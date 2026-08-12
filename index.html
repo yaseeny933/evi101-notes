@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Evidence — Study Notes</title>
+<style>
+  :root{--ink:#1c1720;--soft:#5f5560;--paper:#f5eff0;--crimson:#a51c30;--crimson-d:#7d1424;
+    --blue:#24608a;--line:#e2d3d6;--shadow:0 10px 30px rgba(90,20,35,.10);--ok:#1f8a5b;--pending:#a99aa0;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;color:var(--ink);
+    background:radial-gradient(circle at 12% 6%,rgba(165,28,48,.10),transparent 42%),
+      radial-gradient(circle at 88% 0%,rgba(36,96,138,.10),transparent 40%),var(--paper);min-height:100vh;line-height:1.55}
+  .wrap{max-width:1000px;margin:0 auto;padding:40px 24px 80px}
+  header.top{background:linear-gradient(135deg,#5f0f1c,#a51c30 72%,#c33);color:#fff;border-radius:20px;
+    padding:34px 36px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  header.top::after{content:"";position:absolute;inset:0;opacity:.35;
+    background-image:linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:36px 36px;-webkit-mask-image:radial-gradient(circle at 85% 15%,#000,transparent 70%);mask-image:radial-gradient(circle at 85% 15%,#000,transparent 70%)}
+  header.top>*{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:#f3cdd3;margin:0 0 10px}
+  header.top h1{margin:0;font-size:2.3rem;letter-spacing:-.01em}
+  header.top p{margin:12px 0 0;color:#fbe6e9;max-width:60ch}
+  .meta{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;font-family:"SF Mono",monospace;font-size:.72rem}
+  .meta span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:5px 11px;border-radius:999px}
+  h2.modtitle{font-size:1.15rem;color:var(--soft);margin:34px 0 2px;font-family:"SF Mono",ui-monospace,monospace;letter-spacing:.04em;text-transform:uppercase}
+  .modsub{margin:2px 0 0;color:var(--pending);font-size:.85rem}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .unit{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px 18px;box-shadow:var(--shadow);text-decoration:none;color:inherit;position:relative;overflow:hidden;
+    transition:transform .12s ease,box-shadow .12s ease}
+  a.unit:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(90,20,35,.16)}
+  .unit .u-num{font-family:"SF Mono",monospace;font-size:.72rem;letter-spacing:.06em;padding:2px 9px;border-radius:7px;align-self:flex-start}
+  .unit h3{margin:12px 0 4px;font-size:1.22rem;letter-spacing:-.01em}
+  .unit p{margin:0;font-size:.9rem;color:var(--soft);flex:1}
+  .kind{font-family:"SF Mono",monospace;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--soft);margin-top:8px}
+  .badge{margin-top:10px;align-self:flex-start;font-family:"SF Mono",monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:999px;font-weight:700}
+  .badge.ready{background:rgba(31,138,91,.14);color:var(--ok)} .badge.ready::before{content:"✓ "}
+  .badge.pending{background:#f1e8ea;color:var(--pending);border:1px dashed #d9c6ca} .badge.pending::before{content:"○ "}
+  .unit.is-pending{opacity:.7} .unit.is-pending:hover{transform:none;box-shadow:var(--shadow)}
+  .accent{position:absolute;top:0;left:0;right:0;height:5px}
+  .c-crimson .u-num{background:rgba(165,28,48,.12);color:#a51c30} .c-crimson .accent{background:#a51c30}
+  .c-blue .u-num{background:rgba(36,96,138,.12);color:#24608a} .c-blue .accent{background:#24608a}
+  .c-slate .u-num{background:rgba(90,90,110,.12);color:#55566e} .c-slate .accent{background:#55566e}
+  .note{margin-top:30px;background:#fff;border:1px solid var(--line);border-left:5px solid var(--crimson);border-radius:12px;padding:16px 20px;box-shadow:var(--shadow);font-size:.92rem;color:var(--soft)}
+  .note b{color:var(--ink)}
+  footer{margin-top:34px;text-align:center;font-size:.78rem;color:var(--soft);font-family:"SF Mono",ui-monospace,monospace}
+  @media (max-width:680px){.grid{grid-template-columns:1fr}header.top h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="kicker">Harvard Graduate School of Education · EDU EVI101</p>
+    <h1>Evidence — Study Notes</h1>
+    <p>One study guide per session — per <em>type of evidence</em> — with core concepts, a diagram, a quiz-yourself glossary, and iRAT-prep practice. Built for a Team-Based-Learning course.</p>
+    <div class="meta">
+      <span id="count">2 session guides</span>
+      <span>iRAT prep</span>
+      <span>quiz-yourself glossaries</span>
+      <span>print-friendly</span>
+    </div>
+  </header>
+
+  <h2 class="modtitle">The Evidence course — session by session</h2>
+  <p class="modsub">The throughline: every type of evidence is judged on <b>inference · quality · relevance</b>.</p>
+  <div class="grid">
+    <a class="unit c-crimson" href="session-1-welcome-and-framework.html">
+      <div class="accent"></div><span class="u-num">SESSION 1</span>
+      <h3>Welcome: Context &amp; the Grand Challenge</h3>
+      <p>The evidence framework &amp; affordances · inference, quality, relevance · the São Paulo Grand Challenge · the ladder of inference · paradigms.</p>
+      <div class="kind">Framework</div>
+      <span class="badge ready">study guide</span>
+    </a>
+    <a class="unit c-blue" href="session-2-descriptive-quantitative.html">
+      <div class="accent"></div><span class="u-num">SESSION 2</span>
+      <h3>Descriptive Quantitative Evidence</h3>
+      <p>Population &amp; sample · random sampling &amp; selection bias · typical values (mean/median) &amp; variability (range/SD) · range of plausible values.</p>
+      <div class="kind">Descriptive · quantitative</div>
+      <span class="badge ready">study guide</span>
+    </a>
+    <div class="unit is-pending c-slate"><div class="accent"></div><span class="u-num">SESSION 3</span><h3>Descriptive Qualitative Evidence</h3><p>Appears here once the session unlocks &amp; is pulled.</p><div class="kind">Descriptive · qualitative</div><span class="badge pending">upcoming</span></div>
+    <div class="unit is-pending c-slate"><div class="accent"></div><span class="u-num">SESSION 4</span><h3>Descriptive Qualitative Evidence</h3><p>Appears here once the session unlocks &amp; is pulled.</p><div class="kind">Descriptive · qualitative</div><span class="badge pending">upcoming</span></div>
+    <div class="unit is-pending c-slate"><div class="accent"></div><span class="u-num">SESSION 5</span><h3>Causal Experimental Evidence</h3><p>Appears here once the session unlocks &amp; is pulled.</p><div class="kind">Causal · experimental</div><span class="badge pending">upcoming</span></div>
+    <div class="unit is-pending c-slate"><div class="accent"></div><span class="u-num">SESSION 6</span><h3>Causal Quasi-Experimental Evidence</h3><p>Appears here once the session unlocks &amp; is pulled.</p><div class="kind">Causal · quasi-experimental</div><span class="badge pending">upcoming</span></div>
+    <div class="unit is-pending c-slate"><div class="accent"></div><span class="u-num">SESSION 7</span><h3>Process Evidence</h3><p>Appears here once the session unlocks &amp; is pulled.</p><div class="kind">Process</div><span class="badge pending">upcoming</span></div>
+    <div class="unit is-pending c-slate"><div class="accent"></div><span class="u-num">SESSION 8</span><h3>Synthetic Evidence</h3><p>Appears here once the session unlocks &amp; is pulled.</p><div class="kind">Synthetic</div><span class="badge pending">upcoming</span></div>
+  </div>
+
+  <div class="note">
+    <b>Sessions 3–8 are still locked in Canvas.</b> Each session's guide appears here automatically once it unlocks and gets pulled — say "refresh my Evidence notes." Each card self-checks its file, so nothing here ever 404s.
+  </div>
+
+  <footer>EVI101 study hub · self-contained · open any card in your browser</footer>
+</div>
+<script>
+  (async () => {
+    const cards = document.querySelectorAll('a.unit[href]');
+    let ready = 0;
+    for (const card of cards) {
+      try { const res = await fetch(card.getAttribute('href'), {method:'HEAD'});
+        const badge = card.querySelector('.badge');
+        if (res.ok) ready++;
+        else { card.removeAttribute('href'); card.classList.add('is-pending'); if(badge){badge.className='badge pending';badge.textContent='coming soon';} }
+      } catch(e){}
+    }
+    if (ready) document.getElementById('count').textContent = ready + (ready===1?' session guide':' session guides');
+  })();
+</script>
+</body>
+</html>

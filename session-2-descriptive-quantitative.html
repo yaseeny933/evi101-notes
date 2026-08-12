@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 2 — Descriptive Quantitative Evidence · Study Notes</title>
+<style>
+  :root{
+    --ink:#152431;
+    --ink-soft:#41586a;
+    --paper:#f3f6f9;
+    --steel:#24608a;
+    --steel-bright:#3d84b8;
+    --teal:#1a8b8f;
+    --amber:#c77c1f;
+    --rose:#c14d6b;
+    --line:#d3dde6;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(20,50,80,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    /* faint sampling-dot texture: measure the few to learn about the many */
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(61,132,184,.10) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(26,139,143,.07) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#12324a,#24608a 68%,#3d84b8);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#c5ddef;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#dcecf6;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--steel);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--teal);background:rgba(26,139,143,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--steel-bright);
+    background:linear-gradient(90deg,rgba(61,132,184,.09),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--steel)}
+
+  /* population -> sample -> inference motif */
+  .flowline{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .fl-node{background:#fff;border:2px solid var(--steel);color:var(--steel);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .fl-node small{display:block;font-size:.62rem;letter-spacing:.08em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .fl-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* contrast / two-col tables */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  table.vs thead th:nth-child(2){color:var(--ink-soft)}
+  table.vs thead th:nth-child(3){color:var(--steel)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  table.vs tr td:nth-child(3){background:rgba(61,132,184,.05)}
+
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+  .svgfig{margin:6px 0 2px}
+
+  /* two-pane comparison (typical vs variability / assimilation-style) */
+  .aa{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .aa .pane{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .aa .pane h4{margin:0 0 4px;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .aa .pane.typ h4{color:var(--teal)}
+  .aa .pane.var h4{color:var(--rose)}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.center{background:rgba(26,139,143,.14);color:var(--teal)}
+  .pill.spread{background:rgba(193,77,107,.14);color:var(--rose)}
+  .aa .pane p{font-size:.92rem;margin:8px 0 0}
+  .aa .ex{font-size:.84rem;color:var(--ink-soft);margin-top:10px;
+    border-top:1px dashed var(--line);padding-top:8px}
+
+  /* nuance / watch-out box */
+  .nuance{background:#fff;border:1px solid var(--line);border-top:5px solid var(--amber);
+    border-radius:14px;padding:20px 24px;margin-top:16px;box-shadow:var(--shadow)}
+  .nuance h3{margin:0 0 6px;color:var(--amber);display:flex;align-items:center;gap:8px}
+  .nuance ul{margin:10px 0 0;padding-left:0;list-style:none}
+  .nuance li{padding:9px 0 9px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.95rem}
+  .nuance li:last-child{border-bottom:none}
+  .nuance li::before{content:"⚠";position:absolute;left:0;top:8px;color:var(--amber);font-size:.9rem}
+  .nuance b{color:var(--ink)}
+
+  /* quality-question steps */
+  .lesson{counter-reset:step;margin-top:10px}
+  .step{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow);position:relative}
+  .step::before{counter-increment:step;content:"Q" counter(step);
+    flex:0 0 42px;height:42px;border-radius:50%;
+    background:var(--steel);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .step .body{flex:1}
+  .step .idea{font-style:italic;color:var(--ink)}
+  .step .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .step .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);background:rgba(26,139,143,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* application panes */
+  .app{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .app .fig{background:#fff;border:1px solid var(--line);border-left:4px solid var(--steel-bright);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .app .fig b{color:var(--steel);display:block;font-size:.98rem;margin-bottom:2px}
+  .app .fig .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal)}
+  .app .fig p{font-size:.9rem;color:var(--ink-soft);margin:6px 0 0}
+
+  /* glossary + iRAT reveal */
+  .gloss details, .quiz details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary, .quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--steel);
+    font-size:1.02rem;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .gloss summary::-webkit-details-marker, .quiz summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .quiz summary::after{content:"answer ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .quiz details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary, .quiz details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def, .quiz .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+  .quiz .q{font-weight:400;color:var(--ink);flex:1}
+  .quiz .q .tag-mc{font-family:"SF Mono",monospace;font-size:.6rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--amber);background:rgba(199,124,31,.12);
+    padding:2px 7px;border-radius:6px;margin-right:8px;font-weight:700;vertical-align:middle}
+  .quiz .q .tag-sa{color:var(--teal);background:rgba(26,139,143,.12)}
+  .quiz .opts{margin:8px 0 0;padding-left:18px;font-size:.9rem;color:var(--ink-soft)}
+  .quiz .opts li{margin:3px 0}
+  .quiz .def b{color:var(--steel)}
+
+  .prompt{background:linear-gradient(90deg,rgba(26,139,143,.08),#fff 60%);
+    border-left:5px solid var(--teal);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:.95rem}
+  .prompt .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal);display:block;margin-bottom:2px}
+
+  /* readings note */
+  .readings{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;margin-top:14px;box-shadow:var(--shadow);font-size:.95rem}
+  .readings h3{margin:0 0 8px;color:var(--steel)}
+  .readings ul{margin:0;padding-left:20px}
+  .readings li{margin:6px 0}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#12324a,#1f5075);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#c5ddef;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#8ec3e6}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .aa,.app{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .step::before{flex-basis:36px;height:36px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details, .quiz details{break-inside:avoid}
+    .gloss .def, .quiz .def{display:block !important}
+    details:not([open]) .def{display:block}
+    .card,.step,.aa .pane,.app .fig,.gloss details,.quiz details,.nuance,.readings{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 2</p>
+    <h1>Descriptive Quantitative Evidence</h1>
+    <p class="sub">The first form of evidence: describing <em>what is</em> — in numbers. Big idea of the day: <strong>measure the few to learn about the many.</strong></p>
+    <div class="tags">
+      <span class="tag">population ↔ sample</span>
+      <span class="tag">random sampling</span>
+      <span class="tag">typical values &amp; variability</span>
+      <span class="tag">plausible values</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea</h2>
+    <p class="lead">Descriptive evidence answers one question: <strong>"What is happening?"</strong> Descriptive <em>quantitative</em> evidence answers it with numbers (the qualitative flavor answers it with words). It does <strong>not</strong> explain causes — only describes how things are.</p>
+
+    <div class="bigidea">
+      We almost never measure everyone. Instead we name a <strong>target population</strong> — the group we want to describe — draw a smaller <strong>sample</strong> from it, calculate statistics on the sample, and use them to make an <strong>inference</strong> back to the population. The more representative the sample, the more trustworthy the inference. That is the whole logic of the day.
+    </div>
+
+    <div class="card">
+      <div class="flowline">
+        <div class="fl-node">POPULATION<small>all 15-yr-olds<br>in school in Brazil</small></div>
+        <span class="fl-arrow">→</span>
+        <div class="fl-node" style="border-color:var(--teal);color:var(--teal)">RANDOM SAMPLE<small>10,691 students<br>in 638 schools</small></div>
+        <span class="fl-arrow">→</span>
+        <div class="fl-node">INFERENCE<small>estimate the<br>population values</small></div>
+      </div>
+      <p class="figcap">Sampling logic: we measure the few (the sample) to learn about the many (the population).</p>
+    </div>
+
+    <p>In the reading, the OECD uses two data sources on Brazil: <strong>PISA</strong> (a global assessment of reading, math, and science for 15-year-olds) and <strong>SAEB</strong> (Brazil's national assessment). The headline descriptive findings: Brazilian students score far below the OECD average in all three subjects, roughly on par with Latin American neighbors, but below economically similar countries like Russia and China.</p>
+
+    <div class="card svgfig">
+      <svg viewBox="0 0 760 300" role="img" aria-label="A population of many dots; a handful drawn at random into a sample; an arrow of inference back to the population" style="width:100%;height:auto">
+        <!-- population cloud -->
+        <g>
+          <rect x="20" y="30" width="230" height="240" rx="16" fill="#eef4f9" stroke="#c3d5e3" stroke-width="1.5"></rect>
+          <text x="135" y="24" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#41586a">POPULATION</text>
+        </g>
+        <!-- population dots (many, faint) -->
+        <g fill="#9fbcd2">
+          <circle cx="52" cy="62" r="6"></circle><circle cx="90" cy="55" r="6"></circle><circle cx="128" cy="66" r="6"></circle>
+          <circle cx="166" cy="54" r="6"></circle><circle cx="204" cy="64" r="6"></circle><circle cx="232" cy="90" r="6"></circle>
+          <circle cx="46" cy="98" r="6"></circle><circle cx="86" cy="96" r="6"></circle><circle cx="126" cy="104" r="6"></circle>
+          <circle cx="166" cy="96" r="6"></circle><circle cx="206" cy="102" r="6"></circle>
+          <circle cx="52" cy="138" r="6"></circle><circle cx="92" cy="140" r="6"></circle><circle cx="130" cy="146" r="6"></circle>
+          <circle cx="170" cy="138" r="6"></circle><circle cx="210" cy="144" r="6"></circle><circle cx="232" cy="132" r="6"></circle>
+          <circle cx="46" cy="180" r="6"></circle><circle cx="88" cy="184" r="6"></circle><circle cx="128" cy="188" r="6"></circle>
+          <circle cx="168" cy="180" r="6"></circle><circle cx="208" cy="186" r="6"></circle>
+          <circle cx="54" cy="222" r="6"></circle><circle cx="94" cy="226" r="6"></circle><circle cx="132" cy="230" r="6"></circle>
+          <circle cx="172" cy="222" r="6"></circle><circle cx="212" cy="228" r="6"></circle><circle cx="232" cy="200" r="6"></circle>
+        </g>
+        <!-- highlighted sampled dots (steel/teal) -->
+        <g fill="#1a8b8f" stroke="#12324a" stroke-width="1.5">
+          <circle cx="90" cy="55" r="7"></circle><circle cx="166" cy="96" r="7"></circle>
+          <circle cx="52" cy="138" r="7"></circle><circle cx="210" cy="144" r="7"></circle>
+          <circle cx="128" cy="188" r="7"></circle><circle cx="94" cy="226" r="7"></circle>
+        </g>
+        <!-- draw-at-random arrow -->
+        <g>
+          <line x1="262" y1="150" x2="360" y2="150" stroke="#24608a" stroke-width="2.5" marker-end="url(#arrowS)"></line>
+          <text x="311" y="140" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#24608a">draw at random</text>
+        </g>
+        <!-- sample box -->
+        <g>
+          <rect x="372" y="90" width="150" height="120" rx="14" fill="#e4f3f2" stroke="#1a8b8f" stroke-width="2"></rect>
+          <text x="447" y="84" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#1a8b8f">SAMPLE</text>
+        </g>
+        <g fill="#1a8b8f" stroke="#12324a" stroke-width="1.5">
+          <circle cx="402" cy="122" r="8"></circle><circle cx="447" cy="118" r="8"></circle><circle cx="492" cy="126" r="8"></circle>
+          <circle cx="415" cy="166" r="8"></circle><circle cx="465" cy="172" r="8"></circle><circle cx="492" cy="160" r="8"></circle>
+        </g>
+        <!-- inference arrow back -->
+        <g>
+          <path d="M 530 150 C 620 150, 640 150, 690 150" stroke="#c77c1f" stroke-width="2.5" fill="none" marker-end="url(#arrowA)"></path>
+          <text x="612" y="140" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#c77c1f">infer</text>
+        </g>
+        <!-- estimate node -->
+        <g>
+          <rect x="606" y="180" width="140" height="88" rx="14" fill="#fff" stroke="#c77c1f" stroke-width="2"></rect>
+          <text x="676" y="210" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#c77c1f">ESTIMATE</text>
+          <text x="676" y="232" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#41586a">population mean</text>
+          <text x="676" y="250" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#41586a">± margin of error</text>
+        </g>
+        <defs>
+          <marker id="arrowS" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+            <path d="M0,0 L8,5 L0,10 z" fill="#24608a"></path>
+          </marker>
+          <marker id="arrowA" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+            <path d="M0,0 L8,5 L0,10 z" fill="#c77c1f"></path>
+          </marker>
+        </defs>
+      </svg>
+      <p class="figcap">The engine of descriptive quantitative evidence: population → random sample → statistic → inference (with a margin of error).</p>
+    </div>
+
+    <h3>Three quality questions for this kind of evidence</h3>
+    <p>Every form of evidence has its own affordances, so we judge each on its own terms. For descriptive quantitative evidence, we ask three questions — they organize the rest of these notes:</p>
+    <div class="lesson">
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well does the sampling approach support inferences about the target population?</p>
+          <p class="mech"><b>Section 02</b> Random sampling from the whole population is what licenses the inference.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well do the authors describe the typical values <em>and</em> their variability in the sample data?</p>
+          <p class="mech"><b>Section 03</b> Report central tendency (mean/median) <em>and</em> spread (range/SD) — never one alone.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well do the authors describe the range of plausible values for the population characteristic (and statistical significance)?</p>
+          <p class="mech"><b>Section 04</b> A sample estimate always comes with uncertainty — report it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 02 SAMPLING ===== -->
+  <section>
+    <h2><span class="num">02</span> Sampling — why random selection earns the inference</h2>
+    <p class="lead">People often distrust small samples: "How can a poll of a few thousand speak for me if I wasn't asked?" The answer is <strong>random sampling</strong>.</p>
+
+    <p>If we draw a <strong>sufficiently large sample at random from the whole population</strong>, the proportion in the sample tends to land close to (though never exactly on) the proportion in the population. If 55% of voters favor a candidate, a large random sample will usually come in near 55%. Every sample differs a little from its population by chance — even when researchers do everything right — but random selection keeps that difference small and, crucially, <em>unbiased</em>.</p>
+
+    <p>Two conditions have to hold together:</p>
+    <div class="card" style="padding:6px 10px">
+      <table class="vs">
+        <thead>
+          <tr><th>Condition</th><th>What it means</th><th>Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Selected at random</td><td>People enter the sample by pure chance — like a coin flip — not by their own choice or the researcher's convenience.</td><td>Removes systematic reasons the sample would differ from the population.</td></tr>
+          <tr><td>From the whole population</td><td>Drawn from the entire group we want to describe — not a narrower slice of it.</td><td>Lets us generalize to <em>that</em> population, not some other one.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nuance" style="border-top-color:var(--rose)">
+      <h3 style="color:var(--rose)">⚠ Where it breaks: selection bias</h3>
+      <p style="margin:0;font-size:.95rem">When sampling is <strong>not</strong> random or <strong>not</strong> from the whole population, you get a <strong>sample of convenience</strong> and there's no reason to think it represents anyone in particular. Classic offenders:</p>
+      <ul style="list-style:none;margin:10px 0 0;padding:0">
+        <li style="padding:6px 0 6px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.93rem"><span style="position:absolute;left:0;color:var(--rose)">•</span> People who live near a university and volunteer to participate.</li>
+        <li style="padding:6px 0 6px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.93rem"><span style="position:absolute;left:0;color:var(--rose)">•</span> Psych students earning extra credit.</li>
+        <li style="padding:6px 0 6px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.93rem"><span style="position:absolute;left:0;color:var(--rose)">•</span> Whoever finds a website and answers its questions.</li>
+        <li style="padding:6px 0 6px 26px;position:relative;font-size:.93rem"><span style="position:absolute;left:0;color:var(--rose)">•</span> Poll respondents who answer the phone — missing everyone who screens calls.</li>
+      </ul>
+    </div>
+
+    <h3>Applied to the reading: who does the PISA sample actually represent?</h3>
+    <p>The report (p. 71) describes its sample: <strong>10,691 fifteen-year-olds across 638 schools</strong>. How was it drawn? PISA can't test every student in every country (too expensive), so each country selects a <strong>random sample of schools</strong>, then a <strong>random sample of students within those schools</strong>. Because selection is random, the sample is a good stand-in for the population of <em>enrolled</em> 15-year-olds.</p>
+    <div class="bigidea">
+      But here's the catch the video flags: about <strong>one-third of Brazilian 15-year-olds are not enrolled in school</strong>, and the sample only includes enrolled youth. So we can infer about <strong>15-year-olds enrolled in school in Brazil</strong> — <em>not</em> about all Brazilian 15-year-olds. Random selection tells you the sample is fair; it's the <em>frame</em> (the whole population you sampled from) that tells you who you're allowed to talk about.
+    </div>
+  </section>
+
+  <!-- ===== 03 DESCRIBING DATA ===== -->
+  <section>
+    <h2><span class="num">03</span> Describing data — typical values <em>and</em> variability</h2>
+    <p class="lead">Once you have sample data, two questions describe it well: <strong>What's typical?</strong> and <strong>How much do the values vary around that?</strong> A good description answers both. Report only one and you can seriously mislead.</p>
+
+    <div class="aa">
+      <div class="pane typ">
+        <h4>Typical values <span class="pill center">central tendency</span></h4>
+        <p><b>Mean</b> — the average. Add up all values, divide by the number of observations.</p>
+        <p><b>Median</b> — the midpoint. Order values low to high; take the middle one (the 50th percentile).</p>
+        <p class="ex"><b>Read it as:</b> if you see mean or median cited, that's the author telling you what a typical case looks like.</p>
+      </div>
+      <div class="pane var">
+        <h4>Variability <span class="pill spread">spread</span></h4>
+        <p><b>Range</b> — the distance from the lowest to the highest value.</p>
+        <p><b>Standard deviation</b> — roughly, the typical distance of a data point from the mean; how tightly points cluster around it.</p>
+        <p class="ex"><b>Read it as:</b> if you see range or SD, that's the author telling you how much the data spreads out around the typical value.</p>
+      </div>
+    </div>
+    <p style="font-size:.9rem;color:var(--ink-soft);margin-top:12px">↳ You don't need to <em>calculate</em> any of these for EVI101. You need to <em>recognize</em> which job each one does: mean/median describe the center; range/SD describe the spread.</p>
+
+    <h3>Why the average alone can fool you — Brazil's reading scores</h3>
+    <p>Brazil's <strong>average PISA reading score is 413</strong> (Figure 3.2, p. 79). The report also notes that scoring <strong>407 or above</strong> (PISA Level 2) signals likely future success in the workforce. Tempting conclusion: "413 > 407, so Brazil is doing fine." That's wrong — because it ignores the spread.</p>
+    <p>Figure 3.3 shows the <strong>full range</strong> of how students scored. Once you look, <strong>50% of Brazilian students score below Level 2</strong> — below the threshold for likely success. The average sits just over the line, but half the distribution falls under it. This is the whole point of reporting variability, not just the center.</p>
+
+    <div class="card svgfig">
+      <svg viewBox="0 0 760 300" role="img" aria-label="A skewed distribution with the mean pulled right of the median, and a proficiency threshold showing half the area below it" style="width:100%;height:auto">
+        <!-- axis -->
+        <line x1="60" y1="240" x2="720" y2="240" stroke="#8ba3b5" stroke-width="1.5"></line>
+        <text x="390" y="278" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#41586a">PISA reading score  →</text>
+        <!-- distribution curve (right-skewed) -->
+        <path d="M 80 240
+                 C 180 240, 220 90, 320 78
+                 C 420 66, 470 150, 560 200
+                 C 620 230, 670 238, 700 240 Z"
+              fill="rgba(61,132,184,.16)" stroke="#3d84b8" stroke-width="2.5"></path>
+        <!-- shaded below-threshold region (left half up to threshold line at x=340) -->
+        <path d="M 80 240
+                 C 180 240, 220 90, 320 78
+                 C 330 77, 336 79, 340 82
+                 L 340 240 Z"
+              fill="rgba(193,77,107,.18)" stroke="none"></path>
+        <!-- threshold line (Level 2 = 407) -->
+        <line x1="340" y1="60" x2="340" y2="240" stroke="#c14d6b" stroke-width="2" stroke-dasharray="6 5"></line>
+        <text x="340" y="50" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#c14d6b">Level 2 ≈ 407</text>
+        <text x="215" y="220" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#c14d6b">~50% below</text>
+        <!-- median line -->
+        <line x1="316" y1="88" x2="316" y2="240" stroke="#1a8b8f" stroke-width="2"></line>
+        <text x="300" y="104" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#1a8b8f">median</text>
+        <!-- mean line (pulled right by skew) -->
+        <line x1="386" y1="120" x2="386" y2="240" stroke="#24608a" stroke-width="2.5"></line>
+        <text x="398" y="120" text-anchor="start" font-family="ui-monospace,monospace" font-size="10.5" fill="#24608a">mean ≈ 413</text>
+        <!-- range bracket -->
+        <line x1="80" y1="258" x2="700" y2="258" stroke="#8ba3b5" stroke-width="1"></line>
+        <line x1="80" y1="252" x2="80" y2="264" stroke="#8ba3b5" stroke-width="1"></line>
+        <line x1="700" y1="252" x2="700" y2="264" stroke="#8ba3b5" stroke-width="1"></line>
+        <text x="390" y="252" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9.5" fill="#8ba3b5">RANGE = lowest to highest observed</text>
+      </svg>
+      <p class="figcap">The mean can clear a threshold while half the students fall below it. Center and spread tell different stories — read both. (In a right-skewed distribution the mean is pulled toward the long tail, sitting above the median.)</p>
+    </div>
+  </section>
+
+  <!-- ===== 04 SAMPLE TO POPULATION ===== -->
+  <section>
+    <h2><span class="num">04</span> From sample to population — plausible values &amp; significance</h2>
+    <p class="lead">A sample statistic is a best guess, not the truth. Because the sample differs from the population by chance, the average we compute won't exactly equal the population average. Honest evidence reports the <strong>uncertainty</strong> around the estimate.</p>
+
+    <h3>Range of plausible values (the margin of error)</h3>
+    <p>We could know Brazil's exact average score only by testing <em>every</em> 15-year-old. Instead we use the sample to make a best estimate and attach a <strong>margin of error</strong> — a <strong>range of plausible values</strong> for the population average. PISA figures draw this as a <strong>95% confidence interval</strong>: a vertical bar around each point estimate.</p>
+    <p>From the 2022 PISA country note (OECD, shown in the video): for the top socioeconomic quintile in Brazil, the sample mean in math is just above 450, with a margin of about ±5 points (roughly 445–460). That's a <em>useful</em> interval. If it had run 400–500, it would pin down almost nothing. Notice too: the <strong>bottom quintile has a narrower interval</strong> because its sample is larger — <strong>bigger samples give more precise estimates</strong>.</p>
+    <div class="nuance">
+      <h3>⚠ Don't confuse two different "ranges"</h3>
+      <ul>
+        <li><b>Range of the data</b> — the spread of individual data points in the sample (Section 03). Describes how varied people are.</li>
+        <li><b>Range of plausible values for the average</b> — the uncertainty in our <em>estimate of the population mean</em> that comes from using a sample. Describes how sure we are about the average.</li>
+      </ul>
+    </div>
+
+    <h3>Statistical significance</h3>
+    <p><strong>Statistical significance</strong> asks: is a difference we see in the sample likely real in the population, or could it just be random chance? One quick visual test: <strong>compare confidence intervals</strong>. In the 2022 figure, the interval for top-quintile students (bottom end ≈ 445) doesn't overlap the interval for bottom-quintile students (top end ≈ 350). Non-overlapping intervals signal a <strong>statistically significant difference</strong> — the SES gap is very unlikely to be a fluke.</p>
+    <p>The reading uses the same logic across time. In Figure 3.5, Brazil's yearly reading averages are compared to 2018 (score 413). Values flagged blue-with-asterisk are statistically significantly different from 2018: the 2000 and 2006 scores are significantly <em>lower</em>, while 2003, 2009, 2012, and 2015 are <em>not</em> significantly different. The inference: Brazilian reading improved over earlier trends by around 2009, then flattened. Effectively the authors put a 95% confidence interval around the <em>difference</em> between 413 (2018) and 396 (2000) and ask whether that 17-point gap is a chance finding.</p>
+
+    <h3>Direction &amp; magnitude</h3>
+    <p>When you report a difference, two things describe it: <strong>direction</strong> (which way — higher or lower, up or down) and <strong>magnitude</strong> (how big). 2000 vs 2018 is a difference in <em>direction</em> (2000 was lower) and <em>magnitude</em> (about 17 points). Significance tells you the difference is probably real; direction and magnitude tell you what it actually amounts to.</p>
+
+    <div class="nuance">
+      <h3>⚠ Nuance &amp; watch-outs</h3>
+      <ul>
+        <li><b>A biased sample can't be rescued by size.</b> If the sample isn't random or isn't from the whole population, a bigger sample just gives you a more precise wrong answer.</li>
+        <li><b>Mean vs median under skew.</b> A few extreme values drag the mean toward the tail; the median barely moves. With skewed data, the median is often the more honest "typical."</li>
+        <li><b>"Not significant" ≠ "no difference."</b> It means any observed difference isn't large enough to rule out chance — not that the true difference is zero.</li>
+        <li><b>Significant ≠ important.</b> A difference can be statistically significant yet tiny in magnitude and practically meaningless. Statistical significance ≠ practical significance.</li>
+        <li><b>Report a range, not just a point.</b> A bare estimate hides its uncertainty. Always look for (or provide) the range of plausible values.</li>
+        <li><b>Describe ≠ explain.</b> Descriptive evidence can't establish causation. Lower-income students scoring lower does <em>not</em> show income caused it — that needs causal evidence. Stay low on the ladder of inference: infer only from what the data actually measured.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== TODAY'S APPLICATION ===== -->
+  <section>
+    <h2><span class="num">05</span> Today's application — São Paulo's Grand Challenge</h2>
+    <p>The in-class task: São Paulo leaders want to frame a Grand Challenge — <em>why focus on academic achievement in foundational subjects for grades 6–9?</em> <strong>Which figure should they use to make the case?</strong> There is <strong>no single correct answer</strong>; the point is to <em>use the language of evidence</em> to argue for one choice over the other.</p>
+    <div class="app">
+      <div class="fig">
+        <span class="lbl">Option A</span>
+        <b>Figure 3.5</b>
+        <p>PISA performance in reading, math, and science <strong>over time</strong>, benchmarked against the OECD and Latin America. Frames the challenge as a <em>level-and-trend</em> problem: how far below peers Brazil sits and how little it has moved.</p>
+      </div>
+      <div class="fig">
+        <span class="lbl">Option B</span>
+        <b>Figure 3.10</b>
+        <p>PISA reading performance broken out by students' <strong>socio-economic background</strong>. Frames the challenge as an <em>equity</em> problem: outcomes diverge sharply across SES within Brazil.</p>
+      </div>
+    </div>
+    <div class="bigidea">
+      <strong>How to argue it in the language of evidence:</strong> Whichever you pick, ground it in Session 2 vocabulary. <em>Figure 3.5</em> leans on <strong>typical values and trends over time</strong> and on <strong>statistical significance</strong> (which year-to-year changes are real vs chance) — good for a "we're falling behind and not catching up" story. <em>Figure 3.10</em> foregrounds <strong>variability across subgroups</strong> and lets you point to <strong>non-overlapping plausible-value ranges</strong> between rich and poor students — good for an "our problem is inequality, not just level" story. A strong answer names the population each figure describes, what's typical, how much it varies, and what inference the framing supports — then argues why that framing best motivates the grades 6–9 focus.
+    </div>
+  </section>
+
+  <!-- ===== GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">06</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it. These are the Session 2 evidence-vocabulary words.</p>
+
+    <details>
+      <summary>random sampling</summary>
+      <div class="def">Selecting members of a sample by pure chance (like a coin flip) rather than by choice or convenience — and from the whole population you want to describe. It's what makes a sample representative and licenses inference to the population.
+        <span class="eg">PISA randomly samples schools, then randomly samples students within them.</span>
+      </div>
+    </details>
+    <details>
+      <summary>sampling logic</summary>
+      <div class="def">The reasoning that lets us measure a small sample to make claims about a larger population: a sufficiently large random sample tends to resemble the population, so sample statistics approximate population values (within a margin of error).
+        <span class="eg">"Measure the few to learn about the many."</span>
+      </div>
+    </details>
+    <details>
+      <summary>mean</summary>
+      <div class="def">The average — add up all values and divide by the number of observations. A measure of typical values (central tendency). Sensitive to extreme values.
+        <span class="eg">Brazil's average PISA reading score is 413.</span>
+      </div>
+    </details>
+    <details>
+      <summary>median</summary>
+      <div class="def">The midpoint of the data — order values from lowest to highest and take the middle one (the 50th percentile). A measure of central tendency that is resistant to extreme values.
+        <span class="eg">With skewed data, the median often describes the "typical" case better than the mean.</span>
+      </div>
+    </details>
+    <details>
+      <summary>range</summary>
+      <div class="def">A measure of variability: the distance from the lowest to the highest value observed in the data. Describes how spread out individual data points are.
+        <span class="eg">Not to be confused with the range of plausible values for the average.</span>
+      </div>
+    </details>
+    <details>
+      <summary>standard deviation</summary>
+      <div class="def">A measure of variability describing how much data points typically differ from the mean — how tightly the values cluster around the center. Small SD = tightly bunched; large SD = widely spread.
+        <span class="eg">If you see "range" or "SD," the author is describing spread, not the typical value.</span>
+      </div>
+    </details>
+    <details>
+      <summary>selection bias</summary>
+      <div class="def">A systematic distortion that arises when a sample is not selected at random or not drawn from the whole target population, so it doesn't represent that population. Bigger samples don't fix it.
+        <span class="eg">Polling only people who answer their phones misses everyone who screens calls.</span>
+      </div>
+    </details>
+    <details>
+      <summary>range of plausible values</summary>
+      <div class="def">The margin of error around a sample estimate — the interval (e.g., a 95% confidence interval) within which the true population value is likely to fall. It captures uncertainty from using a sample instead of the whole population. Bigger samples give narrower ranges.
+        <span class="eg">Top-quintile Brazil math mean ≈ 450, plausibly 445–460.</span>
+      </div>
+    </details>
+    <details>
+      <summary>statistical significance</summary>
+      <div class="def">A way to judge whether a difference seen in the sample is likely true in the population or could be due to random chance. One visual check: non-overlapping confidence intervals suggest a significant difference. "Not significant" ≠ "no difference," and "significant" ≠ "practically important."
+        <span class="eg">Non-overlapping SES intervals imply the rich–poor gap is unlikely to be chance.</span>
+      </div>
+    </details>
+    <details>
+      <summary>direction</summary>
+      <div class="def">Which way a difference or relationship points — higher vs lower, increase vs decrease. One of the two things you report about a difference.
+        <span class="eg">2000 reading scores were lower than 2018 (direction: down over that gap).</span>
+      </div>
+    </details>
+    <details>
+      <summary>magnitude</summary>
+      <div class="def">How big a difference or effect is. Distinct from significance: a difference can be statistically significant yet small in magnitude (and vice versa).
+        <span class="eg">The 2018-vs-2000 reading gap had a magnitude of about 17 points.</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== iRAT PREP ===== -->
+  <section class="quiz">
+    <h2><span class="num">07</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer before revealing. Two are written like TBL readiness-check multiple-choice; the rest are short-answer/application. Then chew on the discussion prompts.</p>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>1. A wellness app surveys the users who opt into its "share my data" feature and reports the average sleep of "adults." The biggest threat to inferring about all adults is —</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. The sample is too small</li>
+          <li>B. The mean was used instead of the median</li>
+          <li>C. <b>Selection bias — opt-in users aren't a random sample of all adults</b></li>
+          <li>D. The standard deviation wasn't reported</li>
+        </ul>
+        <b>C.</b> Opt-in users self-select, so they're a sample of convenience, not a random sample of the whole population. No sample size fixes that — you can only infer about app users who opt in, not all adults.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>2. A district's household incomes include a few very wealthy families. Which single number best describes the <em>typical</em> household?</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. The mean, because it uses every value</li>
+          <li>B. <b>The median, because it resists the pull of the extreme high incomes</b></li>
+          <li>C. The range, because it shows the spread</li>
+          <li>D. The standard deviation, because it's precise</li>
+        </ul>
+        <b>B.</b> With right-skewed data, a few large values drag the mean upward, overstating what's typical. The median (the midpoint) is resistant to those extremes. Range and SD describe spread, not the typical value.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>3. The PISA sample was randomly drawn — so why can't we use it to describe <em>all</em> Brazilian 15-year-olds?</span></summary>
+      <div class="def">
+        Because roughly one-third of Brazilian 15-year-olds aren't enrolled in school, and the sample only includes enrolled students. Random selection makes the sample representative of the <b>population it was drawn from</b> — 15-year-olds enrolled in school — not of a broader population the frame excludes.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>4. Brazil's average reading score (413) sits above the Level-2 threshold (407), yet the report warns against optimism. Why?</span></summary>
+      <div class="def">
+        Because the <b>average hides the variability</b>. Looking at the full range (Figure 3.3), about 50% of students score below Level 2. A mean just over the line can coexist with half the distribution falling under it — which is why you must report spread (range/SD), not just central tendency.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>5. Two subgroups' 95% confidence intervals don't overlap. What can you infer, and what can you <em>not</em> infer?</span></summary>
+      <div class="def">
+        <b>Can infer:</b> the difference in means is statistically significant — unlikely to be due to random chance, so probably real in the population. <b>Cannot infer:</b> that the difference is large or practically important (that's <b>magnitude</b>, judged separately), or that one group's status <b>caused</b> the difference (descriptive evidence can't establish causation).
+      </div>
+    </details>
+
+    <div class="prompt"><span class="lbl">Discussion 1</span>The report shows lower-income Brazilian students score lower on PISA. A colleague says, "So poverty lowers test scores." Using the language of evidence, explain exactly what this descriptive data can and cannot support — and what kind of evidence would be needed to make the causal claim.</div>
+    <div class="prompt"><span class="lbl">Discussion 2</span>Imagine a finding that is statistically significant but only 2 points on a 600-point scale. How would you communicate this to a policymaker so they grasp both the significance and the magnitude without over-reacting?</div>
+  </section>
+
+  <!-- ===== READINGS ===== -->
+  <section>
+    <h2><span class="num">08</span> Readings</h2>
+    <div class="readings">
+      <h3>For this session</h3>
+      <ul>
+        <li><strong>Required:</strong> OECD, <em>Education in Brazil</em> (2021), <strong>Chapter 3, pages 70–92 only</strong>. Access via the course Library Reserves page. Key figures: 3.2 (average scores), 3.3 (full range of reading scores), 3.5 (scores over time), 3.10 (scores by SES).</li>
+        <li><strong>Also referenced:</strong> <strong>Figure 5</strong> from the OECD PISA 2022 factsheet / country note on Brazil (shown in the session video to illustrate confidence intervals and the range of plausible values).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>Descriptive quantitative evidence describes "what is" in numbers</strong> — it can't explain causes.</li>
+      <li><strong>Measure the few to learn about the many:</strong> a random sample from the whole population lets you infer population values.</li>
+      <li><strong>Selection bias breaks inference</strong> — and no amount of sample size repairs a non-random or wrong-population sample.</li>
+      <li><strong>Describe both center and spread:</strong> mean/median for typical values, range/SD for variability. The average alone can mislead.</li>
+      <li><strong>Report a range of plausible values,</strong> not just a point estimate — bigger samples give narrower confidence intervals.</li>
+      <li><strong>Statistical significance ≠ practical importance;</strong> always pair it with direction and magnitude.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 2 · study notes · © Harvard content paraphrased for personal study</footer>
+
+</div>
+</body>
+</html>

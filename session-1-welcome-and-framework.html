@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 1 — Welcome to Evidence · Study Notes</title>
+<style>
+  :root{
+    --ink:#231317;
+    --ink-soft:#5c4148;
+    --paper:#faf5f4;
+    --crimson:#a51c30;
+    --crimson-dark:#6e0f1e;
+    --crimson-bright:#c8324a;
+    --teal:#1f7a6f;
+    --amber:#c9791f;
+    --slate:#3f5a73;
+    --line:#e7d6d6;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(110,15,30,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(165,28,48,.07) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(31,122,111,.06) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#4a0a15,#a51c30 72%,#c8324a);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#f4cdd4;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#fbe4e8;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--crimson);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--teal);background:rgba(31,122,111,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--crimson-bright);
+    background:linear-gradient(90deg,rgba(165,28,48,.08),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--crimson)}
+
+  /* affordance flow motif */
+  .openbox{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .ob-node{background:#fff;border:2px solid var(--crimson);color:var(--crimson);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .ob-mind{background:#fff;border:2px dashed var(--teal);color:var(--teal);
+    padding:12px 18px;border-radius:12px;position:relative}
+  .ob-mind small{display:block;font-size:.62rem;letter-spacing:.1em;color:var(--ink-soft);margin-top:4px}
+  .ob-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* evidence-types table */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--crimson)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  table.vs tbody tr:nth-child(odd) td{background:rgba(165,28,48,.035)}
+
+  /* triad panes */
+  .aa{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
+  .aa .pane{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .aa .pane h4{margin:0 0 4px;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .aa .pane.inf h4{color:var(--crimson)}
+  .aa .pane.qual h4{color:var(--teal)}
+  .aa .pane.rel h4{color:var(--slate)}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.a{background:rgba(165,28,48,.14);color:var(--crimson)}
+  .pill.b{background:rgba(31,122,111,.14);color:var(--teal)}
+  .pill.c{background:rgba(63,90,115,.14);color:var(--slate)}
+  .aa .pane p{font-size:.92rem;margin:8px 0 0}
+  .aa .ex{font-size:.84rem;color:var(--ink-soft);margin-top:10px;
+    border-top:1px dashed var(--line);padding-top:8px}
+
+  /* grand challenge steps */
+  .lesson{counter-reset:step;margin-top:10px}
+  .step{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow);position:relative}
+  .step::before{counter-increment:step;content:counter(step);
+    flex:0 0 38px;height:38px;border-radius:50%;
+    background:var(--crimson);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .step .body{flex:1}
+  .step .idea{font-style:italic;color:var(--ink)}
+  .step .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .step .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);background:rgba(31,122,111,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* figure caption */
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+  .schemafig{margin:6px 0 2px}
+
+  /* watch-outs callout */
+  .watch{background:#fff5ec;border:1px solid #f0d3ad;border-left:6px solid var(--amber);
+    border-radius:12px;padding:18px 22px;margin-top:16px;box-shadow:var(--shadow)}
+  .watch h3{margin:0 0 6px;color:var(--amber);font-size:1.08rem;display:flex;align-items:center;gap:8px}
+  .watch ul{margin:8px 0 0;padding-left:0;list-style:none}
+  .watch li{padding:7px 0 7px 26px;position:relative;font-size:.95rem;border-bottom:1px dashed #f0d3ad}
+  .watch li:last-child{border-bottom:none}
+  .watch li::before{content:"⚠";position:absolute;left:2px;color:var(--amber);font-size:.85rem}
+  .watch b{color:#a35d10}
+
+  /* paradigms grid */
+  .it-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .it{background:#fff;border:1px solid var(--line);border-left:4px solid var(--slate);
+    border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+  .it b{color:var(--slate);display:block;font-size:.98rem;margin-bottom:2px}
+  .it .q{font-family:"SF Mono",monospace;font-size:.66rem;letter-spacing:.04em;
+    color:var(--crimson);text-transform:uppercase;display:block;margin:2px 0 6px}
+  .it span.d{font-size:.9rem;color:var(--ink-soft)}
+
+  /* glossary + quiz shared */
+  .gloss details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--crimson);
+    font-size:1.05rem;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .gloss summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+
+  /* quiz question badge */
+  .qbadge{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.06em;
+    text-transform:uppercase;padding:2px 8px;border-radius:6px;font-weight:700;flex:0 0 auto}
+  .qbadge.mc{background:rgba(165,28,48,.12);color:var(--crimson)}
+  .qbadge.sa{background:rgba(31,122,111,.12);color:var(--teal)}
+  .gloss summary .qtext{flex:1}
+  .choices{margin:6px 0 4px;padding-left:20px;font-size:.92rem;color:var(--ink)}
+  .choices li{margin:3px 0}
+
+  /* discussion prompts */
+  .disc{background:linear-gradient(90deg,rgba(63,90,115,.08),#fff 60%);
+    border-left:6px solid var(--slate);border-radius:12px;padding:16px 20px;margin-top:14px}
+  .disc h3{margin:0 0 6px;color:var(--slate);font-size:1.05rem}
+  .disc ol{margin:6px 0 0;padding-left:20px}
+  .disc li{margin:6px 0;font-size:.95rem}
+
+  /* readings note */
+  .reading{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);margin-top:14px}
+  .reading .bk{font-size:1.6rem;line-height:1}
+  .reading .meta{font-size:.95rem}
+  .reading .meta b{color:var(--crimson)}
+  .reading .meta small{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:4px;
+    font-family:"SF Mono",monospace;letter-spacing:.03em}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#4a0a15,#7e1122);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#f4cdd4;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#f0a9b4}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .aa,.it-grid{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .step::before{flex-basis:32px;height:32px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details{break-inside:avoid}
+    .gloss .def{display:block !important}
+    details:not([open]) .def{display:block}
+    .card,.step,.it,.aa .pane,.gloss details,.reading{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 1</p>
+    <h1>Welcome to Evidence: Context &amp; the Grand Challenge</h1>
+    <p class="sub">Each form of evidence has a <em>unique affordance</em> — it answers a different question and licenses a different inference. Learning to judge <strong>quality</strong> and <strong>relevance</strong> is how we keep those inferences sound.</p>
+    <div class="tags">
+      <span class="tag">evidence framework</span>
+      <span class="tag">inference · quality · relevance</span>
+      <span class="tag">ladder of inference</span>
+      <span class="tag">paradigms</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea — the Evidence Framework</h2>
+    <p class="lead">The big idea for the whole course, and this session: <strong>each form of evidence has a unique affordance.</strong> Each type answers a different question and lets us make a different <em>type</em> of inference. The central skill is deciding whether you are using the <em>right type of evidence</em> for the inference you want to make.</p>
+
+    <div class="bigidea">
+      An <strong>affordance</strong> is what a given type of evidence <em>lets you do</em> — the kind of question it can answer and the kind of conclusion it can support. Descriptive evidence can tell you <em>what is happening</em>; it cannot, on its own, tell you <em>what caused it</em>. Match the evidence to the claim, or the inference breaks.
+    </div>
+
+    <h3>The four types of evidence</h3>
+    <p>You'll draw on all four to build your final recommendation to São Paulo. A single study can contain several types at once (e.g., Calarco's classroom study is mostly descriptive-qualitative but also reports descriptive-quantitative counts of help requests).</p>
+    <div class="card" style="padding:6px 10px">
+      <table class="vs">
+        <thead>
+          <tr><th>Type</th><th>Question it answers</th><th>Typical methods</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Descriptive</td><td>What is happening? (e.g. what is happening with income inequality in Brazil?)</td><td>Quantitative (numbers describing a population) or qualitative (words describing a local setting)</td></tr>
+          <tr><td>Causal</td><td>Is a policy, program, or practice causing an impact?</td><td>Experiments and quasi-experiments</td></tr>
+          <tr><td>Synthetic</td><td>What do we already know about this topic?</td><td>Synthesizes / combines prior research</td></tr>
+          <tr><td>Process</td><td>Not what is happening, but <em>how</em> and <em>why</em>?</td><td>Studies of mechanisms and implementation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>The three throughlines of the whole course</h3>
+    <p>Every session returns to these three ideas. They are the lens you use on every reading.</p>
+    <div class="aa">
+      <div class="pane inf">
+        <h4>Inference <span class="pill a">the goal</span></h4>
+        <p>A conclusion drawn on the basis of reasoning and evidence. The course is one long exercise in making <strong>sound</strong> inferences — and noticing when a claim outruns its evidence.</p>
+        <p class="ex"><b>Ask:</b> what conclusion does this evidence actually license?</p>
+      </div>
+      <div class="pane qual">
+        <h4>Quality <span class="pill b">how strong</span></h4>
+        <p>How well the claims are supported by the <em>type</em> of evidence used. Each type is judged on <strong>its own terms</strong> — but two questions apply to all: how well-supported are the claims, and what are the limitations?</p>
+        <p class="ex"><b>Ask:</b> what claims can we <em>not</em> make from this?</p>
+      </div>
+      <div class="pane rel">
+        <h4>Relevance <span class="pill c">applies to me?</span></h4>
+        <p>Whether high-quality findings actually apply to <em>your</em> context. Evidence gathered "there and then" must be reasoned into "here and now" for São Paulo's challenge.</p>
+        <p class="ex"><b>Ask:</b> how similar are the setting &amp; sample — and would the differences matter?</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="openbox">
+        <div class="ob-node">EVIDENCE<br>a specific type</div>
+        <span class="ob-arrow">→</span>
+        <div class="ob-mind">AFFORDANCE<small>the question it can answer</small></div>
+        <span class="ob-arrow">→</span>
+        <div class="ob-node">INFERENCE<br>a matching conclusion</div>
+      </div>
+      <p class="figcap">Right type of evidence → the inference holds. Wrong type → the inference breaks.</p>
+    </div>
+  </section>
+
+  <!-- ===== 02 GRAND CHALLENGE ===== -->
+  <section>
+    <h2><span class="num">02</span> The Grand Challenge</h2>
+    <p class="lead">The course is organized around one real problem — the <strong>Grand Challenge</strong> — and it is also your final, culminating assignment. In the spirit of a "no surprises" policy, you see the final before class even begins.</p>
+
+    <div class="bigidea">
+      <strong>The Grand Challenge:</strong> How can we improve academic achievement in the foundational subjects of <strong>math, reading, and science</strong> for students in <strong>years 6–9</strong> in the <strong>São Paulo</strong> school system? Underneath it sits the field's larger question: <em>how do we improve learning and advance equity in pursuit of a more just society?</em>
+    </div>
+
+    <h3>The Brazilian context (from the OECD reading)</h3>
+    <p>Brazil's education system has made great progress over the last couple of decades — the vast majority of children are now enrolled in basic education. But there are <strong>great disparities in access and achievement along class lines</strong>, and these <strong>deepened during the COVID-19 pandemic</strong>. Much of the reading is <em>descriptive quantitative</em> evidence about income inequality.</p>
+
+    <h3>You will use evidence in four ways</h3>
+    <p>Your final recommendation to the São Paulo Secretary of Education has four moves — and each pulls on the evidence framework:</p>
+    <div class="lesson">
+      <div class="step">
+        <div class="body">
+          <p class="idea">Frame the issue — highlight the dimension of the problem people should focus on.</p>
+          <p class="mech"><b>Framing</b> Descriptive evidence helps you decide <em>what</em> the problem really is before proposing fixes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">Discuss considerations for expanding a curricular innovation to São Paulo.</p>
+          <p class="mech"><b>Relevance</b> Was the innovation shown to work elsewhere? Would it transfer "here and now"?</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">Recommend a form of teacher coaching to support that expansion.</p>
+          <p class="mech"><b>Causal + process</b> What coaching causes improvement, and how/why does it work?</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">Recommend additional evidence São Paulo should collect to keep improving.</p>
+          <p class="mech"><b>Affordances</b> Which type of evidence fills the gaps that current evidence can't?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 LADDER OF INFERENCE ===== -->
+  <section>
+    <h2><span class="num">03</span> The Ladder of Inference &amp; confirmation bias</h2>
+    <p class="lead">One way to picture inference is as a <strong>ladder</strong>. It breaks the move from raw data to action into steps — and shows where we tend to slip. The farther you climb from the data, the more careful you must be that your conclusion is actually warranted.</p>
+
+    <div class="card schemafig">
+      <svg viewBox="0 0 760 360" role="img" aria-label="The ladder of inference: rungs from data at the bottom up to action at the top, with a warning about jumping rungs" style="width:100%;height:auto">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#a51c30"></path>
+          </marker>
+        </defs>
+        <!-- upward arrow spine -->
+        <line x1="70" y1="330" x2="70" y2="34" stroke="#a51c30" stroke-width="3" marker-end="url(#arrow)"></line>
+        <text x="70" y="352" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#5c4148">add meaning ↑</text>
+
+        <g font-family="ui-monospace,Menlo,monospace" font-size="14">
+          <!-- rung 1: data (bottom) -->
+          <g>
+            <rect x="110" y="300" width="360" height="42" rx="9" fill="#fff" stroke="#1f7a6f" stroke-width="2.5"></rect>
+            <text x="128" y="326" fill="#0f5a51" font-weight="700">1 · DATA</text>
+            <text x="228" y="326" fill="#3f2b30" font-size="12.5">everything your five senses take in</text>
+          </g>
+          <!-- rung 2: select -->
+          <g>
+            <rect x="110" y="246" width="360" height="42" rx="9" fill="#fff" stroke="#a51c30" stroke-width="2.5"></rect>
+            <text x="128" y="272" fill="#a51c30" font-weight="700">2 · SELECT</text>
+            <text x="242" y="272" fill="#3f2b30" font-size="12.5">choose which data to focus on</text>
+          </g>
+          <!-- rung 3: interpret -->
+          <g>
+            <rect x="110" y="192" width="360" height="42" rx="9" fill="#fff" stroke="#a51c30" stroke-width="2.5"></rect>
+            <text x="128" y="218" fill="#a51c30" font-weight="700">3 · INTERPRET</text>
+            <text x="266" y="218" fill="#3f2b30" font-size="12.5">add meanings to the data</text>
+          </g>
+          <!-- rung 4: conclude -->
+          <g>
+            <rect x="110" y="138" width="360" height="42" rx="9" fill="#fff" stroke="#a51c30" stroke-width="2.5"></rect>
+            <text x="128" y="164" fill="#a51c30" font-weight="700">4 · CONCLUDE</text>
+            <text x="266" y="164" fill="#3f2b30" font-size="12.5">draw a conclusion</text>
+          </g>
+          <!-- rung 5: act (top) -->
+          <g>
+            <rect x="110" y="84" width="360" height="42" rx="9" fill="#f7e3e6" stroke="#6e0f1e" stroke-width="2.5"></rect>
+            <text x="128" y="110" fill="#6e0f1e" font-weight="700">5 · ACT</text>
+            <text x="210" y="110" fill="#3f2b30" font-size="12.5">take action on the conclusion</text>
+          </g>
+        </g>
+
+        <!-- danger note: jumping rungs -->
+        <g font-family="ui-monospace,monospace" font-size="12" fill="#c9791f">
+          <path d="M500,300 C580,250 580,150 500,100" fill="none" stroke="#c9791f" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow)"></path>
+          <text x="560" y="205" text-anchor="middle" transform="rotate(90 560 205)">jumping the ladder ⚠</text>
+        </g>
+        <text x="600" y="60" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11.5" fill="#5c4148">Start low. Name the</text>
+        <text x="600" y="76" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11.5" fill="#5c4148">observation before</text>
+        <text x="600" y="92" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11.5" fill="#5c4148">the interpretation.</text>
+      </svg>
+      <p class="figcap">Data → select → interpret → conclude → act. The higher the rung, the more the conclusion depends on the type of evidence being adequate.</p>
+    </div>
+
+    <p>The data at the bottom aren't only research findings — they also include your <strong>professional expertise, personal relationships, and knowledge of local context</strong>, and can be quantitative (numbers) or qualitative (words, stories). Our brains are wired to make meaning out of data — that's how we make sense of the world — but it makes it dangerously easy to <strong>jump up the ladder</strong>, adding interpretation and conclusions without supporting data.</p>
+
+    <h3>Worked example — the OECD report (p. 6)</h3>
+    <p>The authors model the ladder in a single passage:</p>
+    <div class="card" style="padding:16px 20px;font-size:.95rem">
+      <p style="margin:4px 0"><b style="color:#a51c30;font-family:'SF Mono',monospace;font-size:.72rem;letter-spacing:.05em">CONCLUSION FIRST →</b> "Brazil is marked by deep-rooted inequalities by race and class." <em>(How do we know we can trust this?)</em></p>
+      <p style="margin:8px 0"><b style="color:#1f7a6f;font-family:'SF Mono',monospace;font-size:.72rem;letter-spacing:.05em">SELECTED DATA →</b> In 2018, Black and mixed Brazilians were more than half the population but over 75% of the poorest income decile.</p>
+      <p style="margin:8px 0"><b style="color:#c9791f;font-family:'SF Mono',monospace;font-size:.72rem;letter-spacing:.05em">INTERPRETATION →</b> Not just overrepresentation — little indication the race-based gap will narrow (Figure 1.3).</p>
+      <p style="margin:8px 0"><b style="color:#6e0f1e;font-family:'SF Mono',monospace;font-size:.72rem;letter-spacing:.05em">CONCLUSION / ACTION →</b> Inequality is deep-rooted and intersectional — grounds for specific education interventions in your Grand Challenge.</p>
+    </div>
+
+    <div class="watch">
+      <h3>Nuance &amp; watch-outs</h3>
+      <ul>
+        <li><b>Don't jump the ladder.</b> It's easy to add interpretation and draw conclusions without the supporting data. Start on the lowest rung: <em>name your observation before</em> stating your interpretation, conclusion, or action.</li>
+        <li><b>Confirmation bias runs in one direction.</b> We readily spot where an author "jumped the ladder" when we <em>disagree</em> with the conclusion — but wave through unjustified inferences when we <em>agree</em>. Staying low on the ladder forces you to clarify the data you're actually relying on, and works against this very human error.</li>
+        <li><b>"There and then" ≠ "here and now."</b> High quality is not enough — evidence from another setting still has to be reasoned into São Paulo's context. Non-São-Paulo data isn't irrelevant; it just takes more work to see how it applies.</li>
+        <li><b>No evidence type is "best."</b> Affordances differ. Judge each type on its own terms — and check you're using the right type for the inference you want.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 04 PARADIGMS ===== -->
+  <section>
+    <h2><span class="num">04</span> Paradigms — the worldview behind the evidence</h2>
+    <p class="lead">Who decides what counts as good evidence? That depends on the researcher's <strong>paradigm</strong> — the worldview that structures their approach to knowledge, their research goals, and how they judge quality. Two researchers in different paradigms can look at the <em>same</em> data and genuinely see different things.</p>
+
+    <div class="bigidea">
+      Think of the <strong>duck–rabbit</strong> picture: the same image reads as a duck or a rabbit depending on the lens you bring. Likewise, a paradigm sets the conventions for what data to collect, how to analyze it, what counts as convincing, and which inferences you can draw. Know a researcher's paradigm <em>before</em> you judge their work — so you apply the conventions <em>they</em> were working under.
+    </div>
+
+    <p>This course adapts the classification of <strong>Lincoln, Lynham &amp; Guba</strong> into five common paradigms. You don't need to memorize the details — the point is to feel the <em>range</em>. Two distinctions separate them: their views on <strong>whether/how objectivity is possible</strong>, and on <strong>the researcher's influence on the research</strong>.</p>
+
+    <div class="it-grid">
+      <div class="it"><b>Positivism</b><span class="q">stable truth · discover it</span><span class="d">A single objective reality exists and can be uncovered through careful measurement. Patterns are independent of the researcher's values. Common in the hard sciences and experimental psychology.</span></div>
+      <div class="it"><b>Post-positivism</b><span class="q">truth, but only partial</span><span class="d">There <em>is</em> an objective truth, but we capture only facets of it — with error — by <strong>triangulating</strong> multiple data sources. Most course readings, and many quantitative studies, live here.</span></div>
+      <div class="it"><b>Interpretivism</b><span class="q">how do people interpret it?</span><span class="d">Cares about the worldviews of those studied — and how the researcher's own values shape their reading of them. Asks not "what is happening?" but "how do people interpret what's happening?" Common in qualitative evidence.</span></div>
+      <div class="it"><b>Participatory</b><span class="q">knowledge co-constructed</span><span class="d">Researchers and participants make sense of the world <em>together</em>. Questions whether an "outsider" should try to interpret others' worldviews at all — knowledge is a shared project.</span></div>
+      <div class="it"><b>Critical</b><span class="q">who has power &amp; voice?</span><span class="d">Unearths the social, political, and economic forces shaping who speaks and who is heard. Overlaps with participatory, but adds explicit critique of power structures — and often argues for redistributing power.</span></div>
+    </div>
+
+    <div class="watch" style="background:#f0f4f7;border-color:#c8d6e2;border-left-color:var(--slate)">
+      <h3 style="color:var(--slate)">Key points about paradigms</h3>
+      <ul style="">
+        <li style="border-color:#c8d6e2"><b style="color:#2f4356">No paradigm is more objective, valid, or biased than another.</b> They differ on whether/how objectivity is possible — and different biases surface in different ones.</li>
+        <li style="border-color:#c8d6e2"><b style="color:#2f4356">Paradigms are loose frameworks, not fixed boxes.</b> A researcher can hold several at once, and multiple can appear in one piece of research.</li>
+        <li style="border-color:#c8d6e2"><b style="color:#2f4356">We need multiple paradigms.</b> Fully addressing educational challenges takes evidence from many perspectives — a strength of education research.</li>
+        <li style="border-color:#c8d6e2"><b style="color:#2f4356">Where does Evidence sit?</b> The course takes a <strong>post-positivist</strong> stance — <em>not</em> because it's "best," but because it's dominant in education policy and practice, so it prepares you to work within it beyond HGSE. (That dominance is historical — e.g., Cold-War-era economic thinking — and has meant qualitative, participatory, and critical traditions often held less power in policy settings.)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== READINGS ===== -->
+  <section>
+    <h2><span class="num">✦</span> Readings for this session</h2>
+    <div class="reading">
+      <div class="bk">📘</div>
+      <div class="meta">
+        <b>OECD, <em>Education in Brazil</em> (2021) — Chapter 1.</b> Introduces the current state of Brazilian education: strong enrollment progress, but deep disparities by race and class, worsened by COVID-19. Mostly <em>descriptive quantitative</em> evidence — and a live example of the ladder of inference.
+        <small>Pages 16–33 only · skip the "emerging issues" section · via course Library Reserves</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== iRAT PREP ===== -->
+  <section class="gloss">
+    <h2><span class="num">✎</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer each before revealing. Two are TBL-style multiple choice; the rest are short-answer / application. Two discussion prompts follow.</p>
+
+    <details>
+      <summary><span class="qbadge mc">Q1 · MC</span><span class="qtext">The "unique affordance" of a type of evidence refers to…</span></summary>
+      <div class="def">
+        <ol class="choices" type="A">
+          <li>How much it costs to collect.</li>
+          <li>The kind of question it can answer and the type of inference it lets you make.</li>
+          <li>Whether it is quantitative or qualitative.</li>
+          <li>How recent the study is.</li>
+        </ol>
+        <strong style="color:var(--crimson)">Answer: B.</strong> An affordance is what a type of evidence <em>lets you do</em> — the question it answers and the inference it supports. Descriptive evidence answers "what is happening?"; causal evidence answers "is this causing an impact?" The core skill is matching evidence type to the inference you want.
+        <span class="eg">Watch-out: A and D are about logistics/recency, not affordance; C is a real distinction but only <em>within</em> descriptive evidence.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="qbadge mc">Q2 · MC</span><span class="qtext">A researcher assumes there is an objective truth but that we can only capture facets of it, with error, by triangulating multiple data sources. Which paradigm?</span></summary>
+      <div class="def">
+        <ol class="choices" type="A">
+          <li>Positivism</li>
+          <li>Interpretivism</li>
+          <li>Post-positivism</li>
+          <li>Critical</li>
+        </ol>
+        <strong style="color:var(--crimson)">Answer: C — Post-positivism.</strong> Like positivism it assumes an objective truth, but unlike positivism it holds we grasp only partial facets, with error, via triangulation. This is also the paradigm the Evidence course itself adopts — because it dominates education policy and practice, not because it is "best."
+        <span class="eg">Positivism (A) claims truth is fully discoverable; interpretivism (B) asks how people interpret events; critical (D) focuses on power.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="qbadge sa">Q3 · Short answer</span><span class="qtext">List the rungs of the ladder of inference in order, and state the one rule the video gives for climbing it well.</span></summary>
+      <div class="def">
+        Bottom to top: <strong>(1) data</strong> (everything your senses take in) → <strong>(2) select data</strong> → <strong>(3) interpret</strong> (add meaning) → <strong>(4) draw a conclusion</strong> → <strong>(5) take action</strong>. The rule: <strong>start on the lowest rung — name your observation before stating your interpretation, conclusion, or next action</strong> — which keeps inferences grounded in the data and guards against jumping the ladder.
+        <span class="eg">The farther you get from the data, the more careful you must be that the conclusion suits the <em>type</em> of evidence available.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="qbadge sa">Q4 · Application</span><span class="qtext">You strongly agree with a study's conclusion, so you accept it quickly without scrutinizing its evidence. Name the reasoning error and the habit that counters it.</span></summary>
+      <div class="def">
+        This is <strong>confirmation bias</strong> — the human tendency to seek and accept information confirming our pre-existing beliefs while minimizing evidence for other explanations. It's asymmetric: we readily catch "ladder-jumping" in arguments we disagree with, but wave it through when we agree. The counter-habit is <strong>staying low on the ladder of inference</strong>: force yourself to name the specific data supporting the claim before endorsing the conclusion.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="qbadge sa">Q5 · Application</span><span class="qtext">A well-designed U.S. study shows a math program raised achievement. Before recommending it for São Paulo, which throughline concept must you apply, and what two questions does it ask?</span></summary>
+      <div class="def">
+        <strong>Relevance</strong> — whether findings gathered "there and then" apply "here and now." Ask: <strong>(1)</strong> What inferences from the study would inform or apply to São Paulo's Grand Challenge? and <strong>(2)</strong> How related are the study's setting and sample to São Paulo's context, priorities, and needs — and how or why would any differences matter? High quality alone isn't enough; a strong finding from elsewhere still has to be reasoned into São Paulo's context.
+        <span class="eg">Non-São-Paulo evidence isn't irrelevant — it just takes more work to establish how it applies.</span>
+      </div>
+    </details>
+
+    <div class="disc">
+      <h3>Discussion prompts</h3>
+      <ol>
+        <li>Pick one figure or claim from the OECD reading. Walk it up the ladder of inference: what is the raw <em>data</em>, what did the authors <em>select</em>, how did they <em>interpret</em> it, and what <em>conclusion / action</em> follows? Where, if anywhere, might they be climbing too fast?</li>
+        <li>The course adopts a post-positivist stance while insisting all paradigms are equally valid. Is there tension there? For São Paulo's Grand Challenge, when might interpretivist, participatory, or critical evidence reveal something post-positivist evidence would miss?</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">§</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it. These are the Session 1 vocabulary plus key terms from the videos.</p>
+
+    <details>
+      <summary>inference</summary>
+      <div class="def">A conclusion drawn on the basis of reasoning and evidence. Making <em>sound</em> inferences — and spotting when a claim outruns its evidence — is the central activity of the whole course.
+        <span class="eg">"Brazil has deep-rooted inequality" is an inference; the income-decile figures are the data behind it.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>affordance</summary>
+      <div class="def">What a given type of evidence <em>lets you do</em> — the question it can answer and the kind of inference it can support. Each of the four evidence types has a different one, so no single type is universally "best."
+        <span class="eg">Descriptive evidence affords "what is happening?"; causal evidence affords "is X causing an impact?"</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>quality</summary>
+      <div class="def">How well a study's claims are supported by the <em>type</em> of evidence it uses. Each evidence type is evaluated on its own terms, but two questions always apply: <em>How well-supported are the claims?</em> and <em>What are the limitations — what claims can't we make?</em>
+        <span class="eg">Higher quality → stronger inferences. Knowing the limits → fewer inappropriate inferences.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>relevance</summary>
+      <div class="def">Whether high-quality findings actually apply to <em>your</em> context — how evidence collected "there and then" transfers "here and now." Ask what inferences would apply to São Paulo, and how similar the setting and sample are (and whether the differences matter).
+        <span class="eg">A finding needn't be about São Paulo to be relevant — it just takes more reasoning to apply it.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>ladder of inference</summary>
+      <div class="def">A model that breaks inference into steps — <strong>data → select data → interpret → conclude → act</strong> — to show where reasoning can go wrong. Staying low on the ladder (naming observations before interpretations) keeps conclusions grounded in the data.
+        <span class="eg">"Jumping the ladder" = drawing conclusions without the supporting data.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>confirmation bias</summary>
+      <div class="def">The human tendency to seek out and accept information that confirms our pre-existing beliefs while minimizing or ignoring evidence for other explanations. It's asymmetric — we scrutinize arguments we disagree with far more than ones we agree with.
+        <span class="eg">Counter it by staying low on the ladder: name the data before endorsing the conclusion.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>the four evidence types</summary>
+      <div class="def"><strong>Descriptive</strong> (what is happening? — quantitative or qualitative), <strong>causal</strong> (is X causing an impact? — experiments &amp; quasi-experiments), <strong>synthetic</strong> (what do we already know? — synthesizes prior research), and <strong>process</strong> (how and why?). One study can contain several types at once.
+      </div>
+    </details>
+
+    <details>
+      <summary>paradigm</summary>
+      <div class="def">The worldview that structures a researcher's approach to knowledge — their research goals, conventions for collecting/analyzing data, and standards for what counts as good research. Two researchers in different paradigms can see different things in the same data (the duck–rabbit).
+        <span class="eg">Five discussed: positivism, post-positivism, interpretivism, participatory, critical.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>post-positivism</summary>
+      <div class="def">The paradigm assuming there is an objective truth, but that we capture only facets of it — with error — by <strong>triangulating</strong> multiple data sources. The dominant paradigm in education policy/practice, and the stance the Evidence course adopts (for that reason, not because it's "best").
+        <span class="eg">Contrast positivism, which holds the full truth is discoverable if methods are careful enough.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>triangulation</summary>
+      <div class="def">Using multiple sources or types of data to converge on a finding, since any single source captures only part of the truth (with error). A hallmark move of the post-positivist paradigm.
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>Each form of evidence has a unique affordance</strong> — it answers a different question and licenses a different inference. Use the right type for the claim you want to make.</li>
+      <li><strong>Four types:</strong> descriptive (what?), causal (is X causing it?), synthetic (what do we know?), process (how &amp; why?). A single study can mix them.</li>
+      <li><strong>Three throughlines run the whole course:</strong> inference (draw sound conclusions), quality (how well evidence supports its claims, judged on its own terms), and relevance ("there and then" → "here and now").</li>
+      <li><strong>Climb the ladder carefully.</strong> Data → select → interpret → conclude → act. Name the observation before the interpretation, and you'll dodge confirmation bias.</li>
+      <li><strong>Paradigms are lenses,</strong> not rankings. No paradigm is more valid or biased; the course works in post-positivism because it dominates policy — while treating all paradigms as equally valid.</li>
+      <li><strong>The Grand Challenge:</strong> improve math, reading &amp; science achievement for São Paulo students in years 6–9 — your culminating assignment, built from all four evidence types.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 1 · study notes · Harvard content paraphrased for personal study</footer>
+
+</div>
+</body>
+</html>
