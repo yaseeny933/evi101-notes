@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 3 — Descriptive Qualitative Evidence · Study Notes</title>
+<style>
+  :root{
+    --ink:#132a26;
+    --ink-soft:#3f5a54;
+    --paper:#eef6f3;
+    --teal:#1f7d70;
+    --teal-bright:#2ca592;
+    --teal-deep:#0f544a;
+    --amber:#c9812a;
+    --rose:#c25577;
+    --line:#cfe4de;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(15,84,74,.12);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(44,165,146,.10) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(31,125,112,.07) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#0b3d36,#0f544a 55%,#1f7d70);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#a9e4d8;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#dcf3ee;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--teal);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--teal-deep);background:rgba(31,125,112,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--teal-bright);
+    background:linear-gradient(90deg,rgba(44,165,146,.10),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--teal)}
+
+  /* what-is-happening motif */
+  .openbox{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .ob-node{background:#fff;border:2px solid var(--teal);color:var(--teal);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .ob-mind{background:#fff;border:2px dashed var(--teal-bright);color:var(--teal-deep);
+    padding:12px 18px;border-radius:12px;position:relative;text-align:center;font-weight:700;font-size:.82rem}
+  .ob-mind small{display:block;font-size:.62rem;letter-spacing:.1em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .ob-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* contrast table */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  table.vs thead th:nth-child(2){color:var(--ink-soft)}
+  table.vs thead th:nth-child(3){color:var(--teal)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  table.vs tr td:nth-child(3){background:rgba(44,165,146,.06)}
+
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+
+  /* two-logic side-by-side svg holder */
+  .logicfig{margin:6px 0 2px}
+
+  /* quality-factor cards */
+  .q-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
+  .q{background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal-bright);
+    border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+  .q b{color:var(--teal);display:block;font-size:.98rem;margin-bottom:4px}
+  .q span{font-size:.88rem;color:var(--ink-soft)}
+
+  /* essential questions */
+  .eq{counter-reset:eq;margin-top:12px}
+  .eqrow{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow)}
+  .eqrow::before{counter-increment:eq;content:counter(eq);
+    flex:0 0 38px;height:38px;border-radius:50%;
+    background:var(--teal);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .eqrow .body{flex:1}
+  .eqrow .idea{font-style:italic;color:var(--ink)}
+  .eqrow .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .eqrow .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal-deep);background:rgba(31,125,112,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* quote block */
+  .quote{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);
+    border-radius:12px;padding:14px 18px;margin-top:12px;box-shadow:var(--shadow);
+    font-size:.95rem}
+  .quote .src{display:block;margin-top:8px;font-family:"SF Mono",monospace;
+    font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* nuance / watch-out callout */
+  .nuance{background:#fff8ef;border:1px solid #edd9b6;border-left:6px solid var(--amber);
+    border-radius:12px;padding:18px 22px;margin-top:16px;box-shadow:var(--shadow)}
+  .nuance h3{margin:0 0 6px;color:var(--amber);display:flex;align-items:center;gap:8px}
+  .nuance ul{margin:10px 0 0;padding-left:0;list-style:none}
+  .nuance li{padding:7px 0 7px 26px;position:relative;font-size:.95rem;color:var(--ink)}
+  .nuance li::before{content:"⚠";position:absolute;left:0;color:var(--amber);font-size:.9rem}
+  .nuance li b{color:var(--teal-deep)}
+
+  /* application two-claim */
+  .claims{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .claim{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px;box-shadow:var(--shadow)}
+  .claim h4{margin:0 0 6px;font-size:1rem;display:flex;align-items:center;gap:8px}
+  .claim.c1 h4{color:var(--teal)}
+  .claim.c2 h4{color:var(--rose)}
+  .claim .pg{font-family:"SF Mono",monospace;font-size:.62rem;color:var(--ink-soft)}
+  .claim p{font-size:.9rem;margin:8px 0 0}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.a{background:rgba(31,125,112,.14);color:var(--teal)}
+  .pill.b{background:rgba(194,85,119,.14);color:var(--rose)}
+  .evrow{margin-top:14px}
+  .evrow .ev{background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin-top:10px;box-shadow:var(--shadow);font-size:.92rem}
+  .evrow .ev b{color:var(--teal-deep)}
+
+  /* iRAT quiz */
+  .quiz details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--ink);
+    font-size:1rem;list-style:none;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .quiz summary::-webkit-details-marker{display:none}
+  .quiz summary::after{content:"answer ▸";font-family:"SF Mono",monospace;font-size:.66rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;margin-top:2px}
+  .quiz details[open] summary::after{content:"hide ▾"}
+  .quiz details[open] summary{border-bottom:1px solid var(--line)}
+  .quiz .qn{font-family:"SF Mono",monospace;color:var(--teal);font-size:.8rem;margin-right:6px}
+  .quiz .opts{padding:4px 18px 0;margin:0;color:var(--ink-soft);font-size:.9rem;list-style:none}
+  .quiz .opts li{padding:3px 0}
+  .quiz .ans{padding:14px 18px;color:var(--ink-soft);font-size:.95rem}
+  .quiz .ans b{color:var(--teal-deep)}
+  .disc{background:linear-gradient(90deg,rgba(44,165,146,.08),#fff 60%);
+    border-left:6px solid var(--teal-bright);border-radius:12px;padding:14px 20px;margin-top:14px}
+  .disc p{margin:6px 0;font-size:.95rem}
+  .disc .lbl{font-family:"SF Mono",monospace;font-size:.66rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal);font-weight:700}
+
+  /* glossary */
+  .gloss details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--teal);
+    font-size:1.05rem;list-style:none;display:flex;align-items:center;justify-content:space-between}
+  .gloss summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal-bright);letter-spacing:.08em;text-transform:uppercase}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+
+  /* readings */
+  .readings{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;box-shadow:var(--shadow);margin-top:14px}
+  .readings ul{margin:8px 0 0;padding-left:20px}
+  .readings li{margin:8px 0;font-size:.95rem}
+  .readings .note{font-family:"SF Mono",monospace;font-size:.68rem;color:var(--ink-soft);
+    letter-spacing:.04em;text-transform:uppercase;margin-top:12px}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#0b3d36,#0f544a);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#a9e4d8;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#7fd7c6}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .claims,.q-grid{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .eqrow::before{flex-basis:32px;height:32px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details,.quiz details{break-inside:avoid}
+    .gloss .def,.quiz .ans,.quiz .opts{display:block !important}
+    details:not([open]) .def,details:not([open]) .ans{display:block}
+    .card,.eqrow,.q,.claim,.gloss details,.quiz details{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 3</p>
+    <h1>Descriptive Qualitative Evidence</h1>
+    <p class="sub">Same question as the numbers — "What is happening?" — answered in <em>words</em>. The big idea: <strong>for depth, choose cases that illustrate the phenomenon.</strong></p>
+    <div class="tags">
+      <span class="tag">case logic</span>
+      <span class="tag">purposeful sampling</span>
+      <span class="tag">palpability · heterogeneity</span>
+      <span class="tag">the Calarco study</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea</h2>
+    <p class="lead">Descriptive qualitative evidence answers the same question as descriptive quantitative evidence — <strong>"What is happening?"</strong> — but it describes "what is" in <strong>words</strong> rather than numbers, and it takes a very different route to get there.</p>
+
+    <div class="bigidea">
+      The goal of qualitative research is <strong>not</strong> to produce findings that generalize to a whole population. Its goal is <strong>depth</strong>: a detailed explanation of a <strong>particular phenomenon</strong> in a specific setting. Quantitative descriptive evidence gives you <strong>breadth</strong> (what's happening across a city, state, or nation); qualitative gives you <strong>depth</strong> (what's happening, richly, in one place).
+    </div>
+
+    <div class="card">
+      <div class="openbox">
+        <div class="ob-node">A QUESTION<br>"What is happening?"</div>
+        <span class="ob-arrow">→</span>
+        <div class="ob-mind">QUALITATIVE ROUTE<small>few cases · words · rich context · depth</small></div>
+        <span class="ob-arrow">→</span>
+        <div class="ob-node">DEPTH<br>detailed explanation<br>of one phenomenon</div>
+      </div>
+      <p class="figcap">The OECD/PISA report and the Calarco study both illuminate socioeconomic inequality — one by breadth, one by depth. Complementary, not competing.</p>
+    </div>
+
+    <p>Qualitative approaches are especially well suited to understanding people's <strong>beliefs, experiences, and motivations</strong>. Researchers work mostly with text-based data — interviews, observations, focus groups, documents — and <strong>code</strong> it (tag it with meaningful category labels), then group codes into <strong>themes</strong>: recurring patterns and significant ideas that reveal the deeper story in participants' words and actions. As Denzin and Lincoln put it, qualitative researchers "study things in their natural settings, attempting to make sense of&hellip; phenomena in terms of the meanings people bring to them."</p>
+  </section>
+
+  <!-- ===== 02 CASE VS SAMPLING LOGIC ===== -->
+  <section>
+    <h2><span class="num">02</span> Case logic vs. sampling logic</h2>
+    <p>This is the key contrast with Session 2. Both approaches must choose <em>who</em> to study — but they choose in opposite ways, for opposite reasons.</p>
+
+    <div class="card logicfig">
+      <svg viewBox="0 0 760 300" role="img" aria-label="Sampling logic draws a representative random sample to stand for a population; case logic selects a few cases purposefully to illustrate a phenomenon in depth" style="width:100%;height:auto">
+        <!-- divider -->
+        <line x1="380" y1="20" x2="380" y2="280" stroke="#cfe4de" stroke-width="2" stroke-dasharray="5 6"></line>
+        <!-- titles -->
+        <text x="190" y="34" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="14" font-weight="700" fill="#3f5a54">SAMPLING LOGIC</text>
+        <text x="570" y="34" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="14" font-weight="700" fill="#1f7d70">CASE LOGIC</text>
+        <text x="190" y="52" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#7f948e">few → represent the many</text>
+        <text x="570" y="52" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#2ca592">few → illustrate in depth</text>
+
+        <!-- LEFT: population cloud of many dots, a random sample circled, arrow to a bar -->
+        <g fill="#b7cfc9">
+          <circle cx="95" cy="95" r="5"></circle><circle cx="120" cy="120" r="5"></circle>
+          <circle cx="150" cy="92" r="5"></circle><circle cx="180" cy="118" r="5"></circle>
+          <circle cx="110" cy="150" r="5"></circle><circle cx="205" cy="150" r="5"></circle>
+          <circle cx="80" cy="125" r="5"></circle><circle cx="235" cy="110" r="5"></circle>
+          <circle cx="160" cy="150" r="5"></circle><circle cx="240" cy="145" r="5"></circle>
+          <circle cx="130" cy="95" r="5"></circle><circle cx="215" cy="90" r="5"></circle>
+        </g>
+        <!-- randomly selected members -->
+        <g fill="#3f5a54">
+          <circle cx="120" cy="120" r="5.5"></circle><circle cx="205" cy="150" r="5.5"></circle>
+          <circle cx="215" cy="90" r="5.5"></circle><circle cx="110" cy="150" r="5.5"></circle>
+        </g>
+        <text x="160" y="185" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#7f948e">random draw from a population</text>
+        <path d="M160 205 L160 225" stroke="#3f5a54" stroke-width="2" marker-end="url(#arrL)"></path>
+        <defs>
+          <marker id="arrL" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#3f5a54"></path></marker>
+          <marker id="arrR" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#1f7d70"></path></marker>
+        </defs>
+        <rect x="95" y="232" width="130" height="42" rx="8" fill="#fff" stroke="#3f5a54" stroke-width="2"></rect>
+        <text x="160" y="252" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#3f5a54">generalize to</text>
+        <text x="160" y="266" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" font-weight="700" fill="#3f5a54">the whole population</text>
+
+        <!-- RIGHT: one setting, chosen on purpose, zoomed for depth -->
+        <circle cx="500" cy="120" r="6" fill="#cfe4de"></circle>
+        <circle cx="640" cy="100" r="6" fill="#cfe4de"></circle>
+        <circle cx="620" cy="165" r="6" fill="#cfe4de"></circle>
+        <circle cx="490" cy="170" r="6" fill="#cfe4de"></circle>
+        <!-- the purposefully chosen case, magnified -->
+        <circle cx="570" cy="128" r="40" fill="#e3f4f0" stroke="#1f7d70" stroke-width="3"></circle>
+        <text x="570" y="122" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" font-weight="700" fill="#0f544a">ONE case</text>
+        <text x="570" y="137" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#0f544a">chosen on purpose</text>
+        <!-- magnifier handle -->
+        <line x1="599" y1="157" x2="618" y2="176" stroke="#1f7d70" stroke-width="4" stroke-linecap="round"></line>
+        <text x="570" y="192" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#2ca592">purposeful selection · high exposure</text>
+        <path d="M570 205 L570 225" stroke="#1f7d70" stroke-width="2" marker-end="url(#arrR)"></path>
+        <rect x="505" y="232" width="130" height="42" rx="8" fill="#e3f4f0" stroke="#1f7d70" stroke-width="2"></rect>
+        <text x="570" y="252" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#0f544a">illustrate the</text>
+        <text x="570" y="266" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" font-weight="700" fill="#0f544a">phenomenon in depth</text>
+      </svg>
+      <p class="figcap">Left: the OECD/PISA logic — a representative random sample stands in for everyone. Right: the Calarco logic — a few cases, chosen deliberately, reveal a phenomenon richly.</p>
+    </div>
+
+    <div class="card" style="padding:6px 10px">
+      <table class="vs">
+        <thead>
+          <tr><th></th><th>Sampling logic (quant.)</th><th>Case logic (qual.)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Goal</td><td>Breadth — describe a whole population</td><td>Depth — explain one phenomenon richly</td></tr>
+          <tr><td>How cases are picked</td><td>Randomly / to be representative</td><td>Purposefully, to illustrate a theory or context</td></tr>
+          <tr><td>What matters about the sample</td><td>Size &amp; representativeness</td><td>Exposure — time spent with participants</td></tr>
+          <tr><td>Key virtue</td><td>Generalizability</td><td>Illustrating perspectives &amp; context</td></tr>
+          <tr><td>"Is it representative?"</td><td>Central question</td><td>Usually not the central question</td></tr>
+          <tr><td>Example</td><td>OECD/PISA across nations</td><td>Calarco in one school, two years</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bigidea">
+      <strong>Exposure, not size.</strong> Imagine Calarco had visited 50 classrooms for one day each. She would have <em>more</em> cases but <em>shallower</em> data. By spending two years in <strong>one</strong> school, she gained the depth, trust, and rapport (cognitive empathy) that let her see how context shapes behavior. In case logic, more time in fewer places usually beats more places for less time.
+    </div>
+  </section>
+
+  <!-- ===== 03 WHAT QUALITY LOOKS LIKE ===== -->
+  <section>
+    <h2><span class="num">03</span> What high-quality qualitative evidence looks like</h2>
+    <p>Because quantitative norms (generalizability, randomization) came to dominate social science, people often <em>misapplied</em> those criteria to qualitative work and judged it "not rigorous." That's a paradigm error. Qualitative evidence should be judged on its own terms. Calarco &amp; Small name five quality factors — <strong>cognitive empathy, heterogeneity, palpability, follow-up, self-awareness</strong>. A strong study needn't have all five. This session focuses on three:</p>
+
+    <div class="q-grid">
+      <div class="q"><b>Palpability</b><span>Concrete, not abstract. Participants' <em>own words</em> — quotes and rich descriptions — so we see the world through their eyes, not just the researcher's summary.</span></div>
+      <div class="q"><b>Heterogeneity</b><span>People shown as full, complex, sometimes contradictory humans — not stereotyped or oversimplified. Shows variation and exceptions within a group.</span></div>
+      <div class="q"><b>Follow-up</b><span>Did researchers adapt over time — track how the context changed, chase new questions that arose during the study itself?</span></div>
+    </div>
+
+    <p style="margin-top:18px">These map onto the <strong>three essential quality questions</strong> for evaluating any descriptive qualitative study:</p>
+    <div class="eq">
+      <div class="eqrow">
+        <div class="body">
+          <p class="idea">How well does the study select participants or cases <strong>purposefully</strong> to address the research question?</p>
+          <p class="mech"><b>case logic</b> The cases chosen should give a real chance to examine the context, experience, or process the question is about. Representativeness is not the test; fit-to-question and exposure are.</p>
+        </div>
+      </div>
+      <div class="eqrow">
+        <div class="body">
+          <p class="idea">How well does the study <strong>illustrate participants' perspectives</strong>?</p>
+          <p class="mech"><b>palpability</b> Look for quotes and paraphrases in participants' own words — concrete scenes, not abstract claims.</p>
+        </div>
+      </div>
+      <div class="eqrow">
+        <div class="body">
+          <p class="idea">How well does the study <strong>describe the context</strong> of participants' experiences?</p>
+          <p class="mech"><b>heterogeneity + follow-up</b> Rich context signals strong exposure; it lets us see people as diverse and complex and see how the setting changed over time.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Palpability in Calarco — Anna &amp; Ms. Dunham (p. 869)</h3>
+    <div class="quote">
+      "Anna looks up at Ms. Dunham and calls out loudly: <em>'Ms. Dunham, I need help! Ms. Dunham!'</em> &hellip; Ms. Dunham nods, noting distractedly: <em>'I'll be there soon.'</em> Anna, however, does not give up, adding: <em>'I can't get it to stay so I can do 170 degrees!'</em>"
+      <span class="src">Calarco (2011), p. 869 — hearing it in their own voices makes the finding palpable</span>
+    </div>
+
+    <h3>Heterogeneity in Calarco — Jesse (p. 870)</h3>
+    <div class="quote">
+      Called on to read, Jesse "frantically scans the page, his eyes growing big and fearful." Ms. Dunham quietly feeds him the line ("Mercy went&hellip; page 206"); he answers "oh, OK" and reads on. Yet Jesse "was usually outgoing and eager to participate&hellip; but he rarely asked for help."
+      <span class="src">Calarco (2011), p. 870 — one scene shows contradiction within a single child; strip the context and you lose his full humanity</span>
+    </div>
+    <p style="font-size:.92rem;color:var(--ink-soft)">Context detail — "while the brown brick building is old, Maplewood's classrooms are clean, colorful, and brightly lit" — signals the deep exposure that makes heterogeneity possible. On <strong>follow-up</strong>, we see little in "I need help!"; the informed guess is that two years in the school revealed no major contextual changes — and a study needn't show all five factors to be high quality.</p>
+  </section>
+
+  <!-- ===== NUANCE / WATCH-OUTS ===== -->
+  <section>
+    <div class="nuance">
+      <h3>⚑ Nuance &amp; watch-outs</h3>
+      <ul>
+        <li><b>Qualitative ≠ "just anecdotes."</b> Systematic coding, iterative rounds of data collection, and thematic saturation make this rigorous evidence — not a pile of stories.</li>
+        <li><b>A small, non-random sample is a feature here, not a flaw.</b> The goal is depth, not generalization, so "n is tiny" and "it's not representative" are the wrong complaints for case-logic work.</li>
+        <li><b>Don't judge qualitative work by quantitative criteria.</b> Asking whether Calarco's findings "generalize to all schools" makes as little sense as asking whether PISA can tell you about one classroom in São Paulo. Match the criteria to the paradigm.</li>
+        <li><b>Palpability is not cherry-picking.</b> Good quotes illustrate patterns that emerged from saturated, coded data. Hand-picking a few vivid lines to prove a point you already decided on is the opposite of quality.</li>
+        <li><b>Depth is a trade-off, not a free lunch.</b> One deeply-studied school buys rich understanding but cannot, by itself, tell you how common the pattern is. That's what quantitative breadth is for — the two are complementary.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 04 CALARCO STUDY ===== -->
+  <section>
+    <h2><span class="num">04</span> The Calarco study — "I need help!"</h2>
+    <p>Jessica Calarco spent <strong>two years</strong> observing and interviewing children and teachers at <strong>Maplewood Elementary</strong>, studying how students of different <strong>social-class backgrounds seek help</strong> in class. Her key finding: <strong>children play an active role in shaping their own classroom experiences</strong> — they are not passive recipients of what teachers hand out.</p>
+
+    <div class="bigidea">
+      <strong>The cultural-capital mechanism.</strong> Teachers and rules gave little explicit guidance about <em>when</em> and <em>how</em> to seek help. Into that vacuum, students drew on their <strong>class backgrounds</strong>: middle-class children more readily and assertively requested help (calling out, persisting, negotiating), while working-class children tended to work through problems on their own. Those help-seeking strategies only become <strong>cultural capital</strong> — yielding real advantages — <em>when they align with what the institution rewards.</em> Same behaviors, different payoff depending on fit with the setting.</p>
+    </div>
+
+    <p>The study is a model of case logic: one purposefully-chosen site, deep exposure, participants' own voices (Anna, Jesse, Ms. Dunham), and careful context — all in service of explaining a phenomenon in depth, not estimating a population.</p>
+  </section>
+
+  <!-- ===== TODAY'S APPLICATION ===== -->
+  <section>
+    <h2><span class="num">✎</span> Today's application</h2>
+    <p>There's no correct answer — the task is to <strong>use the language of evidence</strong> to argue for one choice. <em>Which of two claims from Calarco gives the stronger rationale that Brazilian teachers should encourage and recognize varied forms of help-seeking across socioeconomic backgrounds?</em> Then find <strong>two examples of data</strong> (quotes or observations) that back the claim you pick.</p>
+
+    <div class="claims">
+      <div class="claim c1">
+        <h4>Claim 1 <span class="pill a">alignment</span></h4>
+        <span class="pg">p. 879</span>
+        <p>Help-seeking becomes cultural capital only when students' propensities/strategies <strong>align with institutional conditions</strong>, yielding "profits" in the classroom and beyond.</p>
+      </div>
+      <div class="claim c2">
+        <h4>Claim 2 <span class="pill b">vacuum → class</span></h4>
+        <span class="pg">p. 878</span>
+        <p>Teachers and rules gave <strong>little explicit guidance</strong> on when/how to seek help, so students drew on their <strong>class backgrounds</strong> to handle school problems.</p>
+      </div>
+    </div>
+
+    <div class="evrow">
+      <p style="font-size:.92rem;color:var(--ink-soft);margin-bottom:2px">A worked example — arguing <strong>Claim 1</strong> (teachers should recognize varied help-seeking because payoff depends on institutional <em>fit</em>, which teachers control):</p>
+      <div class="ev"><b>Data example A —</b> Anna (p. 869) calls out loudly and repeatedly until Ms. Dunham comes. The assertive strategy "pays off" only because the classroom tolerates and rewards calling out — evidence that the <em>institution's response</em>, not the behavior alone, converts help-seeking into advantage.</div>
+      <div class="ev"><b>Data example B —</b> Jesse (p. 870) rarely asks for help, yet gets quietly rescued by Ms. Dunham feeding him the line. His need is met only because the teacher happened to notice — showing that when strategies <em>don't</em> align with explicit norms, whether they "profit" is left to teacher discretion. If teachers deliberately recognized quieter help-seeking, the payoff would be less arbitrary.</div>
+      <p style="font-size:.86rem;color:var(--ink-soft);margin-top:10px">↳ Whichever claim you choose, name the evidence factor you're leaning on (palpability of the quotes, heterogeneity across Anna vs. Jesse) and tie each data example explicitly back to the claim.</p>
+    </div>
+  </section>
+
+  <!-- ===== iRAT PREP ===== -->
+  <section class="quiz">
+    <h2><span class="num">✓</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer before you reveal. Multiple-choice items mimic the readiness quiz; the last two are discussion prompts for class.</p>
+
+    <details>
+      <summary><span><span class="qn">Q1</span>A researcher spends two years in a single school to richly explain how help-seeking works there. This is an example of&hellip;</span></summary>
+      <ul class="opts">
+        <li>A. Sampling logic</li>
+        <li>B. Case logic</li>
+        <li>C. Random sampling</li>
+        <li>D. Post-positivist generalization</li>
+      </ul>
+      <div class="ans"><b>B — Case logic.</b> Cases are chosen purposefully to illustrate a phenomenon in depth, not to represent a population. The long stay is about maximizing <em>exposure</em>, not sample size.</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q2</span>Which is a genuine <em>strength</em> of high-quality qualitative descriptive evidence?</span></summary>
+      <ul class="opts">
+        <li>A. It generalizes findings to an entire population</li>
+        <li>B. It uses a large random sample</li>
+        <li>C. It palpably illustrates participants' perspectives in their own words</li>
+        <li>D. It eliminates researcher interpretation entirely</li>
+      </ul>
+      <div class="ans"><b>C — Palpability.</b> Concrete quotes and rich descriptions let us see the world through participants' eyes. A, B, and D are quantitative virtues (or impossible ideals) misapplied to qualitative work.</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q3</span>Criticizing Calarco's study because "the sample is too small to generalize" is&hellip;</span></summary>
+      <ul class="opts">
+        <li>A. A fair critique that undermines the study</li>
+        <li>B. A misapplication of quantitative criteria to qualitative evidence</li>
+        <li>C. Evidence the study lacks thematic saturation</li>
+        <li>D. A problem of low exposure</li>
+      </ul>
+      <div class="ans"><b>B.</b> Generalizing to a population was never the goal; depth was. Judging case-logic work by sampling-logic standards is a paradigm error. (Small non-random samples are a <em>feature</em> here.)</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q4</span>Calarco shows Jesse as usually outgoing yet frozen and silent when called on to read. Which quality factor does this best illustrate?</span></summary>
+      <ul class="opts">
+        <li>A. Follow-up</li>
+        <li>B. Generalizability</li>
+        <li>C. Heterogeneity</li>
+        <li>D. Randomization</li>
+      </ul>
+      <div class="ans"><b>C — Heterogeneity.</b> Showing contradiction and complexity within a single participant (outgoing overall, but rarely asks for help) portrays him as a full human being and avoids stereotyping.</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q5</span>In case logic, when choosing whom to study, the priority is usually&hellip;</span></summary>
+      <ul class="opts">
+        <li>A. Sample size over exposure</li>
+        <li>B. Exposure over sample size</li>
+        <li>C. Representativeness over context</li>
+        <li>D. Random selection over purposeful selection</li>
+      </ul>
+      <div class="ans"><b>B — Exposure over size.</b> More time with fewer participants generates depth, trust/rapport, and cognitive empathy — the opposite of the breadth-first quantitative priority.</div>
+    </details>
+
+    <div class="disc">
+      <p><span class="lbl">Discussion 1</span></p>
+      <p>Calarco's study shows little evidence of <strong>follow-up</strong>. Does that weaken it? Argue using the idea that a study needn't display all five quality factors to be high quality — and say what follow-up would even look like here.</p>
+      <p style="margin-top:14px"><span class="lbl">Discussion 2</span></p>
+      <p>How do breadth (OECD/PISA) and depth (Calarco) <strong>complement</strong> each other on the topic of socioeconomic inequality? Give one question only the quantitative study can answer and one only the qualitative study can.</p>
+    </div>
+  </section>
+
+  <!-- ===== GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">§</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it.</p>
+
+    <details>
+      <summary>case logic</summary>
+      <div class="def">Selecting cases <em>intentionally / purposefully</em> because they illustrate a theory, context, or phenomenon of interest — <strong>not</strong> to represent a broader population. The organizing logic of qualitative sampling and the big idea of the day.
+        <span class="eg">Calarco chose one school and stayed two years to illustrate class-based help-seeking in depth.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>purposeful sampling</summary>
+      <div class="def">Choosing participants or cases <em>on purpose</em> because they give a good opportunity to examine the context, experience, or process central to the research question — as opposed to random or representative sampling.
+        <span class="eg">The first essential quality question asks exactly this: were cases selected purposefully to address the research question?</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>exposure</summary>
+      <div class="def">The amount of <strong>time a researcher spends with participants</strong>. In case logic, exposure matters more than sample size — it builds trust and rapport (cognitive empathy) and deepens understanding of how context shapes behavior.
+        <span class="eg">Two years in one school = high exposure and deep data; one day in 50 schools = low exposure and shallow data.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>palpability</summary>
+      <div class="def">Whether the evidence is <strong>concrete rather than abstract</strong> — how well the study illustrates participants' perspectives and behaviors through quotes or rich descriptions, ideally in their <em>own words</em>, so we see the world through their eyes.
+        <span class="eg">Anna's "Ms. Dunham, I need help!" makes the finding palpable.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>heterogeneity</summary>
+      <div class="def">Portraying participants and contexts as <strong>diverse, full, and complex</strong> — not stereotyped or oversimplified. It can show contradiction within one person, variation within a group, or exceptions. Rich context and strong exposure make it possible, and it guards against inaccurate generalizations.
+        <span class="eg">Jesse is outgoing yet freezes and rarely asks for help — complexity within a single child.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>thematic saturation</summary>
+      <div class="def">The point in iterative rounds of data collection and coding where researchers <strong>keep seeing similar patterns</strong> across cases and gathering or analyzing more data <em>reveals no new insights</em>. A signal that the themes are well-grounded.
+        <span class="eg">You stop collecting when new classrooms stop teaching you anything new.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>follow-up</summary>
+      <div class="def">How well researchers <strong>adapted over time</strong> — tracking how the research context changed, or collecting new data to answer questions that arose <em>during</em> the study itself. One of Calarco &amp; Small's five quality factors; part of describing context.
+        <span class="eg">"I need help!" shows little follow-up — plausibly because two years revealed no major changes in the setting.</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== READINGS ===== -->
+  <section>
+    <h2><span class="num">⌘</span> Readings</h2>
+    <div class="readings">
+      <ul>
+        <li><strong>Calarco, J. M. (2011).</strong> "I need help!" Social class and children's help-seeking in elementary school. <em>American Sociological Review, 76</em>(6), 862–882. — the study under evaluation; source of the Anna, Jesse, and Ms. Dunham scenes and the two application claims (pp. 878–879).</li>
+        <li><strong>Small, M. L., &amp; Calarco, J. (2022).</strong> <em>Qualitative Literacy: A Guide to Evaluating Ethnographic and Interview Research.</em> University of California Press. Introduction: <strong>pp. 8–9 and 18–22 only</strong> — the quality-factor framework (cognitive empathy, heterogeneity, palpability, follow-up, self-awareness).</li>
+      </ul>
+      <p class="note">Access via the course Library Reserves page.</p>
+    </div>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>Same question, different route.</strong> Qualitative descriptive evidence answers "What is happening?" in <strong>words</strong>, aiming for <strong>depth</strong> in one setting — not generalization to a population.</li>
+      <li><strong>Case logic, not sampling logic.</strong> Cases are chosen <em>purposefully</em> to illustrate a phenomenon, not drawn randomly to represent the many.</li>
+      <li><strong>Exposure over size.</strong> Time with participants beats number of participants — it buys depth, trust, and cognitive empathy.</li>
+      <li><strong>Quality = palpability + heterogeneity + context</strong> (plus cognitive empathy, follow-up, self-awareness). Judge it on qualitative terms, never by quantitative criteria.</li>
+      <li><strong>Calarco's finding:</strong> children actively shape their classroom lives; class-based help-seeking becomes <strong>cultural capital</strong> only when it <em>aligns with</em> what the institution rewards.</li>
+      <li><strong>Not just anecdotes.</strong> Systematic coding to thematic saturation makes small, non-random qualitative work rigorous — depth is the point.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 3 · study notes</footer>
+
+</div>
+</body>
+</html>
