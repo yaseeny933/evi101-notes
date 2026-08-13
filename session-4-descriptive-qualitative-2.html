@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 4 — Descriptive Qualitative Evidence, Day 2 · Study Notes</title>
+<style>
+  :root{
+    --ink:#221830;
+    --ink-soft:#4f4165;
+    --paper:#f4f0f8;
+    --plum:#6d4a8f;
+    --plum-bright:#8a63ad;
+    --plum-deep:#4a2f6b;
+    --amber:#c9812a;
+    --rose:#c2557a;
+    --line:#e0d5ec;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(74,47,107,.12);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(138,99,173,.10) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(109,74,143,.07) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#33204d,#4a2f6b 55%,#6d4a8f);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#d6c4ec;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#ede4f6;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--plum);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--plum-deep);background:rgba(109,74,143,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--plum-bright);
+    background:linear-gradient(90deg,rgba(138,99,173,.10),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--plum)}
+
+  /* core-idea motif */
+  .openbox{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .ob-node{background:#fff;border:2px solid var(--plum);color:var(--plum);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .ob-mind{background:#fff;border:2px dashed var(--plum-bright);color:var(--plum-deep);
+    padding:12px 18px;border-radius:12px;position:relative;text-align:center;font-weight:700;font-size:.82rem}
+  .ob-mind small{display:block;font-size:.62rem;letter-spacing:.1em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .ob-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* contrast table */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  table.vs thead th:nth-child(2){color:var(--ink-soft)}
+  table.vs thead th:nth-child(3){color:var(--plum)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  table.vs tr td:nth-child(3){background:rgba(138,99,173,.06)}
+
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+  .depthfig{margin:6px 0 2px}
+
+  /* quality-factor / mini cards */
+  .q-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
+  .q{background:#fff;border:1px solid var(--line);border-top:4px solid var(--plum-bright);
+    border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+  .q b{color:var(--plum);display:block;font-size:.98rem;margin-bottom:4px}
+  .q span{font-size:.88rem;color:var(--ink-soft)}
+
+  /* essential questions */
+  .eq{counter-reset:eq;margin-top:12px}
+  .eqrow{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow)}
+  .eqrow::before{counter-increment:eq;content:counter(eq);
+    flex:0 0 38px;height:38px;border-radius:50%;
+    background:var(--plum);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .eqrow .body{flex:1}
+  .eqrow .idea{font-style:italic;color:var(--ink)}
+  .eqrow .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .eqrow .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--plum-deep);background:rgba(109,74,143,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* quote block */
+  .quote{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);
+    border-radius:12px;padding:14px 18px;margin-top:12px;box-shadow:var(--shadow);
+    font-size:.95rem}
+  .quote .src{display:block;margin-top:8px;font-family:"SF Mono",monospace;
+    font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* nuance / watch-out callout */
+  .nuance{background:#fbf6ee;border:1px solid #ecd9b7;border-left:6px solid var(--amber);
+    border-radius:12px;padding:18px 22px;margin-top:16px;box-shadow:var(--shadow)}
+  .nuance h3{margin:0 0 6px;color:var(--amber);display:flex;align-items:center;gap:8px}
+  .nuance ul{margin:10px 0 0;padding-left:0;list-style:none}
+  .nuance li{padding:7px 0 7px 26px;position:relative;font-size:.95rem;color:var(--ink)}
+  .nuance li::before{content:"⚠";position:absolute;left:0;color:var(--amber);font-size:.9rem}
+  .nuance li b{color:var(--plum-deep)}
+
+  /* application two-option */
+  .claims{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .claim{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px;box-shadow:var(--shadow)}
+  .claim h4{margin:0 0 6px;font-size:1rem;display:flex;align-items:center;gap:8px}
+  .claim.c1 h4{color:var(--plum)}
+  .claim.c2 h4{color:var(--rose)}
+  .claim .pg{font-family:"SF Mono",monospace;font-size:.62rem;color:var(--ink-soft)}
+  .claim p{font-size:.9rem;margin:8px 0 0}
+  .claim ul{margin:8px 0 0;padding-left:18px;font-size:.86rem;color:var(--ink-soft)}
+  .claim li{margin:4px 0}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.a{background:rgba(109,74,143,.14);color:var(--plum)}
+  .pill.b{background:rgba(194,85,122,.14);color:var(--rose)}
+  .evrow{margin-top:14px}
+  .evrow .ev{background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin-top:10px;box-shadow:var(--shadow);font-size:.92rem}
+  .evrow .ev b{color:var(--plum-deep)}
+
+  /* iRAT quiz */
+  .quiz details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--ink);
+    font-size:1rem;list-style:none;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .quiz summary::-webkit-details-marker{display:none}
+  .quiz summary::after{content:"answer ▸";font-family:"SF Mono",monospace;font-size:.66rem;
+    color:var(--plum);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;margin-top:2px}
+  .quiz details[open] summary::after{content:"hide ▾"}
+  .quiz details[open] summary{border-bottom:1px solid var(--line)}
+  .quiz .qn{font-family:"SF Mono",monospace;color:var(--plum);font-size:.8rem;margin-right:6px}
+  .quiz .opts{padding:4px 18px 0;margin:0;color:var(--ink-soft);font-size:.9rem;list-style:none}
+  .quiz .opts li{padding:3px 0}
+  .quiz .ans{padding:14px 18px;color:var(--ink-soft);font-size:.95rem}
+  .quiz .ans b{color:var(--plum-deep)}
+  .disc{background:linear-gradient(90deg,rgba(138,99,173,.08),#fff 60%);
+    border-left:6px solid var(--plum-bright);border-radius:12px;padding:14px 20px;margin-top:14px}
+  .disc p{margin:6px 0;font-size:.95rem}
+  .disc .lbl{font-family:"SF Mono",monospace;font-size:.66rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--plum);font-weight:700}
+
+  /* glossary */
+  .gloss details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--plum);
+    font-size:1.05rem;list-style:none;display:flex;align-items:center;justify-content:space-between}
+  .gloss summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--plum-bright);letter-spacing:.08em;text-transform:uppercase}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+
+  /* readings */
+  .readings{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;box-shadow:var(--shadow);margin-top:14px}
+  .readings ul{margin:8px 0 0;padding-left:20px}
+  .readings li{margin:8px 0;font-size:.95rem}
+  .readings .note{font-family:"SF Mono",monospace;font-size:.68rem;color:var(--ink-soft);
+    letter-spacing:.04em;text-transform:uppercase;margin-top:12px}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#33204d,#4a2f6b);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#d6c4ec;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#c3a6e0}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .claims,.q-grid{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .eqrow::before{flex-basis:32px;height:32px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details,.quiz details{break-inside:avoid}
+    .gloss .def,.quiz .ans,.quiz .opts{display:block !important}
+    details:not([open]) .def,details:not([open]) .ans{display:block}
+    .card,.eqrow,.q,.claim,.gloss details,.quiz details{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 4</p>
+    <h1>Descriptive Qualitative Evidence — Day 2</h1>
+    <p class="sub">The big idea: <strong>cognitive empathy</strong>. For depth, step into other people's shoes and see the world as <em>they</em> see it — and be honest about how your own presence shaped the view.</p>
+    <div class="tags">
+      <span class="tag">cognitive empathy</span>
+      <span class="tag">self-awareness</span>
+      <span class="tag">positionality · paradigms</span>
+      <span class="tag">relevance</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea &amp; where it picks up</h2>
+    <p class="lead">Session 3 introduced Calarco &amp; Small's <strong>five quality factors</strong> for judging descriptive qualitative evidence — cognitive empathy, heterogeneity, palpability, follow-up, and self-awareness. Today we go deeper on the two that describe the <strong>relationship between researcher and participant</strong>: <strong>cognitive empathy</strong> and <strong>self-awareness</strong>.</p>
+
+    <div class="bigidea">
+      <strong>Cognitive empathy is the big idea of the day.</strong> Studies that exhibit high cognitive empathy help us understand individual participants <em>as they understand themselves</em> — so we grasp their <strong>perceptions, motivations, and beliefs</strong>. In other words, they let us step into the participants' shoes and see the world as they see it.
+    </div>
+
+    <div class="card">
+      <div class="openbox">
+        <div class="ob-node">WHAT PEOPLE<br>say &amp; do</div>
+        <span class="ob-arrow">→</span>
+        <div class="ob-mind">COGNITIVE EMPATHY<small>reach the perceptions · motivations · beliefs behind it</small></div>
+        <span class="ob-arrow">→</span>
+        <div class="ob-node">UNDERSTAND THEM<br>as they understand<br>themselves</div>
+      </div>
+      <p class="figcap">Cognitive empathy doesn't stop at reporting words and actions — it captures the meaning that produced them.</p>
+    </div>
+
+    <p>Session 3 gave us the <em>logic</em> of qualitative work (case logic, purposeful sampling, exposure over size). Session 4 explains <em>why</em> qualitative researchers deliberately get <strong>close</strong> to their participants — and why that closeness, handled well, is a source of trust rather than bias.</p>
+  </section>
+
+  <!-- ===== 02 COGNITIVE EMPATHY ===== -->
+  <section>
+    <h2><span class="num">02</span> Cognitive empathy — beneath the words</h2>
+    <p>Calarco &amp; Small (Chapter 1) argue that cognitive empathy shows up not just by <strong>reporting what participants say or do</strong>, but by <strong>seeking to capture the perceptions, motivations, and beliefs</strong> that might influence those statements or actions.</p>
+
+    <div class="card depthfig">
+      <svg viewBox="0 0 760 320" role="img" aria-label="A diagram showing a single surface statement at the top, and beneath it three deeper layers — perceptions, motivations, and beliefs — that cognitive empathy reaches to understand a participant as she understands herself" style="width:100%;height:auto">
+        <defs>
+          <marker id="arrD" markerWidth="9" markerHeight="9" refX="4.5" refY="8" orient="auto"><path d="M0 0 L9 0 L4.5 9 z" fill="#8a63ad"></path></marker>
+        </defs>
+        <!-- surface statement -->
+        <rect x="230" y="18" width="300" height="52" rx="12" fill="#fff" stroke="#6d4a8f" stroke-width="2.5"></rect>
+        <text x="380" y="42" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="12" font-weight="700" fill="#4a2f6b">SURFACE — one statement</text>
+        <text x="380" y="60" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#4f4165">"I couldn't wait to leave my city."  — Maria</text>
+        <text x="600" y="48" font-family="ui-monospace,monospace" font-size="10" fill="#c2557a">taken alone → misread</text>
+
+        <!-- arrow down -->
+        <line x1="380" y1="74" x2="380" y2="104" stroke="#8a63ad" stroke-width="2.5" marker-end="url(#arrD)"></line>
+        <text x="470" y="96" font-family="ui-monospace,monospace" font-size="10" fill="#8a63ad">ask · listen · return</text>
+
+        <!-- the three deeper layers -->
+        <g font-family="ui-monospace,Menlo,monospace">
+          <rect x="70" y="120" width="200" height="150" rx="14" fill="#efe7f6" stroke="#8a63ad" stroke-width="2"></rect>
+          <text x="170" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2f6b">PERCEPTIONS</text>
+          <text x="170" y="176" text-anchor="middle" font-size="10" fill="#4f4165">how she reads</text>
+          <text x="170" y="192" text-anchor="middle" font-size="10" fill="#4f4165">her neighborhood</text>
+          <text x="170" y="208" text-anchor="middle" font-size="10" fill="#4f4165">&amp; college choices</text>
+
+          <rect x="280" y="120" width="200" height="150" rx="14" fill="#e9def3" stroke="#8a63ad" stroke-width="2"></rect>
+          <text x="380" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2f6b">MOTIVATIONS</text>
+          <text x="380" y="176" text-anchor="middle" font-size="10" fill="#4f4165">what drives the</text>
+          <text x="380" y="192" text-anchor="middle" font-size="10" fill="#4f4165">feeling — the</text>
+          <text x="380" y="208" text-anchor="middle" font-size="10" fill="#4f4165">experiences behind it</text>
+
+          <rect x="490" y="120" width="200" height="150" rx="14" fill="#e3d6ef" stroke="#8a63ad" stroke-width="2"></rect>
+          <text x="590" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#4a2f6b">BELIEFS</text>
+          <text x="590" y="176" text-anchor="middle" font-size="10" fill="#4f4165">what she holds</text>
+          <text x="590" y="192" text-anchor="middle" font-size="10" fill="#4f4165">to be true about</text>
+          <text x="590" y="208" text-anchor="middle" font-size="10" fill="#4f4165">home &amp; her future</text>
+        </g>
+
+        <text x="380" y="300" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d4a8f">By the 3rd exchange, we understand <tspan font-style="italic">why</tspan> Maria feels the way she does — cognitive empathy achieved</text>
+      </svg>
+      <p class="figcap">Maria (Ch. 1, pp. 29–31): one line alone might mischaracterize her or invite judgment; the deeper the researcher digs, the more we understand her on her own terms.</p>
+    </div>
+
+    <p>Watch for the <strong>Maria example (pp. 29–31)</strong> when you read: at first we hear a single statement about her city and college applications that, taken alone, could be misread. By the third example the authors provide, we understand far more deeply <em>why</em> she feels as she does and how the researcher engaged her to reach that understanding. Developing cognitive empathy, Small &amp; Calarco note, is a <strong>key component of high-quality qualitative evidence</strong>.</p>
+  </section>
+
+  <!-- ===== 03 RESEARCHER-DATA RELATIONSHIP ===== -->
+  <section>
+    <h2><span class="num">03</span> Two stances toward the researcher–participant relationship</h2>
+    <p>Cognitive empathy exposes a deep difference in how the paradigms treat the gap between researcher and participant. It's not that one is careful and the other sloppy — they are pursuing trust by <em>opposite</em> routes.</p>
+
+    <div class="card" style="padding:6px 10px">
+      <table class="vs">
+        <thead>
+          <tr><th></th><th>Quantitative stance</th><th>Qualitative stance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Goal in the relationship</td><td>Objectivity &amp; detachment</td><td>Cognitive empathy &amp; closeness</td></tr>
+          <tr><td>Contact with participants</td><td>Minimize it — distance protects validity</td><td>Increase it — closeness deepens understanding</td></tr>
+          <tr><td>How trust is built</td><td>Detaching the researcher from the data</td><td>Rich exposure to context &amp; participants</td></tr>
+          <tr><td>Typical question</td><td>Not usually "how do participants see the world?"</td><td>Centered on understanding the world as participants do</td></tr>
+          <tr><td>The researcher's presence</td><td>A threat to control for</td><td>An instrument to reflect on &amp; explain</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bigidea">
+      Qualitative researchers view <strong>closeness to participants and the research site as a way to increase the trust and quality of their findings</strong> — because it raises their <em>exposure</em> to context and their ability to let the audience step into participants' shoes. The quantitative worry ("you're too close, that's bias") is, in the qualitative paradigm, often exactly backwards.
+    </div>
+  </section>
+
+  <!-- ===== 04 SELF-AWARENESS / POSITIONALITY ===== -->
+  <section>
+    <h2><span class="num">04</span> Self-awareness &amp; positionality</h2>
+    <p>The flip side of getting close is being honest about it. <strong>Self-awareness</strong> is the extent to which the researcher understands and explains the influence of their own <strong>presence and assumptions</strong>. Because descriptive qualitative evidence is collected <em>through interactions and relationships</em>, the researcher must reckon with how they helped create that evidence.</p>
+
+    <div class="bigidea">
+      A consideration of self-awareness does <strong>not</strong> make qualitative evidence weaker, more biased, or less rigorous. The way to increase trust and validity is to <strong>embrace and discuss subjectivity rather than try to avoid it.</strong> That is why you'll often see <strong>positionality statements</strong> in descriptive qualitative evidence.
+    </div>
+
+    <div class="q-grid">
+      <div class="q"><b>What positionality names</b><span>Each person's identity is shaped by race, gender, class, sexuality, ethnicity, ability, and other social characteristics.</span></div>
+      <div class="q"><b>Why it matters</b><span>These shape a researcher's perspective and biases — how they interact with participants, interpret evidence, and even which questions they ask and data they gather.</span></div>
+      <div class="q"><b>The aim of stating it</b><span>Naming the identity elements that may have influenced the work is meant to <em>improve</em> the quality of the evidence and the research process.</span></div>
+    </div>
+
+    <p style="margin-top:16px">Increasingly, positionality statements appear in <strong>quantitative</strong> research too. This is consistent with <strong>post-positivism</strong>: although there is an objective truth, we can only know it <em>imperfectly and in part</em>, because every researcher has a unique positionality that influences their work. Positionality is thus one dimension of the <strong>limitations</strong> we must weigh for any study.</p>
+
+    <div class="quote">
+      When evaluating any study, always ask: <em>How well supported are the claims by the type of evidence it represents, and what are the limitations of this evidence?</em> Claims about people's beliefs, behaviors, motivations, and interpretations are more likely to be well supported by descriptive <strong>qualitative</strong> evidence than by descriptive quantitative evidence.
+      <span class="src">The recurring quality question — applied to qualitative work</span>
+    </div>
+
+    <h3>Ask the right people</h3>
+    <p>Even the right <em>type</em> of evidence fails if you ask the wrong people. To make a claim about <strong>students' beliefs</strong> about whether teachers are helpful, interview <strong>students</strong> — not just teachers about their own practices. And qualitative interview data will usually give far more nuance and context about those beliefs than a simple 1-to-5 survey item ever could.</p>
+  </section>
+
+  <!-- ===== NUANCE / WATCH-OUTS ===== -->
+  <section>
+    <div class="nuance">
+      <h3>⚑ Nuance &amp; watch-outs</h3>
+      <ul>
+        <li><b>Closeness is not automatically bias.</b> In the qualitative paradigm, closeness to participants is often <em>how</em> researchers earn trust in their findings — the opposite of a defect.</li>
+        <li><b>Self-awareness ≠ weakness.</b> A positionality statement doesn't confess that a study is flawed; it strengthens it by making the researcher's influence explicit and inspectable.</li>
+        <li><b>Judge a study by its own paradigm.</b> Evaluating qualitative work by quantitative standards (or vice versa) is a category error — attend to the paradigm and its epistemology so you judge the evidence by <em>its own</em> standards.</li>
+        <li><b>Positionality is showing up in quant, too.</b> Post-positivism accepts an objective truth we can only know imperfectly — so stating one's positionality is not a "soft science" quirk.</li>
+        <li><b>Relevance is judgment, not a checkbox.</b> A study is almost never a perfect fit on every metric, and different context does <em>not</em> automatically make a study irrelevant — you need a real reason the difference would matter.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 05 RELEVANCE ===== -->
+  <section>
+    <h2><span class="num">05</span> Relevance — from "there &amp; then" to "here &amp; now"</h2>
+    <p>To recommend new evidence for São Paulo's Grand Challenge, you have to judge how <strong>relevant</strong> an existing study is to your context. Two guiding questions structure that judgment:</p>
+
+    <div class="eq">
+      <div class="eqrow">
+        <div class="body">
+          <p class="idea">What inferences can you make from this study that would <strong>inform or apply to</strong> São Paulo's Grand Challenge?</p>
+          <p class="mech"><b>topic fit</b> Is the research about the problem you're trying to solve? A study on teaching reading to struggling readers in grades 6–9 is directly relevant to a challenge about grades 6–9 reading; one on beginning readers or social studies is less so.</p>
+        </div>
+      </div>
+      <div class="eqrow">
+        <div class="body">
+          <p class="idea">How related are the <strong>setting and sample</strong> to São Paulo's context, priorities, and needs — and how or why would any differences matter?</p>
+          <p class="mech"><b>there → here</b> Look for shared characteristics beyond demographics: historical, social, legal, political, and cultural context all count (e.g., Brazil's federal requirement to teach Afro-Brazilian history).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bigidea">
+      Different context does <strong>not</strong> automatically make a study irrelevant. You can't dismiss a study just because it was done somewhere else — <em>there needs to be a good reason why the difference would matter for the inference you want to make.</em> Calarco's study was set in the U.S., but classrooms everywhere struggle to give all students equitable access to teacher support, so many of her help-seeking claims can travel.
+    </div>
+
+    <p>There's no single indicator that settles relevance — it's a matter of <strong>judgment</strong>, and it's almost never a perfect fit. Carefully answering the two questions guides that judgment about how well any piece of research applies to your context, priorities, and needs.</p>
+  </section>
+
+  <!-- ===== TODAY'S APPLICATION ===== -->
+  <section>
+    <h2><span class="num">✎</span> Today's application</h2>
+    <p>To increase <strong>relevance</strong> beyond Calarco's U.S. setting, São Paulo's leaders want new research on how teachers and students from different socioeconomic classes interact in <strong>Brazilian</strong> schools. There's no correct answer — the task is to <strong>use the language of evidence</strong> (cognitive empathy, heterogeneity, palpability, follow-up, self-awareness, case logic, exposure) to argue for one path over the other. Both are enriching; funding allows only one. Both purposefully sample schools across socioeconomic backgrounds.</p>
+
+    <div class="claims">
+      <div class="claim c1">
+        <h4>Option 1 <span class="pill a">observe · deep</span></h4>
+        <span class="pg">6 months · 4 schools</span>
+        <p>Observation only, one full school day per week per school, across multiple grade levels. Detailed field notes on classroom set-up, materials, teachers' pedagogies, and student engagement.</p>
+        <ul>
+          <li><b>Strong exposure</b> — sustained time enables follow-up and rich context</li>
+          <li>Sees <em>what actually happens</em> in the room, not just self-report</li>
+          <li>But <b>no interviews</b> → weaker on cognitive empathy (the "why" behind actions)</li>
+        </ul>
+      </div>
+      <div class="claim c2">
+        <h4>Option 2 <span class="pill b">interview · voices</span></h4>
+        <span class="pg">2 months · 20 schools</span>
+        <p>Interviews teachers twice (second interview designed from the first, digging deeper) and students once, about their perceptions of how teachers interact with them.</p>
+        <ul>
+          <li><b>High cognitive empathy</b> — reaches perceptions, motivations, beliefs</li>
+          <li><b>Follow-up built in</b> — the second interview adapts to the first</li>
+          <li>Asks students directly about <em>their own</em> beliefs (right people)</li>
+          <li>But shorter, thinner <b>exposure</b>; relies on report, not observation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="evrow">
+      <p style="font-size:.92rem;color:var(--ink-soft);margin-bottom:2px">A worked line of argument — recommending <strong>Option 2</strong> when the question is about how students <em>experience</em> class-based interactions:</p>
+      <div class="ev"><b>Cognitive empathy —</b> because the Grand Challenge cares about beliefs and perceptions, interviews reach the motivations behind behavior, exactly what the Maria example shows observation alone can miss.</div>
+      <div class="ev"><b>Follow-up &amp; the right people —</b> the second interview, designed from the first, lets researchers dig deeper on specific practices; interviewing students directly means claims about students' perceptions come from students themselves.</div>
+      <p style="font-size:.86rem;color:var(--ink-soft);margin-top:10px">↳ Or argue <strong>Option 1</strong> on <em>exposure</em> and <em>palpability</em>: six months of firsthand observation captures what people <em>do</em> (not just say), avoids self-report bias, and supplies the concrete, contextual scenes that make findings palpable. Either way, name the factors and tie the affordances and limitations to the claim — a jump-start for what São Paulo should collect in Part 4 of the Grand Challenge.</p>
+    </div>
+  </section>
+
+  <!-- ===== iRAT PREP ===== -->
+  <section class="quiz">
+    <h2><span class="num">✓</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer before you reveal. Multiple-choice items mimic the readiness quiz; the last two are discussion prompts for class.</p>
+
+    <details>
+      <summary><span><span class="qn">Q1</span>A study reports not only what a participant says, but the perceptions, motivations, and beliefs behind it, so we understand her as she understands herself. This best illustrates&hellip;</span></summary>
+      <ul class="opts">
+        <li>A. Heterogeneity</li>
+        <li>B. Cognitive empathy</li>
+        <li>C. Follow-up</li>
+        <li>D. Generalizability</li>
+      </ul>
+      <div class="ans"><b>B — Cognitive empathy.</b> The big idea of the day: reaching beneath words and actions to the meaning that produced them, so we can step into the participant's shoes.</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q2</span>Why do qualitative researchers often <em>seek</em> closeness to participants and the research site?</span></summary>
+      <ul class="opts">
+        <li>A. To reduce their exposure to context</li>
+        <li>B. Because closeness increases trust and quality by deepening exposure and understanding</li>
+        <li>C. To maximize objectivity and detachment</li>
+        <li>D. Because it guarantees the sample is representative</li>
+      </ul>
+      <div class="ans"><b>B.</b> In the qualitative paradigm, closeness raises exposure and lets the audience step into participants' shoes — the reverse of the quantitative goal of detachment (A, C) and unrelated to representativeness (D).</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q3</span>A researcher includes a statement describing how her race, class, and gender may have shaped her questions and interpretations. In the paradigm, this positionality statement is best understood as&hellip;</span></summary>
+      <ul class="opts">
+        <li>A. An admission that the study is biased and weak</li>
+        <li>B. A way to increase trust by embracing and explaining subjectivity</li>
+        <li>C. Proof the study lacks rigor</li>
+        <li>D. A substitute for collecting evidence</li>
+      </ul>
+      <div class="ans"><b>B — Self-awareness.</b> Because qualitative evidence is created through relationships, explaining the researcher's influence <em>strengthens</em> the work; it does not make it weaker, more biased, or less rigorous.</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q4</span>You want to claim that students find their teachers helpful. Which evidence is most convincing?</span></summary>
+      <ul class="opts">
+        <li>A. Interviews asking teachers about their helping practices</li>
+        <li>B. A district budget report on staffing</li>
+        <li>C. Interviews asking students directly whether and how their teachers help</li>
+        <li>D. A 1-to-5 survey item averaged across the school</li>
+      </ul>
+      <div class="ans"><b>C.</b> The claim is about <em>students'</em> beliefs, so ask students — the right people. Rich interview data also gives more nuance and context than a simple survey scale (D) or teacher self-report (A).</div>
+    </details>
+
+    <details>
+      <summary><span><span class="qn">Q5</span>A study was conducted in the U.S., while São Paulo is in Brazil. The <em>best</em> way to judge its relevance is to&hellip;</span></summary>
+      <ul class="opts">
+        <li>A. Declare it irrelevant because the context differs</li>
+        <li>B. Assume it fully applies because education is universal</li>
+        <li>C. Ask what inferences apply and whether/why the setting-and-sample differences would matter</li>
+        <li>D. Check whether its sample was randomly drawn</li>
+      </ul>
+      <div class="ans"><b>C.</b> Relevance is a judgment guided by the two questions. Different context alone doesn't make a study irrelevant (A) or relevant (B) — you need a good reason a difference would matter for your inference. Randomness (D) isn't the relevance test.</div>
+    </details>
+
+    <div class="disc">
+      <p><span class="lbl">Discussion 1</span></p>
+      <p>Take the São Paulo application. Using cognitive empathy, exposure, follow-up, and palpability, argue for <strong>Option 1</strong> or <strong>Option 2</strong> — and be explicit about the <strong>affordances and limitations</strong> of the evidence your choice would produce.</p>
+      <p style="margin-top:14px"><span class="lbl">Discussion 2</span></p>
+      <p>Some say a researcher who gets close to participants has "contaminated" the study. Using <strong>self-awareness</strong>, <strong>positionality</strong>, and <strong>post-positivism</strong>, respond: when is closeness a source of trust rather than bias, and what would a good positionality statement add?</p>
+    </div>
+  </section>
+
+  <!-- ===== GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">§</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it.</p>
+
+    <details>
+      <summary>cognitive empathy</summary>
+      <div class="def">Understanding individual participants <em>as they understand themselves</em> — capturing their <strong>perceptions, motivations, and beliefs</strong>, not just reporting what they say or do. It lets the audience step into participants' shoes and see the world as they see it. The big idea of the day and one of the five quality factors.
+        <span class="eg">The Maria example (pp. 29–31): by the third exchange we understand <em>why</em> she feels the way she does about her city.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>self-awareness</summary>
+      <div class="def">The extent to which a researcher <strong>understands and explains the influence of their own presence and assumptions</strong> on the study. Because qualitative evidence is created through interactions and relationships, reflecting on this influence <em>strengthens</em> the work rather than weakening it — the route to trust is to embrace and discuss subjectivity, not avoid it.
+        <span class="eg">Often expressed through a positionality statement.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>positionality</summary>
+      <div class="def">The idea that each person's identity is shaped by factors such as race, gender, class, sexuality, ethnicity, ability, and other social characteristics — which influence a researcher's perspective, experiences, and biases, affecting how they interact with participants, interpret evidence, and even which questions they ask and data they gather.
+        <span class="eg">A "positionality statement" names the identity elements a researcher thinks may have influenced their research, aiming to improve its quality.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>paradigms</summary>
+      <div class="def">The underlying frameworks of assumptions (about reality, knowledge, and how to build trust) that a body of research operates within — e.g., the quantitative paradigm's pursuit of detachment vs. the qualitative paradigm's pursuit of closeness. Evaluating quality requires attention to the paradigm so you judge a study <strong>by its own standards</strong>.
+        <span class="eg">Judging qualitative work by quantitative criteria (or vice versa) is a paradigm error.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>epistemology</summary>
+      <div class="def">A theory of <strong>knowledge</strong> — what counts as knowing, and how we can come to know it. Different paradigms rest on different epistemologies, which is why they seek trust in different ways. <em>Post-positivism</em> is one such view: there is an objective truth, but we can only know it imperfectly and in part, because every researcher has a unique positionality that influences their work.
+        <span class="eg">Post-positivism is why positionality statements increasingly appear even in quantitative research.</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>relevance</summary>
+      <div class="def">How well a study applies to your own context, priorities, and needs — a matter of <strong>judgment</strong>, not a checklist. Guided by two questions: (1) what inferences from the study would inform your challenge, and (2) how related are its setting and sample, and how or why would any differences matter? Different context alone does not make a study irrelevant.
+        <span class="eg">Moving evidence from "there and then" to "here and now" — e.g., asking whether Calarco's U.S. help-seeking findings apply to São Paulo.</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== READINGS ===== -->
+  <section>
+    <h2><span class="num">⌘</span> Readings</h2>
+    <div class="readings">
+      <ul>
+        <li><strong>Small, M. L., &amp; Calarco, J. (2022).</strong> <em>Qualitative Literacy: A Guide to Evaluating Ethnographic and Interview Research.</em> University of California Press. <strong>Chapter 1: Cognitive Empathy (pp. 23–46).</strong> — the source for today's big idea; watch for the <strong>Maria</strong> example on pp. 29–31, where a single statement about her city and college applications is deepened across three exchanges until we understand her on her own terms.</li>
+      </ul>
+      <p class="note">Access all readings through the course Library Reserves page.</p>
+    </div>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>Cognitive empathy is the big idea.</strong> Strong qualitative evidence reports not just what people say or do, but the <strong>perceptions, motivations, and beliefs</strong> behind it — so we understand participants as they understand themselves.</li>
+      <li><strong>Closeness builds trust.</strong> Quantitative work minimizes contact for objectivity; qualitative work embraces closeness because it raises exposure and lets us step into participants' shoes.</li>
+      <li><strong>Self-awareness &amp; positionality strengthen, not weaken.</strong> Since qualitative evidence is created through relationships, the researcher must explain their influence — embracing subjectivity is the route to trust. Post-positivism brings positionality into quantitative work too.</li>
+      <li><strong>Judge by the paradigm.</strong> Attend to a study's paradigm and epistemology so you evaluate it by <em>its own</em> standards, and always ask how well the evidence supports its claims and what its limitations are.</li>
+      <li><strong>Ask the right people.</strong> Claims about students' beliefs need evidence from students; qualitative interviews add nuance a survey scale can't.</li>
+      <li><strong>Relevance is judgment.</strong> Move evidence from "there and then" to "here and now" using the two questions — different context matters only when there's a real reason it would.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 4 · study notes</footer>
+
+</div>
+</body>
+</html>

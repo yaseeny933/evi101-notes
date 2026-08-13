@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 6 — Causal Quasi-Experimental Evidence · Study Notes</title>
+<style>
+  :root{
+    --ink:#2b2214;
+    --ink-soft:#5f5237;
+    --paper:#faf6ee;
+    --gold:#a9781a;
+    --gold-bright:#c8952e;
+    --teal:#2c8878;
+    --rose:#bb5340;
+    --line:#e6dcc7;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(90,66,20,.12);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    /* faint cut-point texture: an arbitrary line splits treatment from comparison */
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(169,120,26,.10) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(44,136,120,.07) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#5f4310,#a9781a 66%,#c8952e);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#f2e2bf;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#f6ecd6;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.30);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--gold);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--teal);background:rgba(44,136,120,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--gold-bright);
+    background:linear-gradient(90deg,rgba(200,149,46,.12),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--gold)}
+
+  /* treatment vs counterfactual motif */
+  .flowline{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .fl-node{background:#fff;border:2px solid var(--gold);color:var(--gold);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .fl-node small{display:block;font-size:.62rem;letter-spacing:.08em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .fl-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* contrast / two-col tables */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  table.vs thead th:nth-child(2){color:var(--ink-soft)}
+  table.vs thead th:nth-child(3){color:var(--gold)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  table.vs tr td:nth-child(3){background:rgba(200,149,46,.06)}
+
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+  .svgfig{margin:6px 0 2px}
+
+  /* two-pane comparison */
+  .aa{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .aa .pane{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .aa .pane h4{margin:0 0 4px;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .aa .pane.typ h4{color:var(--teal)}
+  .aa .pane.var h4{color:var(--rose)}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.center{background:rgba(44,136,120,.14);color:var(--teal)}
+  .pill.spread{background:rgba(187,83,64,.14);color:var(--rose)}
+  .aa .pane p{font-size:.92rem;margin:8px 0 0}
+  .aa .ex{font-size:.84rem;color:var(--ink-soft);margin-top:10px;
+    border-top:1px dashed var(--line);padding-top:8px}
+
+  /* nuance / watch-out box */
+  .nuance{background:#fff;border:1px solid var(--line);border-top:5px solid var(--rose);
+    border-radius:14px;padding:20px 24px;margin-top:16px;box-shadow:var(--shadow)}
+  .nuance h3{margin:0 0 6px;color:var(--rose);display:flex;align-items:center;gap:8px}
+  .nuance ul{margin:10px 0 0;padding-left:0;list-style:none}
+  .nuance li{padding:9px 0 9px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.95rem}
+  .nuance li:last-child{border-bottom:none}
+  .nuance li::before{content:"⚠";position:absolute;left:0;top:8px;color:var(--rose);font-size:.9rem}
+  .nuance b{color:var(--ink)}
+
+  /* quality-question steps */
+  .lesson{counter-reset:step;margin-top:10px}
+  .step{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow);position:relative}
+  .step::before{counter-increment:step;content:"Q" counter(step);
+    flex:0 0 42px;height:42px;border-radius:50%;
+    background:var(--gold);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .step .body{flex:1}
+  .step .idea{font-style:italic;color:var(--ink)}
+  .step .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .step .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);background:rgba(44,136,120,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* application panes */
+  .app{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .app .fig{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold-bright);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .app .fig b{color:var(--gold);display:block;font-size:.98rem;margin-bottom:2px}
+  .app .fig .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal)}
+  .app .fig p{font-size:.9rem;color:var(--ink-soft);margin:6px 0 0}
+
+  /* glossary + iRAT reveal */
+  .gloss details, .quiz details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary, .quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--gold);
+    font-size:1.02rem;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .gloss summary::-webkit-details-marker, .quiz summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .quiz summary::after{content:"answer ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .quiz details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary, .quiz details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def, .quiz .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+  .quiz .q{font-weight:400;color:var(--ink);flex:1}
+  .quiz .q .tag-mc{font-family:"SF Mono",monospace;font-size:.6rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--gold);background:rgba(169,120,26,.12);
+    padding:2px 7px;border-radius:6px;margin-right:8px;font-weight:700;vertical-align:middle}
+  .quiz .q .tag-sa{color:var(--teal);background:rgba(44,136,120,.12)}
+  .quiz .opts{margin:8px 0 0;padding-left:18px;font-size:.9rem;color:var(--ink-soft)}
+  .quiz .opts li{margin:3px 0}
+  .quiz .def b{color:var(--gold)}
+
+  .prompt{background:linear-gradient(90deg,rgba(44,136,120,.08),#fff 60%);
+    border-left:5px solid var(--teal);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:.95rem}
+  .prompt .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal);display:block;margin-bottom:2px}
+
+  /* readings note */
+  .readings{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;margin-top:14px;box-shadow:var(--shadow);font-size:.95rem}
+  .readings h3{margin:0 0 8px;color:var(--gold)}
+  .readings ul{margin:0;padding-left:20px}
+  .readings li{margin:6px 0}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#4a340c,#7a561a);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#f2e2bf;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#f0cf80}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .aa,.app{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .step::before{flex-basis:36px;height:36px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details, .quiz details{break-inside:avoid}
+    .gloss .def, .quiz .def{display:block !important}
+    details:not([open]) .def{display:block}
+    .card,.step,.aa .pane,.app .fig,.gloss details,.quiz details,.nuance,.readings{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 6</p>
+    <h1>Causal Quasi-Experimental Evidence</h1>
+    <p class="sub">Estimating a causal effect when you <em>can't</em> randomize. Big idea of the day, again: <strong>the counterfactual — compared to what?</strong></p>
+    <div class="tags">
+      <span class="tag">as-good-as-random</span>
+      <span class="tag">regression discontinuity</span>
+      <span class="tag">statistical controls</span>
+      <span class="tag">selection bias</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea</h2>
+    <p class="lead">Causal evidence asks whether a change in a policy, procedure, or practice <strong>causes</strong> a change in an outcome. Session 5 answered this with the gold standard — the <strong>randomized controlled trial (RCT)</strong>. But experiments aren't always possible, and today's question is: how do we build convincingly causal evidence <em>without</em> one?</p>
+
+    <p>Sometimes an experiment is <strong>unethical</strong> — you can't randomly assign some students to be suspended from school to see if suspension raises dropout rates. Sometimes it's simply <strong>not feasible</strong> — a state or national policy usually applies to everyone in a jurisdiction at once, so there are no implementers to compare against non-implementers, and you can't randomly assign states or nations to adopt it. In those cases we turn to <strong>quasi-experimental methods</strong>.</p>
+
+    <div class="bigidea">
+      The counterfactual is the big idea <strong>again</strong>. To measure a causal impact we compare the treatment group's outcome to an estimate of the <strong>counterfactual</strong> — what would have happened to that <em>same</em> group if it had <em>not</em> been treated. Always ask, <strong>"compared to what?"</strong> The only thing that changes today is <em>how the comparison group is created</em>: instead of <strong>random</strong> assignment (RCT), a quasi-experiment finds a process that produces <strong>"as-good-as-random"</strong> assignment to treatment and comparison groups.
+    </div>
+
+    <div class="card">
+      <div class="flowline">
+        <div class="fl-node">TREATMENT GROUP<small>received the<br>program / policy</small></div>
+        <span class="fl-arrow">vs</span>
+        <div class="fl-node" style="border-color:var(--teal);color:var(--teal)">COMPARISON GROUP<small>the estimated<br>counterfactual</small></div>
+        <span class="fl-arrow">→</span>
+        <div class="fl-node" style="border-color:var(--gold-bright);color:var(--gold)">CAUSAL EFFECT<small>difference in<br>outcomes</small></div>
+      </div>
+      <p class="figcap">Same logic as an RCT — a valid counterfactual — but the groups are formed by an as-good-as-random process, not a coin flip.</p>
+    </div>
+
+    <p>There are many quasi-experimental methods — <strong>difference-in-differences, propensity score matching, instrumental variables regression, synthetic controls</strong> — and which one fits depends on the data you have. EVI101 focuses on just one, the workhorse that today's reading uses: the <strong>regression discontinuity design (RDD)</strong>.</p>
+  </section>
+
+  <!-- ===== 02 REGRESSION DISCONTINUITY ===== -->
+  <section>
+    <h2><span class="num">02</span> Regression discontinuity — a cut point does the randomizing</h2>
+    <p class="lead">In education, students are constantly sorted into programs by an <strong>arbitrary cutoff</strong>: miss more than 15% of school days → mandatory summer school; earn above a 3.8 GPA → a college scholarship; score below a threshold → extra tutoring. That cutoff is exactly what makes a causal estimate possible.</p>
+
+    <h3>Why you can't just compare treated to untreated</h3>
+    <p>Take the summer-school rule. We <em>can't</em> simply compare students who attended summer school to those who didn't, because assignment wasn't random — and we have good reason to think the two groups differ. Kids absent often enough to qualify may have higher rates of illness, live far from school, or face other challenges, so they might do worse <em>with or without</em> the program. Comparing them to never-absent kids gives us <strong>no valid counterfactual</strong>: it's a selection-bias trap.</p>
+
+    <div class="bigidea">
+      The RDD fix: <strong>zoom in on the students right at the cutoff.</strong> A student who missed <strong>14%</strong> of days (just below, no summer school) and one who missed <strong>16%</strong> (just above, assigned to summer school) are almost identical — both missed a lot of school — except that an arbitrary line put one in treatment and one in comparison. Near the cutoff, which side you land on is <strong>as good as random</strong>. So if test scores jump for the just-above group but not the just-below group, it's reasonable to attribute that jump to the treatment.
+    </div>
+
+    <div class="card svgfig">
+      <svg viewBox="0 0 760 340" role="img" aria-label="A regression discontinuity plot: an outcome on the vertical axis against a running variable on the horizontal axis, with a cutoff line. The comparison group's fitted line sits below, the treatment group's fitted line sits above, and the vertical gap at the cutoff is the treatment effect." style="width:100%;height:auto">
+        <!-- axes -->
+        <line x1="70" y1="70" x2="70" y2="270" stroke="#b8a679" stroke-width="1.5"></line>
+        <line x1="70" y1="270" x2="710" y2="270" stroke="#b8a679" stroke-width="1.5"></line>
+        <text x="70" y="300" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10.5" fill="#5f5237">low</text>
+        <text x="700" y="300" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#5f5237">high</text>
+        <text x="390" y="322" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#5f5237">RUNNING VARIABLE  ( e.g. % school days missed )  →</text>
+        <text x="34" y="170" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#5f5237" transform="rotate(-90 34 170)">OUTCOME  ( test score )</text>
+
+        <!-- cutoff line -->
+        <line x1="390" y1="60" x2="390" y2="270" stroke="#bb5340" stroke-width="2" stroke-dasharray="6 5"></line>
+        <text x="390" y="52" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#bb5340">CUTOFF = 15%</text>
+
+        <!-- comparison-side label -->
+        <text x="225" y="90" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#2c8878">COMPARISON (not assigned)</text>
+        <!-- treatment-side label -->
+        <text x="558" y="90" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#a9781a">TREATMENT (summer school)</text>
+
+        <!-- comparison scatter (below cutoff) -->
+        <g fill="#7fbdb0">
+          <circle cx="108" cy="228" r="4.5"></circle><circle cx="140" cy="222" r="4.5"></circle>
+          <circle cx="168" cy="230" r="4.5"></circle><circle cx="196" cy="216" r="4.5"></circle>
+          <circle cx="222" cy="224" r="4.5"></circle><circle cx="250" cy="212" r="4.5"></circle>
+          <circle cx="280" cy="220" r="4.5"></circle><circle cx="308" cy="208" r="4.5"></circle>
+          <circle cx="336" cy="214" r="4.5"></circle><circle cx="364" cy="204" r="4.5"></circle>
+          <circle cx="150" cy="238" r="4.5"></circle><circle cx="300" cy="226" r="4.5"></circle>
+        </g>
+        <!-- comparison fitted line -->
+        <line x1="92" y1="232" x2="388" y2="200" stroke="#2c8878" stroke-width="3"></line>
+
+        <!-- treatment scatter (above cutoff) -->
+        <g fill="#d8b25e">
+          <circle cx="418" cy="158" r="4.5"></circle><circle cx="448" cy="150" r="4.5"></circle>
+          <circle cx="476" cy="156" r="4.5"></circle><circle cx="506" cy="144" r="4.5"></circle>
+          <circle cx="534" cy="150" r="4.5"></circle><circle cx="562" cy="138" r="4.5"></circle>
+          <circle cx="592" cy="144" r="4.5"></circle><circle cx="620" cy="132" r="4.5"></circle>
+          <circle cx="648" cy="138" r="4.5"></circle><circle cx="676" cy="128" r="4.5"></circle>
+          <circle cx="460" cy="166" r="4.5"></circle><circle cx="606" cy="152" r="4.5"></circle>
+        </g>
+        <!-- treatment fitted line -->
+        <line x1="392" y1="152" x2="694" y2="120" stroke="#a9781a" stroke-width="3"></line>
+
+        <!-- the jump / treatment effect bracket at the cutoff -->
+        <circle cx="388" cy="200" r="5" fill="#2c8878" stroke="#fff" stroke-width="1.5"></circle>
+        <circle cx="392" cy="152" r="5" fill="#a9781a" stroke="#fff" stroke-width="1.5"></circle>
+        <line x1="408" y1="200" x2="408" y2="152" stroke="#bb5340" stroke-width="2.5"></line>
+        <line x1="404" y1="200" x2="412" y2="200" stroke="#bb5340" stroke-width="2.5"></line>
+        <line x1="404" y1="152" x2="412" y2="152" stroke="#bb5340" stroke-width="2.5"></line>
+        <text x="420" y="180" text-anchor="start" font-family="ui-monospace,monospace" font-size="10.5" fill="#bb5340">JUMP =</text>
+        <text x="420" y="194" text-anchor="start" font-family="ui-monospace,monospace" font-size="10.5" fill="#bb5340">causal effect</text>
+      </svg>
+      <p class="figcap">Regression discontinuity: the <em>discontinuity</em> (vertical jump) in the outcome exactly at the arbitrary cutoff — not the overall slope — is the estimated causal effect of the treatment.</p>
+    </div>
+
+    <div class="nuance" style="border-top-color:var(--gold-bright)">
+      <h3 style="color:var(--gold)">The one big caveat: it's a <em>local</em> effect</h3>
+      <p style="margin:0;font-size:.95rem">An RDD can only tell us about the effect of treatment on students <strong>near the cutoff</strong>. From the summer-school example, we learn about kids who missed <em>around 15%</em> of days — <strong>not</strong> kids who missed only one or two days, or kids who missed half the year. Note also that researchers usually <strong>don't set the cutoff</strong> or design the policy; they work with the data they have and ask, "what method for building causal evidence best fits the data in front of me?"</p>
+    </div>
+
+    <h3>Today's reading applies exactly this: Dee &amp; Penner (2016)</h3>
+    <p>Dee and Penner study the impact of encouraging ninth graders to enroll in a year-long <strong>ethnic studies</strong> course (focused on the experiences, perspectives, and histories of traditionally underrepresented racial and ethnic groups) on attendance, grades, and credits earned. Students whose 8th-grade GPA fell <strong>below 2.0</strong> were <em>encouraged</em> to take the course; those above 2.0 were not. That clear cut point — GPA 2.0 — is what lets the authors run a regression discontinuity, just like the summer-school example but with GPA as the running variable.</p>
+  </section>
+
+  <!-- ===== 03 STATISTICAL CONTROLS ===== -->
+  <section>
+    <h2><span class="num">03</span> Statistical controls &amp; confounding — and why RDD still isn't an RCT</h2>
+    <p class="lead">Even comparing students just above and below the 2.0 cutoff, we might worry that a difference in an outcome (attendance, credits) reflects a leftover difference in <strong>academic preparation</strong> rather than the course itself. The tool for this worry is <strong>statistical controls</strong>.</p>
+
+    <p>A <strong>confounding variable</strong> is a variable related to <em>both</em> the treatment and the outcome, which can masquerade as a treatment effect. In this study, <strong>8th-grade attendance</strong> is a prime suspect: it's strongly correlated with 9th-grade attendance, GPA, and credits earned. Maybe the outcomes we see near the cutoff are really being driven by prior attendance, not by ethnic-studies eligibility.</p>
+
+    <p>To handle it, we add 8th-grade attendance to the statistical model as a <strong>control</strong> — mathematically, we <strong>hold that variable constant</strong>. We now compare outcomes between students who were and weren't eligible for ethnic studies <em>among people with the same 8th-grade attendance</em>, teasing out the prior-attendance relationship so the effect estimate reflects eligibility and nothing else. We aren't limited to one control — we can also hold constant gender, race, grade level, special-education and English-learner status, prior suspension, and more.</p>
+
+    <div class="bigidea">
+      <strong>So why bother with RCTs at all?</strong> Because controls can only account for things we <em>measured</em>. If a factor that matters was never captured — and there always is one — we'll never know whether it, rather than the treatment, produced the difference. That is the fundamental limit of quasi-experiments: they defend against <strong>observed</strong> confounders, but <strong>unobserved</strong> confounders (omitted variables) remain a threat. Random assignment, by contrast, balances <em>both</em> measured and unmeasured factors — which is why it yields stronger internal validity.
+    </div>
+
+    <h3>Reading a results table (Dee &amp; Penner, Table 4)</h3>
+    <p>Each column of Table 4 is a separate <strong>regression</strong> — an attempt to isolate the association between a predictor (ethnic-studies encouragement) and an outcome (attendance, GPA, credits) after controlling for other factors. The treatment effect sits in the row <strong>"Grade 8 GPA &lt; 2.0"</strong>: the difference in outcomes between students just below vs. just above the cutoff. Interpret it with the same four moves from the quantitative-data handout:</p>
+    <div class="card" style="padding:6px 10px">
+      <table class="vs">
+        <thead>
+          <tr><th>Move</th><th>What to look for</th><th>Grade-9 attendance result</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Direction</td><td>Which way does the effect point — positive or negative?</td><td>Positive across all three models (no negative signs).</td></tr>
+          <tr><td>Magnitude</td><td>How big is the estimate?</td><td>About <strong>6 days</strong> (6.164, 6.397, 5.638 across models).</td></tr>
+          <tr><td>Significance</td><td>Are there stars? Is the difference likely real?</td><td>Yes — asterisks flag a likely-real treatment–comparison difference.</td></tr>
+          <tr><td>Range of plausible values</td><td>Estimate ± ~2 standard errors (the number in parentheses).</td><td>Roughly <strong>2.74 to 8.54</strong> more days attended.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.9rem;color:var(--ink-soft);margin-top:12px">↳ The bottom line Dee &amp; Penner reach: encouragement to enroll raised 9th-grade <strong>attendance by about 6 percentage points</strong>, <strong>GPA by about 0.4 grade points</strong>, and <strong>credits earned by about 6.5</strong> — sizeable impacts that <em>survive</em> the addition of controls, which is what makes the argument compelling.</p>
+  </section>
+
+  <!-- ===== 04 QUALITY QUESTIONS ===== -->
+  <section>
+    <h2><span class="num">04</span> Judging quasi-experimental causal evidence — three questions</h2>
+    <p class="lead">As with every form of evidence, we judge causal evidence on its own terms. Three essential questions organize the appraisal — and Dee &amp; Penner is a good stress test of each.</p>
+
+    <div class="lesson">
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well does the study describe the <strong>contrast</strong> between the treatment and the comparison group? (What <em>is</em> the treatment?)</p>
+          <p class="mech"><b>The tricky part</b> Not all encouraged students took the course, and some higher-GPA students did — so is the treatment <em>being encouraged to enroll</em> or <em>actually participating</em>? "Eligibility" better captures real-world impact (we usually can't force participation); "participation" better captures whether the course works for those who take it. Dee &amp; Penner distinguish both. But RDD tells you <em>whether</em> there's an impact, not <em>why</em> or <em>how</em> to implement it — we'd want to know more about the course content and pedagogy.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How <strong>valid is the counterfactual</strong>? How well does the study deal with <strong>selection bias</strong>?</p>
+          <p class="mech"><b>RDD's strength</b> People who barely fall on either side of an arbitrary line should be alike except for treatment — so Dee &amp; Penner can convincingly claim a strong counterfactual, at least for students <em>near</em> the 2.0 GPA cutoff. Statistical controls further guard against observed confounders like prior attendance.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well do the authors <strong>identify the groups</strong> to which the treatment effect applies?</p>
+          <p class="mech"><b>External validity</b> Authors should report <em>who</em> was actually affected. Dee &amp; Penner describe the institutional context and student demographics (pp. 135–136, Table 1) and repeatedly remind readers their estimates apply only to students <em>near the 2.0 cutoff</em> — a direct consequence of RDD's local nature.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p style="margin-top:0"><strong>Other quasi-experimental methods (named, not tested in EVI101):</strong> when there's no cutoff to exploit, researchers reach for other tools that manufacture an as-good-as-random comparison. A quick map:</p>
+      <table class="vs">
+        <thead>
+          <tr><th>Method</th><th>The idea in one line</th><th>Hinges on</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Difference-in-differences</td><td>Compare the <em>change over time</em> in a treated group to the change in an untreated comparison group.</td><td>The <strong>parallel-trends</strong> assumption — absent treatment, both groups would have moved in parallel.</td></tr>
+          <tr><td>Propensity score matching</td><td>Pair treated and untreated units that look alike on measured characteristics.</td><td>Having measured the confounders that matter (no hidden ones).</td></tr>
+          <tr><td>Instrumental variables</td><td>Use an outside "nudge" that shifts treatment but not the outcome directly.</td><td>A valid instrument that only affects outcomes <em>through</em> the treatment.</td></tr>
+          <tr><td>Synthetic controls</td><td>Build a weighted blend of untreated units to mimic the treated unit's pre-trend.</td><td>A good pre-treatment match between the unit and its synthetic twin.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Nuance & watch-outs -->
+    <div class="nuance">
+      <h3>⚠ Nuance &amp; watch-outs</h3>
+      <ul>
+        <li><b>Quasi-experiments rest on an untestable assumption.</b> The whole case depends on the comparison group being a valid counterfactual (near-cutoff similarity for RDD; parallel trends for DiD). You can argue for that assumption, but you can't prove it from the data.</li>
+        <li><b>Unobserved confounders are the Achilles' heel.</b> Controls only neutralize variables you measured. Any omitted variable that drives both treatment and outcome can still bias the estimate — the reason RDD is not a substitute for an RCT.</li>
+        <li><b>Weaker internal validity than an RCT.</b> Random assignment balances measured <em>and</em> unmeasured factors; a quasi-experiment only balances the ones it captured, so its causal claim is more conditional.</li>
+        <li><b>RDD estimates are local.</b> They speak only to units near the cutoff — great internal validity there, limited external validity elsewhere. Don't extrapolate to people far from the threshold.</li>
+        <li><b>Describes impact, not mechanism.</b> RDD shows <em>whether</em> a program worked, not <em>why</em> or <em>how</em> to replicate it — a limitation for practitioners wanting to implement.</li>
+        <li><b>Watch your causal language.</b> A quasi-experiment can license causal claims, but only as strongly as its counterfactual. Match the strength of the wording to the strength of the design and be explicit about who the estimate applies to.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== TODAY'S APPLICATION ===== -->
+  <section>
+    <h2><span class="num">05</span> Today's application — the Brazilian ethnic-studies law</h2>
+    <p>A 2003 Brazilian law requires that African and Afro-Brazilian history and culture be taught in history, art, and literature courses at the elementary and high-school levels. The in-class task uses the Dee &amp; Penner evidence to argue about a requirement like this. As always, there's <strong>no single correct answer</strong> — the point is to <em>use the language of evidence</em> to argue for one choice over the other.</p>
+    <div class="app">
+      <div class="fig">
+        <span class="lbl">Best support?</span>
+        <b>Long-term impact vs. replication</b>
+        <p>Option A: students encouraged to enroll were <strong>15.7 pp more likely to graduate high school</strong> (a statistically significant follow-up result). Option B: results replicate across <strong>three of five piloting high schools</strong>. One speaks to <em>magnitude &amp; durability</em>; the other to <em>external validity across contexts</em>.</p>
+      </div>
+      <div class="fig">
+        <span class="lbl">Bigger limitation?</span>
+        <b>What transfers to Brazil?</b>
+        <p>Option A: Dee &amp; Penner report <strong>little on how the program works</strong>, so a leader couldn't easily adapt and implement it (RDD shows <em>whether</em>, not <em>how</em>). Option B: they don't report <strong>standardized test-score</strong> outcomes, so we don't know the effect on that kind of learning.</p>
+      </div>
+    </div>
+    <div class="bigidea">
+      <strong>How to argue it in the language of evidence:</strong> ground every claim in Session 6 vocabulary. To <em>support</em> the requirement, a long-term graduation effect leans on <strong>magnitude and statistical significance</strong>, while the multi-school replication leans on <strong>external validity</strong> — deciding which matters more depends on the decision at hand. On <em>limitations</em>, note that regression discontinuity is designed to establish <strong>whether</strong> an impact exists near the cutoff, not to explain <strong>mechanism</strong> or generalize far from it — so the "we don't know how it works, so we can't implement it" critique cuts to the heart of applying this evidence in a new national context. A strong answer names the counterfactual, the population the estimate applies to, and the internal-vs-external-validity trade-off.
+    </div>
+  </section>
+
+  <!-- ===== GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">06</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it. These are the Session 6 evidence-vocabulary words (plus the supporting concepts from the video).</p>
+
+    <details>
+      <summary>counterfactual</summary>
+      <div class="def">What <em>would have happened</em> to the treatment group if it had not received the treatment. Causal evidence works by comparing the treatment group's actual outcome to an estimate of this counterfactual. The big idea of the day: "compared to what?"
+        <span class="eg">A valid comparison group is a stand-in for the treatment group's counterfactual.</span>
+      </div>
+    </details>
+    <details>
+      <summary>as-good-as-random assignment</summary>
+      <div class="def">A process — not a literal coin flip — that sorts units into treatment and comparison groups in a way that is effectively random with respect to the outcome, so the groups are comparable. It's what lets a quasi-experiment stand in for an experiment.
+        <span class="eg">Near a cutoff, landing just above vs. just below is as good as random.</span>
+      </div>
+    </details>
+    <details>
+      <summary>quasi-experiment</summary>
+      <div class="def">A study that produces convincingly causal evidence <em>without</em> random assignment, by exploiting a process that yields as-good-as-random treatment and comparison groups. Examples: regression discontinuity, difference-in-differences, matching, instrumental variables, synthetic controls.
+        <span class="eg">Used when an RCT is unethical or infeasible.</span>
+      </div>
+    </details>
+    <details>
+      <summary>regression discontinuity (RDD)</summary>
+      <div class="def">A quasi-experimental design in which an arbitrary cutoff on a running variable determines who is eligible for a treatment. Units just above vs. just below the cutoff are nearly identical, so a jump (discontinuity) in the outcome exactly at the cutoff estimates the causal effect — <em>for units near the cutoff</em>.
+        <span class="eg">GPA below 2.0 → encouraged to take ethnic studies; GPA above → not.</span>
+      </div>
+    </details>
+    <details>
+      <summary>confounding variable</summary>
+      <div class="def">A variable related to both the treatment and the outcome that can create a spurious apparent effect. Addressed by adding it to the model as a statistical control — if it was measured.
+        <span class="eg">8th-grade attendance is correlated with both eligibility and 9th-grade outcomes.</span>
+      </div>
+    </details>
+    <details>
+      <summary>statistical control</summary>
+      <div class="def">Adding a variable to a regression to hold it constant, so the estimated treatment effect reflects the treatment and not that other variable. Multiple controls can be included, but you can only control for factors you actually measured.
+        <span class="eg">Comparing eligible vs. ineligible students <em>among those with the same prior attendance</em>.</span>
+      </div>
+    </details>
+    <details>
+      <summary>internal validity (for quasi-experiments)</summary>
+      <div class="def">How convincingly the study establishes that the treatment — not something else — caused the outcome, i.e., how valid the estimated counterfactual is. RDD has strong internal validity near the cutoff; quasi-experiments in general have weaker internal validity than RCTs because unmeasured confounders remain a threat.
+        <span class="eg">Near-cutoff comparability + controls = a strong (but not airtight) counterfactual.</span>
+      </div>
+    </details>
+    <details>
+      <summary>external validity (for quasi-experiments)</summary>
+      <div class="def">How well the study's causal estimate generalizes to other people, places, or contexts. RDD estimates are <em>local</em> — they apply to units near the cutoff — so external validity is inherently limited and authors should specify exactly whom the effect applies to.
+        <span class="eg">Dee &amp; Penner's effect applies to students near the 2.0 GPA cutoff, not all students.</span>
+      </div>
+    </details>
+    <details>
+      <summary>selection bias</summary>
+      <div class="def">Systematic differences between treated and untreated groups that arise when assignment is not random, so a naïve comparison confounds the treatment effect with those pre-existing differences. Producing a valid counterfactual is precisely the effort to defeat it.
+        <span class="eg">Frequently-absent kids differ from never-absent kids for reasons unrelated to summer school.</span>
+      </div>
+    </details>
+    <details>
+      <summary>causal language</summary>
+      <div class="def">Wording that asserts one thing <em>causes</em> another ("raised," "increased," "led to"). It should be used only as strongly as the design's counterfactual supports, and paired with a clear statement of the population to which the effect applies.
+        <span class="eg">"Encouragement raised attendance by ~6 days, for students near the cutoff."</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== iRAT PREP ===== -->
+  <section class="quiz">
+    <h2><span class="num">07</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer before revealing. Three are written like TBL readiness-check multiple-choice; the rest are short-answer/application. Then chew on the discussion prompts.</p>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>1. A district assigns every student who scores <em>below</em> 70 on a placement test to a mandatory tutoring program. To estimate the program's causal effect with a regression discontinuity, you should compare —</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. All tutored students to all non-tutored students</li>
+          <li>B. <b>Students who scored just below 70 to students who scored just above 70</b></li>
+          <li>C. The highest scorers to the lowest scorers</li>
+          <li>D. Tutored students before vs. after the program</li>
+        </ul>
+        <b>B.</b> RDD's leverage is <em>near the cutoff</em>. Students just below vs. just above 70 are nearly identical except for treatment assignment, so a jump in outcomes at the cutoff estimates the causal effect. Comparing all tutored to all non-tutored (A) reintroduces selection bias, since the groups differ systematically in ability.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>2. In the Dee &amp; Penner study, why is a regression discontinuity <em>possible</em> at all?</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. Students were randomly assigned to ethnic studies by lottery</li>
+          <li>B. The authors ran a controlled experiment in a lab</li>
+          <li>C. <b>An arbitrary GPA cutoff (2.0) determined who was encouraged to enroll</b></li>
+          <li>D. Every student in the district took the course</li>
+        </ul>
+        <b>C.</b> A clear cut point — 8th-grade GPA of 2.0 — decided who was encouraged to take the course. That arbitrary threshold makes students just above and just below comparable, which is exactly what an RDD exploits. There was no random lottery (A) and no experiment (B).
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>3. A researcher adds 8th-grade attendance, gender, and prior suspension as statistical controls and says, "Now this is just as good as an RCT." The best correction is —</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. Correct — controls make any design equivalent to an experiment</li>
+          <li>B. Wrong — controls make the estimate worse, not better</li>
+          <li>C. <b>Wrong — controls only account for variables you measured; unobserved confounders can still bias the estimate</b></li>
+          <li>D. Wrong — you should never use control variables</li>
+        </ul>
+        <b>C.</b> Controls neutralize <em>observed</em> confounders, but there are always factors we didn't or couldn't measure. Random assignment balances measured <em>and</em> unmeasured factors — which is why a quasi-experiment with controls is still not a substitute for an RCT.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>4. RDD gave Dee &amp; Penner a strong counterfactual. Why can't they claim their effect applies to <em>all</em> ninth graders?</span></summary>
+      <div class="def">
+        Because RDD identifies a <b>local</b> effect — it's only credible for students <b>near the cutoff</b> (here, GPA around 2.0). Students far above or below the threshold aren't comparable to anyone across the line, so the design says nothing causal about them. This is the internal-validity (strong, near the cutoff) vs. external-validity (limited) trade-off, and it's why the authors keep reminding readers who the estimate applies to.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>5. Name the untestable assumption a regression discontinuity relies on, and contrast it with the key assumption behind difference-in-differences.</span></summary>
+      <div class="def">
+        <b>RDD:</b> units just above and just below the cutoff are alike in all respects except treatment (continuity at the cutoff) — so any jump is the treatment's doing. <b>Difference-in-differences:</b> the <b>parallel-trends</b> assumption — absent treatment, the treated and comparison groups would have followed parallel paths over time. Both are assumptions <em>about the comparison group serving as a valid counterfactual</em>, and neither can be fully proven from the data — which is the core vulnerability of quasi-experiments.
+      </div>
+    </details>
+
+    <div class="prompt"><span class="lbl">Discussion 1</span>We can't randomly assign students to be suspended to test whether suspension causes dropout. Sketch a quasi-experimental design (a plausible cutoff or as-good-as-random process) that could get at this causal question — and name the assumption your design would hinge on.</div>
+    <div class="prompt"><span class="lbl">Discussion 2</span>Most ethnic-studies research generates <em>qualitative</em> evidence in a critical/participatory paradigm, while Dee &amp; Penner generate <em>quantitative</em> evidence in a postpositivist paradigm. What does the RDD reveal well, what does it miss, and how might your own lens on ethnic studies shape whether you find it convincing?</div>
+  </section>
+
+  <!-- ===== READINGS ===== -->
+  <section>
+    <h2><span class="num">08</span> Readings</h2>
+    <div class="readings">
+      <h3>For this session</h3>
+      <ul>
+        <li><strong>Required:</strong> Dee, T. S., &amp; Penner, E. K. (2016). "The causal effects of cultural relevance." <em>American Educational Research Journal, 54</em>(1), 127–166. <strong>Read pp. 127–150 only.</strong> Key items: pp. 135–136 &amp; Table 1 (context and demographics), p. 136 (course content/pedagogy), <strong>Table 4</strong> (treatment effects with statistical controls). Access via the course Library Reserves page.</li>
+        <li><strong>Recommended:</strong> Gopalan, Rosinger &amp; Ahn (2020). "Use of Quasi-Experimental Research Designs in Education Research: Growth, Promise, and Challenges." <em>Review of Research in Education, 44,</em> 218–243 — an overview of two widely used quasi-experimental methods (<strong>regression discontinuity</strong> and <strong>difference-in-differences</strong>) across early, K-12, and higher education.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>The counterfactual is the whole game — again.</strong> Causal evidence compares the treatment group to an estimate of what would have happened without treatment. Always ask "compared to what?"</li>
+      <li><strong>Quasi-experiments swap random assignment for as-good-as-random assignment</strong> — the way to get causal evidence when an RCT is unethical or infeasible.</li>
+      <li><strong>Regression discontinuity uses an arbitrary cutoff:</strong> units just above vs. just below are comparable, so a jump in the outcome at the cutoff is the causal effect — but only <em>near</em> the cutoff.</li>
+      <li><strong>Statistical controls handle observed confounders</strong> by holding them constant — yet unmeasured confounders remain, which is why RDD is not a substitute for an RCT.</li>
+      <li><strong>Appraise with three questions:</strong> How clear is the treatment–comparison contrast? How valid is the counterfactual (selection bias)? Whom does the effect apply to?</li>
+      <li><strong>Match your causal language to your design.</strong> Strong counterfactual → confident, but specify the local population and stay honest about weaker internal validity than an experiment.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 6 · study notes · © Harvard content paraphrased for personal study</footer>
+
+</div>
+</body>
+</html>

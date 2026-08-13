@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 5 — Causal Experimental Evidence · Study Notes</title>
+<style>
+  :root{
+    --ink:#241a12;
+    --ink-soft:#5e4c3c;
+    --paper:#faf5ee;
+    --orange:#c76a1f;
+    --orange-bright:#e08a34;
+    --orange-deep:#8a4212;
+    --teal:#1a8b7f;
+    --amber:#c79a1f;
+    --rose:#c1526b;
+    --line:#e6dccd;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(90,50,20,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    /* faint two-group texture: treatment & control, side by side */
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(199,106,31,.10) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(26,139,127,.07) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#5a2c0c,#8a4212 55%,#c76a1f);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#f2d8bd;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#f6e4d3;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--orange);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--teal);background:rgba(26,139,127,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--orange-bright);
+    background:linear-gradient(90deg,rgba(224,138,52,.10),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--orange-deep)}
+
+  /* treatment / control flow motif */
+  .flowline{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .fl-node{background:#fff;border:2px solid var(--orange);color:var(--orange);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .fl-node small{display:block;font-size:.62rem;letter-spacing:.08em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .fl-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* contrast / two-col tables */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  table.vs thead th:nth-child(2){color:var(--ink-soft)}
+  table.vs thead th:nth-child(3){color:var(--orange)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  table.vs tr td:nth-child(3){background:rgba(199,106,31,.05)}
+
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+  .svgfig{margin:6px 0 2px}
+
+  /* two-pane comparison */
+  .aa{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .aa .pane{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .aa .pane h4{margin:0 0 4px;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .aa .pane.treat h4{color:var(--orange)}
+  .aa .pane.ctrl h4{color:var(--teal)}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.tr{background:rgba(199,106,31,.14);color:var(--orange)}
+  .pill.co{background:rgba(26,139,127,.14);color:var(--teal)}
+  .aa .pane p{font-size:.92rem;margin:8px 0 0}
+  .aa .ex{font-size:.84rem;color:var(--ink-soft);margin-top:10px;
+    border-top:1px dashed var(--line);padding-top:8px}
+
+  /* nuance / watch-out box */
+  .nuance{background:#fff;border:1px solid var(--line);border-top:5px solid var(--amber);
+    border-radius:14px;padding:20px 24px;margin-top:16px;box-shadow:var(--shadow)}
+  .nuance h3{margin:0 0 6px;color:var(--amber);display:flex;align-items:center;gap:8px}
+  .nuance ul{margin:10px 0 0;padding-left:0;list-style:none}
+  .nuance li{padding:9px 0 9px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.95rem}
+  .nuance li:last-child{border-bottom:none}
+  .nuance li::before{content:"⚠";position:absolute;left:0;top:8px;color:var(--amber);font-size:.9rem}
+  .nuance b{color:var(--ink)}
+
+  /* quality-question steps */
+  .lesson{counter-reset:step;margin-top:10px}
+  .step{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow);position:relative}
+  .step::before{counter-increment:step;content:"Q" counter(step);
+    flex:0 0 42px;height:42px;border-radius:50%;
+    background:var(--orange);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .step .body{flex:1}
+  .step .idea{font-style:italic;color:var(--ink)}
+  .step .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .step .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);background:rgba(26,139,127,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* application panes */
+  .app{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .app .fig{background:#fff;border:1px solid var(--line);border-left:4px solid var(--orange-bright);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .app .fig b{color:var(--orange);display:block;font-size:.98rem;margin-bottom:2px}
+  .app .fig .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal)}
+  .app .fig p{font-size:.9rem;color:var(--ink-soft);margin:6px 0 0}
+
+  /* glossary + iRAT reveal */
+  .gloss details, .quiz details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary, .quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--orange);
+    font-size:1.02rem;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .gloss summary::-webkit-details-marker, .quiz summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .quiz summary::after{content:"answer ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .quiz details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary, .quiz details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def, .quiz .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+  .quiz .q{font-weight:400;color:var(--ink);flex:1}
+  .quiz .q .tag-mc{font-family:"SF Mono",monospace;font-size:.6rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--amber);background:rgba(199,154,31,.14);
+    padding:2px 7px;border-radius:6px;margin-right:8px;font-weight:700;vertical-align:middle}
+  .quiz .q .tag-sa{color:var(--teal);background:rgba(26,139,127,.12)}
+  .quiz .opts{margin:8px 0 0;padding-left:18px;font-size:.9rem;color:var(--ink-soft)}
+  .quiz .opts li{margin:3px 0}
+  .quiz .def b{color:var(--orange)}
+
+  .prompt{background:linear-gradient(90deg,rgba(26,139,127,.08),#fff 60%);
+    border-left:5px solid var(--teal);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:.95rem}
+  .prompt .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal);display:block;margin-bottom:2px}
+
+  /* readings note */
+  .readings{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;margin-top:14px;box-shadow:var(--shadow);font-size:.95rem}
+  .readings h3{margin:0 0 8px;color:var(--orange)}
+  .readings ul{margin:0;padding-left:20px}
+  .readings li{margin:6px 0}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#5a2c0c,#8a4212);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#f2d8bd;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#f0b985}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .aa,.app{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .step::before{flex-basis:36px;height:36px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details, .quiz details{break-inside:avoid}
+    .gloss .def, .quiz .def{display:block !important}
+    details:not([open]) .def{display:block}
+    .card,.step,.aa .pane,.app .fig,.gloss details,.quiz details,.nuance,.readings{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 5</p>
+    <h1>Causal Experimental Evidence</h1>
+    <p class="sub">The evidence that lets us say a program <em>caused</em> a change — not just moved alongside it. Big idea of the day: <strong>the counterfactual</strong> — what would have happened to the treated group if they hadn't been treated?</p>
+    <div class="tags">
+      <span class="tag">counterfactual</span>
+      <span class="tag">treatment ↔ control</span>
+      <span class="tag">random assignment</span>
+      <span class="tag">RCT · effect size</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea — the counterfactual</h2>
+    <p class="lead">Causal evidence answers a sharper question than description: <strong>"Is a treatment causing an impact?"</strong> A <em>treatment</em> is any intervention — a policy, program, or practice. This is the evidence that lets us claim a program <strong>actually improved</strong> achievement, not merely that it was <em>associated</em> with better outcomes.</p>
+
+    <div class="bigidea">
+      To measure the causal impact of a treatment, you compare the outcome for the treated group to a <strong>counterfactual</strong>: <strong>what would have happened to those same people if they had <em>not</em> been treated.</strong> The treatment effect is the gap between the two. Causal inference always asks, <strong>"compared to what?"</strong>
+    </div>
+
+    <p>In this week's study, the authors ask whether the <strong>Pedagogical Innovation Project (PIP)</strong> — which let teachers propose and implement a locally tailored project for a problem of practice in their classrooms — improved language and math scores and grade progression for students in <strong>Rio Grande do Norte, Brazil</strong>. The real question isn't just "did PIP students do well?" It's "did they do better <em>than they would have</em> under business-as-usual instruction?"</p>
+
+    <h3>Causal ≠ correlational</h3>
+    <p>Two things can be strongly <em>associated</em> without one causing the other. Descriptive evidence (Session 2) can show that PIP schools and higher scores move together; only causal evidence can license the claim that PIP <em>produced</em> the gain. The whole machinery below exists to rule out the rival explanation that the two groups simply differed to begin with.</p>
+
+    <div class="card">
+      <div class="flowline">
+        <div class="fl-node">TREATMENT<small>schools that<br>implemented PIP</small></div>
+        <span class="fl-arrow">−</span>
+        <div class="fl-node" style="border-color:var(--teal);color:var(--teal)">COUNTERFACTUAL<small>same schools,<br>business as usual</small></div>
+        <span class="fl-arrow">=</span>
+        <div class="fl-node" style="border-color:var(--orange-deep);color:var(--orange-deep)">TREATMENT EFFECT<small>the causal<br>impact of PIP</small></div>
+      </div>
+      <p class="figcap">Causal logic: outcome under treatment minus outcome under the counterfactual = the treatment effect.</p>
+    </div>
+  </section>
+
+  <!-- ===== 02 FUNDAMENTAL PROBLEM ===== -->
+  <section>
+    <h2><span class="num">02</span> The fundamental problem — we never observe the counterfactual</h2>
+    <p class="lead">Here is the catch that makes causal inference hard: <strong>we can never observe the true counterfactual.</strong> As soon as a student is taught <em>with</em> PIP, it is impossible to also know what that same student would have scored <em>without</em> it — and vice versa. No individual can be in both conditions at once.</p>
+
+    <p>The true individual treatment effect is therefore unknowable. But there's a solution: although we can't know what would have happened to any one person under both conditions, we <em>can</em> estimate the <strong>average</strong> difference. We build two groups — one that gets the treatment (the <strong>treatment group</strong>) and one that doesn't (the <strong>control group</strong>). The control group's outcome <strong>stands in for</strong> — estimates — the counterfactual for the treatment group.</p>
+
+    <div class="bigidea">
+      The control group is our estimate of the counterfactual. If — and only if — the two groups were <strong>equivalent before the treatment began</strong>, then their difference in outcomes afterward is a good estimate of the <strong>average treatment effect</strong>. Everything hinges on that "if."
+    </div>
+
+    <div class="card svgfig">
+      <svg viewBox="0 0 760 320" role="img" aria-label="Two bars: the observed treated outcome and the estimated untreated (control) outcome; the gap between them is the treatment effect" style="width:100%;height:auto">
+        <!-- baseline -->
+        <line x1="70" y1="270" x2="710" y2="270" stroke="#c3b39d" stroke-width="1.5"></line>
+        <text x="70" y="290" font-family="ui-monospace,Menlo,monospace" font-size="10.5" fill="#5e4c3c">outcome (e.g. test score) ↑</text>
+
+        <!-- control / counterfactual bar -->
+        <rect x="150" y="180" width="150" height="90" rx="4" fill="rgba(26,139,127,.18)" stroke="#1a8b7f" stroke-width="2"></rect>
+        <text x="225" y="205" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#1a8b7f">CONTROL</text>
+        <text x="225" y="222" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9.5" fill="#5e4c3c">business as usual</text>
+        <text x="225" y="256" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#1a8b7f">= estimated counterfactual</text>
+
+        <!-- treatment bar -->
+        <rect x="470" y="95" width="150" height="175" rx="4" fill="rgba(199,106,31,.18)" stroke="#c76a1f" stroke-width="2"></rect>
+        <text x="545" y="120" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#c76a1f">TREATMENT</text>
+        <text x="545" y="137" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9.5" fill="#5e4c3c">received PIP</text>
+        <text x="545" y="256" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#c76a1f">= observed outcome</text>
+
+        <!-- effect-size gap bracket -->
+        <line x1="300" y1="180" x2="470" y2="180" stroke="#8a4212" stroke-width="1.5" stroke-dasharray="5 4"></line>
+        <line x1="655" y1="95" x2="655" y2="180" stroke="#8a4212" stroke-width="2"></line>
+        <line x1="648" y1="95" x2="662" y2="95" stroke="#8a4212" stroke-width="2"></line>
+        <line x1="648" y1="180" x2="662" y2="180" stroke="#8a4212" stroke-width="2"></line>
+        <text x="690" y="142" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#8a4212" transform="rotate(90 690 138)">TREATMENT EFFECT</text>
+
+        <!-- unobservable note -->
+        <rect x="470" y="188" width="150" height="82" rx="4" fill="none" stroke="#c1526b" stroke-width="1.6" stroke-dasharray="4 4"></rect>
+        <text x="545" y="214" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" fill="#c1526b">what the treated group</text>
+        <text x="545" y="228" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" fill="#c1526b">WOULD have scored</text>
+        <text x="545" y="242" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" fill="#c1526b">without PIP —</text>
+        <text x="545" y="256" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" fill="#c1526b">never observed</text>
+      </svg>
+      <p class="figcap">We see the treated group's actual outcome (orange). We never see their counterfactual (dashed) — so we borrow the control group's outcome (teal) to estimate it. The remaining gap is the treatment effect.</p>
+    </div>
+  </section>
+
+  <!-- ===== 03 RANDOM ASSIGNMENT ===== -->
+  <section>
+    <h2><span class="num">03</span> Random assignment — how we earn a valid counterfactual</h2>
+    <p class="lead">Everything reduces to one question: <strong>how do we create treatment and control groups that were equivalent before the treatment?</strong> The answer is <strong>random assignment</strong> — the defining feature of a <strong>randomized controlled trial (RCT)</strong>, also just called an experiment.</p>
+
+    <p>Note the shift from Session 2. There, we randomly <em>selected a sample</em> from a population. Here, we randomly <em>assign</em> people already in the study to <em>get</em> the treatment or not. In PIP, researchers randomly assigned <strong>schools</strong>: some got PIP, some got business-as-usual. You could literally flip a coin — heads, you get PIP; tails, you don't.</p>
+
+    <div class="bigidea">
+      Because assignment is by chance, there should be <strong>no systematic difference</strong> between the two groups before the treatment. So if we later see a difference in outcomes, <strong>the treatment is the only thing that could have caused it.</strong> That is what makes the control group a trustworthy estimate of the treatment group's counterfactual — at least in a reasonably large sample.
+    </div>
+
+    <div class="card svgfig">
+      <svg viewBox="0 0 760 300" role="img" aria-label="A pool of mixed schools split by a coin flip into two balanced groups: treatment gets PIP, control gets business as usual" style="width:100%;height:auto">
+        <!-- pool -->
+        <rect x="20" y="90" width="180" height="130" rx="14" fill="#f6ecdd" stroke="#d8c4a8" stroke-width="1.5"></rect>
+        <text x="110" y="82" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#5e4c3c">POOL OF SCHOOLS</text>
+        <g stroke="#8a4212" stroke-width="1.2">
+          <circle cx="52" cy="122" r="7" fill="#c76a1f"></circle>
+          <circle cx="86" cy="118" r="7" fill="#1a8b7f"></circle>
+          <circle cx="120" cy="128" r="7" fill="#c76a1f"></circle>
+          <circle cx="156" cy="120" r="7" fill="#1a8b7f"></circle>
+          <circle cx="60" cy="160" r="7" fill="#1a8b7f"></circle>
+          <circle cx="98" cy="166" r="7" fill="#c76a1f"></circle>
+          <circle cx="140" cy="162" r="7" fill="#1a8b7f"></circle>
+          <circle cx="70" cy="196" r="7" fill="#c76a1f"></circle>
+          <circle cx="120" cy="194" r="7" fill="#c76a1f"></circle>
+          <circle cx="158" cy="192" r="7" fill="#1a8b7f"></circle>
+        </g>
+
+        <!-- coin flip -->
+        <g>
+          <circle cx="300" cy="155" r="30" fill="#fff" stroke="#c79a1f" stroke-width="2.5"></circle>
+          <text x="300" y="150" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#c79a1f">RANDOM</text>
+          <text x="300" y="165" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#c79a1f">COIN FLIP</text>
+        </g>
+        <line x1="200" y1="155" x2="266" y2="155" stroke="#8a4212" stroke-width="2" marker-end="url(#arr)"></line>
+        <line x1="332" y1="140" x2="430" y2="95" stroke="#c76a1f" stroke-width="2" marker-end="url(#arrO)"></line>
+        <line x1="332" y1="172" x2="430" y2="220" stroke="#1a8b7f" stroke-width="2" marker-end="url(#arrT)"></line>
+
+        <!-- treatment group -->
+        <rect x="440" y="40" width="290" height="105" rx="14" fill="rgba(199,106,31,.08)" stroke="#c76a1f" stroke-width="2"></rect>
+        <text x="458" y="34" font-family="ui-monospace,monospace" font-size="11" fill="#c76a1f">TREATMENT → gets PIP</text>
+        <g stroke="#8a4212" stroke-width="1.2">
+          <circle cx="480" cy="80" r="7" fill="#c76a1f"></circle>
+          <circle cx="516" cy="76" r="7" fill="#1a8b7f"></circle>
+          <circle cx="552" cy="84" r="7" fill="#c76a1f"></circle>
+          <circle cx="588" cy="78" r="7" fill="#1a8b7f"></circle>
+          <circle cx="624" cy="82" r="7" fill="#c76a1f"></circle>
+          <circle cx="498" cy="116" r="7" fill="#1a8b7f"></circle>
+          <circle cx="536" cy="120" r="7" fill="#c76a1f"></circle>
+          <circle cx="574" cy="114" r="7" fill="#1a8b7f"></circle>
+          <circle cx="612" cy="118" r="7" fill="#c76a1f"></circle>
+        </g>
+
+        <!-- control group -->
+        <rect x="440" y="165" width="290" height="105" rx="14" fill="rgba(26,139,127,.08)" stroke="#1a8b7f" stroke-width="2"></rect>
+        <text x="458" y="288" font-family="ui-monospace,monospace" font-size="11" fill="#1a8b7f">CONTROL → business as usual</text>
+        <g stroke="#8a4212" stroke-width="1.2">
+          <circle cx="480" cy="200" r="7" fill="#1a8b7f"></circle>
+          <circle cx="516" cy="204" r="7" fill="#c76a1f"></circle>
+          <circle cx="552" cy="198" r="7" fill="#1a8b7f"></circle>
+          <circle cx="588" cy="206" r="7" fill="#c76a1f"></circle>
+          <circle cx="624" cy="200" r="7" fill="#1a8b7f"></circle>
+          <circle cx="498" cy="236" r="7" fill="#c76a1f"></circle>
+          <circle cx="536" cy="240" r="7" fill="#1a8b7f"></circle>
+          <circle cx="574" cy="234" r="7" fill="#c76a1f"></circle>
+          <circle cx="612" cy="238" r="7" fill="#1a8b7f"></circle>
+        </g>
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L7,4.5 L0,9 z" fill="#8a4212"></path></marker>
+          <marker id="arrO" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L7,4.5 L0,9 z" fill="#c76a1f"></path></marker>
+          <marker id="arrT" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L7,4.5 L0,9 z" fill="#1a8b7f"></path></marker>
+        </defs>
+      </svg>
+      <p class="figcap">Random assignment scatters every kind of school (colors mixed) evenly across both groups. The two groups start balanced, so the only systematic difference left is the treatment itself.</p>
+    </div>
+
+    <h3>How randomization defeats selection bias</h3>
+    <p>If people <em>choose</em> whether to take a program, the groups can differ systematically from the start — <strong>selection bias</strong>. Maybe only the most motivated teachers sign up for PIP; then any score gain might reflect <em>motivation</em>, not the program. You'd get a biased (wrong) answer about the impact.</p>
+    <p>Randomization removes choice from the equation. Every school has an <strong>equal chance</strong> of landing in either group, so motivation — and every other characteristic — is spread evenly across treatment and control. That lets us <strong>rule out the rival explanation</strong> that the groups just differed to begin with. This is why RCTs are said to have high <strong>internal validity</strong>: they close off alternative explanations for the result.</p>
+
+    <div class="aa">
+      <div class="pane treat">
+        <h4>Random assignment <span class="pill tr">RCT</span></h4>
+        <p>A coin flip decides who gets the treatment. Groups are balanced by chance, so the treatment is the <strong>only</strong> systematic difference.</p>
+        <p class="ex"><b>Result:</b> a valid counterfactual and high internal validity — a difference in outcomes can be attributed to the treatment.</p>
+      </div>
+      <div class="pane ctrl">
+        <h4>Self-selection <span class="pill co">biased</span></h4>
+        <p>People opt in or out. The groups may differ in motivation, resources, or ability <em>before</em> anything happens.</p>
+        <p class="ex"><b>Result:</b> selection bias — you can't tell whether the treatment or the pre-existing difference produced the outcome.</p>
+      </div>
+    </div>
+    <p style="font-size:.9rem;color:var(--ink-soft);margin-top:12px">↳ One honest caveat from the video: randomization is not a guarantee for any single trial. <strong>Chance</strong> can still leave small differences between groups — randomization <em>minimizes</em> the possibility of systematic differences, and does so most reliably in <strong>reasonably large samples.</strong></p>
+  </section>
+
+  <!-- ===== 04 READING & JUDGING RCTs ===== -->
+  <section>
+    <h2><span class="num">04</span> Reading &amp; judging an RCT</h2>
+    <p class="lead">When you meet a causal experimental study, you judge it on its own terms. The effect is reported as an <strong>effect size</strong>, and three essential questions from the learning outcomes tell you whether to trust and how far to extend the finding.</p>
+
+    <h3>Effect size — the difference, in standard-deviation units</h3>
+    <p>In causal evidence, the <strong>effect size</strong> is the difference in outcomes between the treatment and control groups, <strong>measured in standard-deviation (SD) units</strong>. Reporting in SDs (rather than raw points) makes effects comparable across different tests and scales — an effect of "0.2 SD" means the average treated student moved two-tenths of a standard deviation above the average control student. As a rough field convention, education effects around 0.1 SD are small, ~0.2–0.3 SD are meaningful, and larger ones are notable — but always weigh <strong>practical</strong> significance, not just the number.</p>
+
+    <div class="lesson">
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well does the study describe the contrast between the treatment and the control group?</p>
+          <p class="mech"><b>The contrast IS the treatment</b> The effect only means something relative to what the control group experienced. PIP looks smaller where control schools also gave teachers autonomy, and larger where controls got only rote instruction. A study should describe <em>both</em> conditions — a weakness of this paper is that it explains the treatment more fully than the control.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How valid is the estimate of the counterfactual? (How well does the study deal with selection bias?)</p>
+          <p class="mech"><b>Internal validity</b> Are we convinced treated and control students would have had the same outcomes but for the treatment? Random assignment is what buys this — it lets you dismiss "the PIP schools were just more motivated" as unlikely, because motivation was balanced across groups by chance.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well do the authors identify the groups to which the treatment effect applies?</p>
+          <p class="mech"><b>Who does it apply to?</b> In an RCT the effect is usually the <em>average</em> effect on the whole sample — but the average may hide variation. PIP's gains were concentrated in <strong>Grade 6</strong>, were more pronounced for students <em>already scoring highly</em>, and differed somewhat by gender. Don't over-extrapolate from an average to every subgroup.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>What an RCT can and can't tell you</h3>
+    <p>A clean RCT supports strong claims about <em>whether</em> a treatment worked — but it <strong>can't tell you how or why</strong> it worked, what it did to outcomes that weren't measured, or what the effect would have been against a <em>different</em> control condition. Causal experimental evidence is one tool among many; the course's process evidence (later) explores the "how and why."</p>
+
+    <div class="nuance">
+      <h3>⚠ Nuance &amp; watch-outs</h3>
+      <ul>
+        <li><b>Correlation ≠ causation.</b> An association between PIP and higher scores is not proof PIP caused them. Only a valid counterfactual — here, from random assignment — licenses the causal claim.</li>
+        <li><b>Randomization balances the <em>unobserved</em> too.</b> Its real power: it evens out not just measured traits (baseline scores) but characteristics you never thought to measure (motivation, home support). No statistical control can do that.</li>
+        <li><b>Internal validity ≠ generalizability.</b> A study can be internally airtight yet not transfer. RCT participants are often unusual — the sickest patients, or schools near research universities. These PIP schools had <em>better baseline outcomes</em>, so impacts may not extend to weaker schools or to São Paulo.</li>
+        <li><b>Statistical vs. practical significance.</b> A statistically significant effect can still be tiny in SD terms; a large effect size in a small study can be noisy. Ask both "is it real?" and "is it big enough to matter?"</li>
+        <li><b>The average hides subgroups.</b> An average treatment effect can be driven by one grade or one type of student. Check whom the effect actually applies to before acting on it.</li>
+        <li><b>Ethics &amp; paradigm.</b> RCTs sit in a post-positivist paradigm (an objective impact exists to be estimated). Randomizing a potentially harmful treatment (e.g., grade retention) is ethically fraught, and over-researching marginalized communities carries real costs.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 05 TODAY'S APPLICATION ===== -->
+  <section>
+    <h2><span class="num">05</span> Today's application — should São Paulo adopt PIP?</h2>
+    <p>Policymakers have decided to implement PIP in São Paulo schools, but some worry the evidence shows PIP's impact is <strong>concentrated in Grade 6</strong> learning. As always, there is <strong>no single correct answer</strong> — the task is to <em>use the language of evidence</em> to argue for one choice over another.</p>
+    <div class="app">
+      <div class="fig">
+        <span class="lbl">Step 1 · pick your headline evidence</span>
+        <b>Table 1 vs. Table 2</b>
+        <p>Choose <strong>one</strong> piece to support implementing PIP: <em>Table 1</em> (the Grade&nbsp;6 average treatment effect) or <em>Table 2</em> (the treatment effects on passing a grade and repetition for <strong>all</strong> students). One is a large, focused effect; the other is broader but may be smaller.</p>
+      </div>
+      <div class="fig">
+        <span class="lbl">Step 2 · answer the "only-G6" concern</span>
+        <b>One more piece of evidence</b>
+        <p>Draw <strong>one additional</strong> result from elsewhere in the paper — qualitative or quantitative, student- or teacher-focused. Options named in the prompt: <em>Appendix A</em> (pedagogical project descriptions), <em>Table 2, Col. 1</em> (impact on student progression), or <em>Table 3</em> (impact on teacher retention in Grade 6).</p>
+      </div>
+    </div>
+    <div class="bigidea">
+      <strong>How to argue it in the language of evidence:</strong> Ground the choice in Session 5 vocabulary. Name the <strong>treatment–control contrast</strong> your table rests on, state the <strong>effect size</strong> and whether it's practically meaningful, and defend the <strong>counterfactual</strong> (random assignment ⇒ internal validity). Then, on the G6 concern, be explicit about <strong>whom the effect applies to</strong>: an average masks subgroups, so either argue the progression/retention effects <em>generalize</em> beyond G6, or concede the effect is grade-specific and justify implementing anyway. Close by flagging <strong>generalizability</strong> from Rio Grande do Norte to São Paulo.
+    </div>
+  </section>
+
+  <!-- ===== 06 GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">06</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it. These are the Session 5 evidence-vocabulary words.</p>
+
+    <details>
+      <summary>causal impact</summary>
+      <div class="def">The change in an outcome that a treatment actually <em>produced</em> — as opposed to a mere association. Answering "is a treatment causing an impact?" requires comparing the treated outcome to a counterfactual.
+        <span class="eg">"PIP raised math scores by X" is a causal-impact claim; "PIP schools had higher scores" is not.</span>
+      </div>
+    </details>
+    <details>
+      <summary>counterfactual</summary>
+      <div class="def">What would have happened to the treatment group if they had <em>not</em> received the treatment. It is never directly observed, so it must be estimated — usually with a control/comparison group. The counterfactual is the central idea of causal inference.
+        <span class="eg">For PIP students, the counterfactual is their scores under business-as-usual instruction.</span>
+      </div>
+    </details>
+    <details>
+      <summary>treatment</summary>
+      <div class="def">The intervention whose impact is being measured — a policy, program, or practice. In this study, the treatment is being in a school that implemented PIP.
+        <span class="eg">"Treatment" doesn't mean medicine here — it's any deliberate intervention.</span>
+      </div>
+    </details>
+    <details>
+      <summary>treatment group</summary>
+      <div class="def">The participants who receive the treatment. Their post-intervention outcome is compared against the control group to estimate the effect.
+        <span class="eg">The schools randomly assigned to run PIP.</span>
+      </div>
+    </details>
+    <details>
+      <summary>control group</summary>
+      <div class="def">The participants who do <em>not</em> receive the treatment (they get business-as-usual). The control group's outcome is used to estimate the counterfactual for the treatment group.
+        <span class="eg">A well-chosen control group answers "compared to what?"</span>
+      </div>
+    </details>
+    <details>
+      <summary>random assignment</summary>
+      <div class="def">Assigning participants to the treatment or control group purely by chance (like a coin flip). It makes the groups equivalent before treatment, so the treatment becomes the only systematic difference between them. Distinct from random <em>sampling</em>, which selects who's in the study.
+        <span class="eg">In PIP, schools were randomly assigned to receive the program or not.</span>
+      </div>
+    </details>
+    <details>
+      <summary>randomized controlled trial (RCT)</summary>
+      <div class="def">An experiment that uses random assignment to create treatment and control groups, then compares their outcomes to estimate a causal effect. The gold-standard design for internal validity.
+        <span class="eg">Also just called "an experiment."</span>
+      </div>
+    </details>
+    <details>
+      <summary>selection bias</summary>
+      <div class="def">Systematic distortion that arises when people are <em>not</em> randomly assigned — e.g., they choose whether to participate — so treatment and control groups differ before the treatment. It produces a biased (incorrect) estimate of impact. Random assignment is what prevents it.
+        <span class="eg">If only the most motivated teachers adopt PIP, motivation — not PIP — could explain the gains.</span>
+      </div>
+    </details>
+    <details>
+      <summary>average treatment effect</summary>
+      <div class="def">The difference between the average outcome of the treatment group and the average outcome of the control group. It's an <em>average</em> — it may not equal the effect for any particular subgroup within the sample.
+        <span class="eg">PIP's average effect masked the fact that gains were concentrated in Grade 6.</span>
+      </div>
+    </details>
+    <details>
+      <summary>effect size</summary>
+      <div class="def">The magnitude of the treatment effect, expressed in <strong>standard-deviation units</strong> so it's comparable across different scales and tests. Bigger = a larger causal impact — but judge practical significance, not just the number.
+        <span class="eg">A 0.2-SD effect ≈ the average treated student outscoring two-thirds of the control group's typical spread.</span>
+      </div>
+    </details>
+    <details>
+      <summary>internal validity</summary>
+      <div class="def">How confident we are that the treatment — and not some other difference between the groups — caused the observed outcome; equivalently, how valid the estimate of the counterfactual is. RCTs have high internal validity because randomization rules out alternative explanations.
+        <span class="eg">"Would the treated and control students have had the same outcomes but for the treatment?"</span>
+      </div>
+    </details>
+    <details>
+      <summary>external validity (generalizability)</summary>
+      <div class="def">The extent to which a study's findings extend to other people, places, or settings beyond the one studied. High internal validity does not guarantee it — RCT participants are often unusual, so transfer must be argued, not assumed.
+        <span class="eg">Would PIP's Rio Grande do Norte results hold in São Paulo? That's an external-validity question.</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== 07 iRAT PREP ===== -->
+  <section class="quiz">
+    <h2><span class="num">07</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer before revealing. Three are written like TBL readiness-check multiple-choice; the rest are short-answer/application. Then chew on the discussion prompts.</p>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>1. Why can we never directly measure the true counterfactual for a treated student?</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. Because samples are always too small</li>
+          <li>B. <b>Because the same student can't be both treated and untreated at once</b></li>
+          <li>C. Because standard deviations are hard to compute</li>
+          <li>D. Because control groups are unethical</li>
+        </ul>
+        <b>B.</b> As soon as a student experiences PIP, their "what would have happened without PIP" outcome is unobservable — and vice versa. This is the fundamental problem of causal inference, which is why we estimate the counterfactual with a control group.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>2. A district lets schools <em>volunteer</em> for a new tutoring program, then compares volunteers to non-volunteers. The biggest threat to a causal claim is —</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. The effect size wasn't reported in SD units</li>
+          <li>B. The sample wasn't drawn from the whole population</li>
+          <li>C. <b>Selection bias — volunteering schools may differ systematically from non-volunteers before any tutoring happens</b></li>
+          <li>D. There is no control group at all</li>
+        </ul>
+        <b>C.</b> Because schools chose their own group, the groups may differ in motivation, resources, or leadership from the start. Without random assignment, we can't tell whether tutoring or those pre-existing differences produced the outcome. (There <em>is</em> a comparison group — the problem is <em>how</em> it was formed.)
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>3. An RCT reports an average treatment effect of <b>0.25 SD</b> on math scores. Which interpretation is best supported?</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. Every student in the treatment group gained 0.25 SD</li>
+          <li>B. <b>On average, the treatment group scored about a quarter of a standard deviation above the control group</b></li>
+          <li>C. The treatment raised scores by 25 percentage points</li>
+          <li>D. The result is automatically practically important</li>
+        </ul>
+        <b>B.</b> Effect size is a difference in <em>averages</em>, in SD units — not a per-student guarantee (A), not percentage points (C). And a statistically detectable 0.25 SD still needs a separate judgment about whether it's <em>practically</em> meaningful (D).
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>4. In one sentence, what does random <em>assignment</em> accomplish that random <em>sampling</em> does not?</span></summary>
+      <div class="def">
+        Random <b>assignment</b> makes the treatment and control groups equivalent <em>before</em> the treatment (balancing observed and unobserved traits), so a later difference in outcomes can be attributed to the treatment — it creates a valid counterfactual and internal validity. Random <b>sampling</b> only makes the study group representative of a population (external/descriptive inference); it says nothing about causation.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>5. PIP was a clean RCT with high internal validity. Name two things it still <em>cannot</em> tell São Paulo's leaders.</span></summary>
+      <div class="def">
+        Any two of: (1) <b>how or why</b> PIP worked — the mechanism/process; (2) its effect on <b>outcomes that weren't measured</b>; (3) what the effect would have been against a <b>different control condition</b>; (4) whether the result <b>generalizes</b> to São Paulo, since these Rio Grande do Norte schools had better-than-average baseline outcomes; (5) the effect for a <b>specific subgroup</b>, since the reported effect is an average (e.g., gains concentrated in Grade 6).
+      </div>
+    </details>
+
+    <div class="prompt"><span class="lbl">Discussion 1</span>A colleague says, "The PIP schools scored higher, so PIP works — let's roll it out everywhere." Using the vocabulary of causal evidence (counterfactual, random assignment, internal vs. external validity, average treatment effect), lay out what the RCT does justify and what it does not — especially given that impacts were concentrated in Grade 6.</div>
+    <div class="prompt"><span class="lbl">Discussion 2</span>Some interventions can't ethically be tested with an RCT — e.g., randomly holding students back a grade. Pick an education policy you care about, decide whether an RCT would be ethical and feasible, and if not, describe what kind of counterfactual you might construct instead.</div>
+  </section>
+
+  <!-- ===== 08 READINGS ===== -->
+  <section>
+    <h2><span class="num">08</span> Readings</h2>
+    <div class="readings">
+      <h3>For this session</h3>
+      <ul>
+        <li><strong>Required (main reading):</strong> Piza, C., Zwager, A., Ruzzante, M., Dantas, R., &amp; Loureiro, A. (2024). <em>Teacher-led innovations to improve education outcomes: Experimental evidence from Brazil.</em> Journal of Public Economics, 234, 105123. — the RCT of the Pedagogical Innovation Project (PIP) in Rio Grande do Norte.</li>
+        <li><strong>Required (guide):</strong> <em>Interpreting Quantitative Data in Research Papers</em> [Google Doc] — a handy guide from the Evidence team on reading the kinds of tables (average treatment effects, progression/repetition, teacher retention) you'll meet in the PIP paper. Keep it open as you read.</li>
+        <li>Access all readings through the course <strong>Library Reserves</strong> page.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>Causal evidence asks "did the treatment cause an impact?"</strong> — a stronger claim than mere association. Causal ≠ correlational.</li>
+      <li><strong>The counterfactual is the big idea:</strong> what would have happened to the treated group if they hadn't been treated. Always ask "compared to what?"</li>
+      <li><strong>We never observe the true counterfactual</strong> — so we estimate it with a control group, valid only if the groups were equivalent before treatment.</li>
+      <li><strong>Random assignment earns the counterfactual:</strong> a coin flip balances observed <em>and</em> unobserved differences, so the treatment is the only systematic one — defeating selection bias.</li>
+      <li><strong>Effect size is the treatment–control difference in standard-deviation units;</strong> weigh statistical <em>and</em> practical significance, and check whom the average effect applies to.</li>
+      <li><strong>Internal validity ≠ generalizability:</strong> an RCT can be airtight yet not transfer, and it can't tell you how or why the treatment worked.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 5 · study notes · © Harvard content paraphrased for personal study</footer>
+
+</div>
+</body>
+</html>

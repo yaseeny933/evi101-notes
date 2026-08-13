@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 8 — Synthetic Evidence · Study Notes</title>
+<style>
+  :root{
+    --ink:#2a1420;
+    --ink-soft:#6a4656;
+    --paper:#faf4f7;
+    --rose:#a53d6e;
+    --rose-bright:#c65a8a;
+    --plum:#7d2a52;
+    --teal:#1a8b8f;
+    --amber:#c77c1f;
+    --line:#e7d3de;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(120,30,70,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    /* faint pooling-dots texture: many studies distilled to one estimate */
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(198,90,138,.10) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(26,139,143,.07) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#5a1638,#7d2a52 60%,#a53d6e);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#f2c9dd;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#f6dfe9;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--rose);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--teal);background:rgba(26,139,143,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--rose-bright);
+    background:linear-gradient(90deg,rgba(198,90,138,.09),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--rose)}
+
+  /* studies -> pooled estimate motif */
+  .flowline{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .fl-node{background:#fff;border:2px solid var(--rose);color:var(--rose);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .fl-node small{display:block;font-size:.62rem;letter-spacing:.08em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .fl-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* contrast / two-col tables */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  table.vs thead th:nth-child(2){color:var(--ink-soft)}
+  table.vs thead th:nth-child(3){color:var(--rose)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  table.vs tr td:nth-child(3){background:rgba(198,90,138,.05)}
+
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+  .svgfig{margin:6px 0 2px}
+
+  /* two-pane comparison */
+  .aa{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .aa .pane{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .aa .pane h4{margin:0 0 4px;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .aa .pane.words h4{color:var(--teal)}
+  .aa .pane.nums h4{color:var(--rose)}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.words{background:rgba(26,139,143,.14);color:var(--teal)}
+  .pill.nums{background:rgba(198,90,138,.14);color:var(--rose)}
+  .aa .pane p{font-size:.92rem;margin:8px 0 0}
+  .aa .ex{font-size:.84rem;color:var(--ink-soft);margin-top:10px;
+    border-top:1px dashed var(--line);padding-top:8px}
+
+  /* nuance / watch-out box */
+  .nuance{background:#fff;border:1px solid var(--line);border-top:5px solid var(--amber);
+    border-radius:14px;padding:20px 24px;margin-top:16px;box-shadow:var(--shadow)}
+  .nuance h3{margin:0 0 6px;color:var(--amber);display:flex;align-items:center;gap:8px}
+  .nuance ul{margin:10px 0 0;padding-left:0;list-style:none}
+  .nuance li{padding:9px 0 9px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.95rem}
+  .nuance li:last-child{border-bottom:none}
+  .nuance li::before{content:"⚠";position:absolute;left:0;top:8px;color:var(--amber);font-size:.9rem}
+  .nuance b{color:var(--ink)}
+
+  /* quality-question steps */
+  .lesson{counter-reset:step;margin-top:10px}
+  .step{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow);position:relative}
+  .step::before{counter-increment:step;content:"Q" counter(step);
+    flex:0 0 42px;height:42px;border-radius:50%;
+    background:var(--rose);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .step .body{flex:1}
+  .step .idea{font-style:italic;color:var(--ink)}
+  .step .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .step .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);background:rgba(26,139,143,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* application panes */
+  .app{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .app .fig{background:#fff;border:1px solid var(--line);border-left:4px solid var(--rose-bright);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .app .fig b{color:var(--rose);display:block;font-size:.98rem;margin-bottom:2px}
+  .app .fig .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal)}
+  .app .fig p{font-size:.9rem;color:var(--ink-soft);margin:6px 0 0}
+
+  /* ladder-of-inference frames */
+  .ladder{margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:var(--shadow);background:#fff}
+  .ladder .rung{display:flex;gap:14px;align-items:baseline;padding:12px 18px;border-bottom:1px solid var(--line)}
+  .ladder .rung:last-child{border-bottom:none}
+  .ladder .rung .frame{font-family:"SF Mono",monospace;font-size:.64rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--rose);flex:0 0 118px}
+  .ladder .rung .txt{font-size:.94rem;color:var(--ink)}
+  .ladder .rung .txt em{color:var(--ink-soft);font-style:italic}
+
+  /* glossary + iRAT reveal */
+  .gloss details, .quiz details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary, .quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--rose);
+    font-size:1.02rem;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .gloss summary::-webkit-details-marker, .quiz summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .quiz summary::after{content:"answer ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .quiz details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary, .quiz details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def, .quiz .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+  .quiz .q{font-weight:400;color:var(--ink);flex:1}
+  .quiz .q .tag-mc{font-family:"SF Mono",monospace;font-size:.6rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--amber);background:rgba(199,124,31,.12);
+    padding:2px 7px;border-radius:6px;margin-right:8px;font-weight:700;vertical-align:middle}
+  .quiz .q .tag-sa{color:var(--teal);background:rgba(26,139,143,.12)}
+  .quiz .opts{margin:8px 0 0;padding-left:18px;font-size:.9rem;color:var(--ink-soft)}
+  .quiz .opts li{margin:3px 0}
+  .quiz .def b{color:var(--rose)}
+
+  .prompt{background:linear-gradient(90deg,rgba(26,139,143,.08),#fff 60%);
+    border-left:5px solid var(--teal);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:.95rem}
+  .prompt .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal);display:block;margin-bottom:2px}
+
+  /* readings note */
+  .readings{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;margin-top:14px;box-shadow:var(--shadow);font-size:.95rem}
+  .readings h3{margin:0 0 8px;color:var(--rose)}
+  .readings ul{margin:0;padding-left:20px}
+  .readings li{margin:6px 0}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#5a1638,#7d2a52);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#f2c9dd;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#eaa8c6}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .aa,.app{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .step::before{flex-basis:36px;height:36px}
+    .ladder .rung{flex-direction:column;gap:2px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details, .quiz details{break-inside:avoid}
+    .gloss .def, .quiz .def{display:block !important}
+    details:not([open]) .def{display:block}
+    .card,.step,.aa .pane,.app .fig,.gloss details,.quiz details,.nuance,.readings,.ladder{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 8</p>
+    <h1>Synthetic Evidence</h1>
+    <p class="sub">Pool many studies to answer one question: <strong>what do we already know?</strong> Big idea of the day: <strong>see the forest, not the trees.</strong></p>
+    <div class="tags">
+      <span class="tag">systematic review</span>
+      <span class="tag">meta-analysis</span>
+      <span class="tag">effect size</span>
+      <span class="tag">inclusion criteria</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea</h2>
+    <p class="lead">Synthetic evidence answers one question: <strong>"What is already known?"</strong> Instead of reading one primary study, it <strong>pools and synthesizes findings across many prior studies</strong> to tell us what the body of research says as a whole. Most practitioners don't have time to read every primary study — so they lean on syntheses.</p>
+
+    <div class="bigidea">
+      The big idea is <strong>systematic review</strong>. Any one study on a topic might find a huge effect, no effect, or even a negative one. We don't want to be swayed by whichever study we happen to read. A synthesis lets us <strong>see the forest, not the trees</strong> — identifying areas of consensus and reconciling conflicting findings. But that only works if the studies are selected <strong>systematically</strong> and the selection criteria are stated <strong>transparently</strong>, so we aren't just cherry-picking studies we already agree with.
+    </div>
+
+    <div class="card">
+      <div class="flowline">
+        <div class="fl-node">MANY STUDIES<small>60 studies on<br>teacher coaching</small></div>
+        <span class="fl-arrow">→</span>
+        <div class="fl-node" style="border-color:var(--teal);color:var(--teal)">SYSTEMATIC<br>SELECTION<small>transparent<br>inclusion criteria</small></div>
+        <span class="fl-arrow">→</span>
+        <div class="fl-node">POOLED ESTIMATE<small>the "typical"<br>effect &amp; its spread</small></div>
+      </div>
+      <p class="figcap">Synthetic evidence: pool many studies through transparent criteria to estimate what is typically true.</p>
+    </div>
+
+    <p>Our worked example all session is a widely cited meta-analysis by <strong>Kraft, Blazar &amp; Hogan (2018)</strong> that synthesizes <strong>60 studies</strong> on the impact of <strong>teacher coaching</strong> on classroom instruction and student achievement. We use it as a Grand-Challenge tool: São Paulo has decided to pursue teacher coaching, and we want to know what the research literature <em>overall</em> tells us to expect.</p>
+
+    <h3>Two flavors of synthesis: words vs. numbers</h3>
+    <p>There are many ways to synthesize prior research; the two most common are shown below. Both aim to give a picture of what is known and not known — the difference is what they pool.</p>
+    <div class="aa">
+      <div class="pane words">
+        <h4>Systematic literature review <span class="pill words">pool words</span></h4>
+        <p>You read individual studies and <strong>distill words, ideas, and conclusions</strong> — a qualitative synthesis of what we know and don't know about a topic.</p>
+        <p class="ex"><b>Yields:</b> themes, areas of consensus, open questions — narrative, not a single number.</p>
+      </div>
+      <div class="pane nums">
+        <h4>Meta-analysis <span class="pill nums">pool numbers</span></h4>
+        <p>You <strong>quantitatively combine the findings</strong> from many studies — usually about the impact of a program or intervention — to estimate the <strong>"typical" impact</strong>.</p>
+        <p class="ex"><b>Yields:</b> a pooled average effect size (plus a sense of how much studies vary around it).</p>
+      </div>
+    </div>
+    <p style="font-size:.9rem;color:var(--ink-soft);margin-top:12px">↳ A narrative (or "traditional") review <em>without</em> transparent, systematic selection risks cherry-picking. The word "systematic" is what separates trustworthy synthesis from a cherry-picked one.</p>
+  </section>
+
+  <!-- ===== 02 THREE QUALITY QUESTIONS ===== -->
+  <section>
+    <h2><span class="num">02</span> Three quality questions for synthetic evidence</h2>
+    <p class="lead">Every form of evidence has its own affordances, so we judge each on its own terms. For synthetic evidence we ask three questions — they organize the rest of these notes, and they're exactly how the session evaluates the Kraft study.</p>
+    <div class="lesson">
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well does the study define and focus the topic or intervention?</p>
+          <p class="mech"><b>Section 03</b> A fuzzy definition pools apples with oranges. Kraft et al. spend real effort defining "coaching."</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How transparent and systematic are the criteria by which studies are included in or excluded from the synthesis?</p>
+          <p class="mech"><b>Section 03</b> Transparent inclusion/exclusion criteria are what keep a synthesis from being cherry-picked.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How strong is the quality of the underlying individual studies?</p>
+          <p class="mech"><b>Section 03</b> Garbage in, garbage out — a summary of weak studies is itself weak. For causal claims, include only experiments/quasi-experiments.</p>
+        </div>
+      </div>
+    </div>
+    <div class="bigidea">
+      Notice the through-line: a synthesis is <strong>only as good as (a)</strong> how clearly it defines what it's about, <strong>(b)</strong> how honestly it chose its studies, and <strong>(c)</strong> the quality of the studies it chose. If any of the three is weak, the pooled number is misleading — no matter how precise it looks.
+    </div>
+  </section>
+
+  <!-- ===== 03 EVALUATING KRAFT ===== -->
+  <section>
+    <h2><span class="num">03</span> Applying the questions to Kraft et al.</h2>
+
+    <h3>Q1 — Defining &amp; focusing the intervention</h3>
+    <p>"Coaching" means different things to different people, so the authors define it carefully (p. 553): <strong>all in-service professional-development programs that incorporate coaching as a key feature</strong>. They further specify that in a coaching process, instructional experts work with teachers in a way that is <strong>individualized</strong> (one-on-one), <strong>intensive</strong> (at least every couple of weeks), <strong>sustained</strong> over an extended period, <strong>context-specific</strong> to the teacher's own classroom, and <strong>focused</strong> on deliberate practice of specific skills. A tight definition means every pooled study is measuring the same kind of thing.</p>
+
+    <h3>Q2 — Transparent &amp; systematic inclusion criteria</h3>
+    <p>The authors searched research databases, mined the reference lists of related studies, and asked field experts for recommendations — then applied <strong>four explicit inclusion criteria</strong>. A study was included only if it:</p>
+    <div class="card" style="padding:6px 10px">
+      <table class="vs">
+        <thead>
+          <tr><th>#</th><th>Inclusion criterion</th><th>Why it's there</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Evaluated a coaching intervention meeting their definition of "coaching."</td><td>Keeps the synthesis focused on one clearly defined thing (Q1).</td></tr>
+          <tr><td>2</td><td>Studied coaching of early-childhood-to-grade-12 teachers in "developed nations."</td><td>Bounds the population the findings speak to.</td></tr>
+          <tr><td>3</td><td>Used a research design that allows <em>causal</em> inferences.</td><td>Only experiments/quasi-experiments can support an average <em>effect</em> (Q3).</td></tr>
+          <tr><td>4</td><td>Included at least one measure of classroom instruction or student outcomes.</td><td>Ensures every study reports an outcome that can be pooled.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Applying these left <strong>60 studies</strong>. Because the process is described and articulated clearly, we have more confidence it's high quality. <strong>But no selection process is perfect or free from the researchers' values.</strong> When they contacted "leading" scholars for study recommendations, how was "leading" defined — by network, by university ranking, by something else? Educational research has its own hierarchies that uplift some authors and methods while overlooking others. Synthesis is powerful for seeing the bigger picture, but no single piece of evidence — even synthetic — shows the <em>entire</em> picture.</p>
+
+    <h3>Q3 — Quality of the underlying studies</h3>
+    <p>If the underlying studies aren't strong, conclusions drawn from summarizing them won't be either. Because Kraft et al. want a <strong>causal</strong> inference about coaching's impact, they included <strong>only experiments and quasi-experiments</strong> and <strong>excluded any study without random assignment</strong>. That's exactly what we want — the designs with the strongest claim on causal inference. This is the key rule: <em>a meta-analysis of an intervention's effect must include only studies designed to make causal inferences in the first place.</em></p>
+  </section>
+
+  <!-- ===== 04 EFFECT SIZES & THE FOREST ===== -->
+  <section>
+    <h2><span class="num">04</span> Reading the results — effect sizes and their spread</h2>
+    <p class="lead">Different studies measure instruction and achievement with different tests on different scales. How do you pool them? The answer is the <strong>effect size</strong> — the common currency of meta-analysis.</p>
+
+    <p>An <strong>effect size</strong> is the difference between the treated group and the control group, expressed in <strong>standard-deviation units</strong>. Putting every result in the same unit (standard deviations) makes results comparable across studies that used very different outcome measures — e.g. low-stakes progress tests and high-stakes end-of-year state tests. Two cautions the session stresses:</p>
+    <div class="nuance">
+      <h3>⚠ Two things to know about effect sizes</h3>
+      <ul>
+        <li><b>They don't always measure "effects."</b> Despite the name, an effect size is a <b>unit of measure, not a statement of causation</b>. You still use your own judgment about whether the design supports a causal claim.</li>
+        <li><b>In education, "big" is small.</b> Even large effect sizes often come in <b>tenths of a standard deviation</b>. What counts as big depends on the outcome, the age of the students, and whether the intervention reaches students directly or indirectly (e.g. through teachers).</li>
+      </ul>
+    </div>
+
+    <p>Kraft et al.'s headline pooled effects (Table 2), averaged across all 60 studies:</p>
+    <div class="app">
+      <div class="fig">
+        <span class="lbl">on instruction</span>
+        <b>+0.49 SD</b>
+        <p>Average effect of coaching on <strong>classroom instruction</strong> (0.488 SD). A pretty big effect size for education research.</p>
+      </div>
+      <div class="fig">
+        <span class="lbl">on achievement</span>
+        <b>+0.18 SD</b>
+        <p>Average effect on <strong>student achievement</strong> (0.178 SD). Sounds small, but it moves a typical student from the 50th to about the 57th percentile — a decent-sized gain.</p>
+      </div>
+    </div>
+    <p>Two reporting details worth knowing: the table reports both <strong>k</strong> (the number of effect sizes) and <strong>n</strong> (the number of studies) behind each estimate — there are more effect sizes than studies because one study can measure several outcomes (e.g. decoding, vocabulary, comprehension). It also reports a <strong>standard error</strong>, giving the margin of error around each pooled estimate. Run the usual four checks: <strong>direction</strong> (all positive — not one negative number in the table); <strong>magnitude</strong> (~0.5 SD instruction, ~0.18 SD achievement); <strong>significance</strong> (many asterisks — but broken out by subject, only <em>reading</em> is statistically significant, not math or science — a detail you'd miss reading only the abstract); and the <strong>range of plausible values</strong>.</p>
+
+    <h3>Why the spread matters: variation in effect size</h3>
+    <p>For São Paulo, the average alone isn't enough. If individual studies all cluster near the mean of 0.18, we can be fairly sure we'd see a similar effect. But if the spread is huge — some studies negative, some near zero, some strongly positive — we'd be far less sure what to expect in our own context. Kraft et al.'s Figure 2 (a density plot) shows the effect for instruction peaks around 0.5 as expected, but with real spread: a decent number of studies exceed 1.0, and a handful land at zero or negative. <strong>Coaching's impact varies quite a bit.</strong> A forest plot makes the same point study-by-study:</p>
+
+    <div class="card svgfig">
+      <svg viewBox="0 0 760 430" role="img" aria-label="A forest plot: each study's effect size and confidence interval as a row, with a pooled diamond at the bottom showing the meta-analytic average" style="width:100%;height:auto">
+        <!-- zero reference line -->
+        <line x1="250" y1="40" x2="250" y2="352" stroke="#c9b3bf" stroke-width="1.5" stroke-dasharray="5 5"></line>
+        <text x="250" y="30" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10.5" fill="#6a4656">0 (no effect)</text>
+        <!-- pooled reference line at ~0.49 -->
+        <line x1="470" y1="40" x2="470" y2="352" stroke="#c65a8a" stroke-width="1.5" stroke-dasharray="4 6" opacity=".55"></line>
+        <text x="470" y="30" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#a53d6e">pooled ≈ 0.49</text>
+
+        <!-- x axis -->
+        <line x1="120" y1="352" x2="720" y2="352" stroke="#b79aa8" stroke-width="1.5"></line>
+        <g font-family="ui-monospace,monospace" font-size="10" fill="#6a4656" text-anchor="middle">
+          <text x="120" y="372">−0.5</text>
+          <text x="250" y="372">0.0</text>
+          <text x="380" y="372">0.5</text>
+          <text x="510" y="372">1.0</text>
+          <text x="640" y="372">1.5</text>
+        </g>
+        <text x="420" y="398" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6a4656">effect size (standard deviations)  →</text>
+
+        <!-- study rows: box size ~ study weight; whiskers = 95% CI -->
+        <!-- study A -->
+        <g>
+          <text x="112" y="66" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study A</text>
+          <line x1="360" y1="62" x2="560" y2="62" stroke="#a53d6e" stroke-width="1.5"></line>
+          <rect x="452" y="53" width="18" height="18" fill="#a53d6e"></rect>
+        </g>
+        <!-- study B -->
+        <g>
+          <text x="112" y="100" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study B</text>
+          <line x1="300" y1="96" x2="470" y2="96" stroke="#a53d6e" stroke-width="1.5"></line>
+          <rect x="374" y="88" width="16" height="16" fill="#a53d6e"></rect>
+        </g>
+        <!-- study C (large, precise, high) -->
+        <g>
+          <text x="112" y="134" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study C</text>
+          <line x1="470" y1="130" x2="610" y2="130" stroke="#a53d6e" stroke-width="1.5"></line>
+          <rect x="527" y="119" width="22" height="22" fill="#a53d6e"></rect>
+        </g>
+        <!-- study D (null / crosses zero) -->
+        <g>
+          <text x="112" y="168" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study D</text>
+          <line x1="205" y1="164" x2="360" y2="164" stroke="#8a6576" stroke-width="1.5"></line>
+          <rect x="268" y="157" width="14" height="14" fill="#8a6576"></rect>
+        </g>
+        <!-- study E (negative point, wide CI) -->
+        <g>
+          <text x="112" y="202" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study E</text>
+          <line x1="150" y1="198" x2="330" y2="198" stroke="#8a6576" stroke-width="1.5"></line>
+          <rect x="205" y="191" width="14" height="14" fill="#8a6576"></rect>
+        </g>
+        <!-- study F -->
+        <g>
+          <text x="112" y="236" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study F</text>
+          <line x1="380" y1="232" x2="540" y2="232" stroke="#a53d6e" stroke-width="1.5"></line>
+          <rect x="447" y="224" width="16" height="16" fill="#a53d6e"></rect>
+        </g>
+        <!-- study G (large, high) -->
+        <g>
+          <text x="112" y="270" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study G</text>
+          <line x1="500" y1="266" x2="660" y2="266" stroke="#a53d6e" stroke-width="1.5"></line>
+          <rect x="567" y="255" width="22" height="22" fill="#a53d6e"></rect>
+        </g>
+        <!-- study H -->
+        <g>
+          <text x="112" y="304" text-anchor="end" font-family="ui-monospace,monospace" font-size="10.5" fill="#2a1420">Study H</text>
+          <line x1="330" y1="300" x2="480" y2="300" stroke="#a53d6e" stroke-width="1.5"></line>
+          <rect x="397" y="292" width="16" height="16" fill="#a53d6e"></rect>
+        </g>
+
+        <!-- pooled diamond -->
+        <g>
+          <text x="112" y="332" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#7d2a52">POOLED</text>
+          <polygon points="440,328 470,318 500,328 470,338" fill="#7d2a52" stroke="#5a1638" stroke-width="1.5"></polygon>
+        </g>
+      </svg>
+      <p class="figcap">Forest plot: each square is one study's effect size (bigger square ≈ more weight, i.e. a larger/more-precise study), each whisker its 95% confidence interval. Studies that cross the zero line found no significant effect; a couple land negative. The diamond at the bottom is the <em>pooled</em> estimate — narrower than any single study, because pooling many studies sharpens the average. The point of synthesis is to read the diamond <em>and</em> the scatter of squares around it.</p>
+    </div>
+
+    <p><strong>Correlation vs. causation inside a synthesis.</strong> Kraft et al. also probe <em>how</em> coaching works — e.g. Figure 4 shows that as the number of teachers in a program grows, effects appear to shrink. But that's <strong>descriptive, not causal</strong>: no one randomly assigned teachers to large vs. small programs, so we can't claim program size <em>causes</em> smaller effects. Even inside a strong meta-analysis, only the parts built on randomized designs earn causal language.</p>
+  </section>
+
+  <!-- ===== 05 NUANCE ===== -->
+  <section>
+    <h2><span class="num">05</span> Nuance &amp; watch-outs</h2>
+    <p class="lead">A synthesis can look authoritative — one clean number pooled from dozens of studies — while resting on shaky ground. Keep these in view.</p>
+    <div class="nuance">
+      <h3>⚠ A synthesis is only as good as what goes into it</h3>
+      <ul>
+        <li><b>Garbage in, garbage out.</b> Pooling weak studies yields a weak conclusion, however precise the pooled number looks. Judge the underlying study quality first.</li>
+        <li><b>The criteria are everything.</b> A synthesis is only as trustworthy as its inclusion/exclusion criteria. Different, reasonable-sounding criteria can yield a different answer — so demand that they be transparent and systematic.</li>
+        <li><b>Publication bias (the file-drawer problem).</b> Studies with big, significant effects get published more readily than null results, which sit in file drawers. A synthesis of only <em>published</em> work can overstate the true effect. (Funnel plots and grey-literature searches help detect it.)</li>
+        <li><b>Heterogeneity.</b> If effect sizes vary wildly across studies (big spread, some negative), a single average can be misleading — the "typical" effect may not describe your context. Read the variation, not just the mean.</li>
+        <li><b>Researcher influence is unavoidable.</b> No selection process is free from the authors' values, expertise, and networks — including how they decided which scholars and studies count as "leading."</li>
+        <li><b>Effect size ≠ causal effect.</b> The name misleads: it's a unit of measure. Causal language is earned by the underlying <em>designs</em>, not by the label.</li>
+        <li><b>Not the whole picture.</b> Synthesis is strong for seeing the bigger picture, but no evidence — even synthetic — shows the entire picture. Match the claim to the population the studies actually covered (here: "developed nations," which may limit transfer to São Paulo).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 06 TODAY'S APPLICATION ===== -->
+  <section>
+    <h2><span class="num">06</span> Today's application — coaching for São Paulo</h2>
+    <p>São Paulo leaders have decided to explore teacher-led innovations and want to understand how <strong>teacher coaching</strong> can support equitable practices. The in-class task: <strong>using the Kraft et al. meta-analysis, what is one finding about teacher coaching you would bring to the leadership team?</strong> As always, there's <strong>no single correct answer</strong> — the point is to use the language of evidence to argue a choice, defending it with the <strong>ladder of inference</strong> sentence frames.</p>
+
+    <div class="ladder">
+      <div class="rung"><span class="frame">Selecting data</span><span class="txt">"The researchers found that…" <em>coaching improved instruction by ~0.49 SD and achievement by ~0.18 SD on average across 60 studies (significant for reading).</em></span></div>
+      <div class="rung"><span class="frame">Interpreting data</span><span class="txt">"This shows that…" <em>coaching has a positive typical effect, but with real variation across contexts.</em></span></div>
+      <div class="rung"><span class="frame">Drawing conclusions</span><span class="txt">"This matters because…" <em>São Paulo can expect gains, especially in reading — but shouldn't assume the biggest headline effects.</em></span></div>
+      <div class="rung"><span class="frame">Taking action</span><span class="txt">"So we should…" <em>invest in coaching while planning to measure our own effects rather than importing a single number.</em></span></div>
+    </div>
+
+    <div class="bigidea">
+      <strong>The other half of the task — name the biggest limitation.</strong> Strong candidates: the studies covered <strong>"developed nations,"</strong> so transfer to São Paulo is uncertain (population mismatch); effects <strong>vary widely</strong> across studies, so the average may not describe our context (heterogeneity); larger programs showed <strong>smaller effects</strong> descriptively, a caution for a big system-wide rollout (and a correlation, not a cause); and achievement gains were <strong>significant only for reading</strong>, not math or science. A strong answer picks one, states it in evidence language, and says what it means for acting on the finding.
+    </div>
+  </section>
+
+  <!-- ===== 07 GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">07</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it. These are the Session 8 evidence-vocabulary words (plus a few the session leans on).</p>
+
+    <details>
+      <summary>synthetic evidence</summary>
+      <div class="def">Evidence that synthesizes findings across multiple prior studies to answer "What is already known?" rather than reporting a single primary study. It can be qualitative (a synthetic literature review) or quantitative (a meta-analysis).
+        <span class="eg">Its affordance: seeing the forest, not the trees — consensus and conflict across a body of work.</span>
+      </div>
+    </details>
+    <details>
+      <summary>systematic review</summary>
+      <div class="def">The big idea of the day: synthesizing studies that were selected <em>systematically</em>, using transparent, pre-stated criteria, so the synthesis isn't just cherry-picking familiar or agreeable studies. It's the quality standard behind both literature reviews and meta-analyses.
+        <span class="eg">"Systematic" is what separates a trustworthy synthesis from a cherry-picked one.</span>
+      </div>
+    </details>
+    <details>
+      <summary>meta-analysis</summary>
+      <div class="def">A quantitative synthesis that pools <em>numbers</em> — statistically combining findings (usually effect sizes) from many studies of an intervention to estimate the "typical" impact. To support a causal claim, it must include only studies designed for causal inference.
+        <span class="eg">Kraft et al. pool 60 coaching studies into average effect sizes.</span>
+      </div>
+    </details>
+    <details>
+      <summary>synthetic literature review</summary>
+      <div class="def">A qualitative synthesis that pools <em>words</em> — reading individual studies and distilling ideas, conclusions, and open questions to describe what a field knows and doesn't know. No single pooled number.
+        <span class="eg">Distills themes and areas of consensus, not a mean effect size.</span>
+      </div>
+    </details>
+    <details>
+      <summary>inclusion / exclusion criteria</summary>
+      <div class="def">The explicit, pre-stated rules that decide which studies enter a synthesis and which are left out. Transparent, systematic criteria are the core quality signal — they keep a synthesis from being cherry-picked, though no set of criteria is free from researcher judgment.
+        <span class="eg">Kraft et al.'s four rules: fits their coaching definition; developed-nation K-12 teachers; causal design; measures instruction or outcomes.</span>
+      </div>
+    </details>
+    <details>
+      <summary>effect size</summary>
+      <div class="def">The difference between the treated and control groups expressed in standard-deviation units. Putting results in a common unit lets you compare and pool studies that used different outcome measures. It is a unit of measure, <em>not</em> proof of causation.
+        <span class="eg">Coaching's effect on instruction ≈ 0.49 SD.</span>
+      </div>
+    </details>
+    <details>
+      <summary>average effect size</summary>
+      <div class="def">The pooled effect size across all studies in a meta-analysis — the combined "typical" impact of the intervention, not the result of any single study. Reported with a standard error (its margin of error).
+        <span class="eg">Coaching's average effect on achievement ≈ 0.18 SD (≈ 50th → 57th percentile).</span>
+      </div>
+    </details>
+    <details>
+      <summary>variation in effect size</summary>
+      <div class="def">How much individual studies' effect sizes spread out around the average. Low variation means the effect is dependable across contexts; high variation (some near zero or negative) means the average may not predict your context well.
+        <span class="eg">Kraft et al.'s Figure 2 shows many studies near the mean but a real spread — some above 1.0, a few at or below zero.</span>
+      </div>
+    </details>
+    <details>
+      <summary>transparent &amp; systematic selection criteria</summary>
+      <div class="def">Criteria for choosing studies that are both openly reported (transparent) and applied consistently by rule rather than by preference (systematic). This is the standard that lets a reader trust — and scrutinize — which studies made the cut.
+        <span class="eg">Ask: how were "leading scholars" defined, and which studies did they recommend?</span>
+      </div>
+    </details>
+    <details>
+      <summary>publication bias</summary>
+      <div class="def">The tendency for studies with large, statistically significant results to be published (and found) more often than null results, which stay in the "file drawer." A synthesis of only published work can therefore overstate the true effect.
+        <span class="eg">Why syntheses search grey literature and check funnel plots for missing null studies.</span>
+      </div>
+    </details>
+    <details>
+      <summary>heterogeneity</summary>
+      <div class="def">Genuine differences in effects across the studies being pooled — driven by differences in populations, settings, or how the intervention was delivered. High heterogeneity warns that a single average may not describe any particular context.
+        <span class="eg">If coaching helps a lot in some studies and not at all in others, the mean hides that.</span>
+      </div>
+    </details>
+    <details>
+      <summary>standard error</summary>
+      <div class="def">A measure of the uncertainty around an estimate — here, around a pooled effect size. It gives the range of plausible values (margin of error); pooling more studies generally shrinks it, sharpening the average.
+        <span class="eg">Reported alongside each effect in Kraft et al.'s Table 2.</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== 08 iRAT PREP ===== -->
+  <section class="quiz">
+    <h2><span class="num">08</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer before revealing. Some are written like TBL readiness-check multiple-choice; the rest are short-answer/application. Then chew on the discussion prompts.</p>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>1. What single question does synthetic evidence exist to answer?</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. "What is happening right now?" (description)</li>
+          <li>B. "Did <em>this</em> program cause a change?" (a single causal study)</li>
+          <li>C. <b>"What is already known?" — pooling findings across many prior studies</b></li>
+          <li>D. "Why does this individual behave this way?" (process)</li>
+        </ul>
+        <b>C.</b> Synthetic evidence synthesizes results from multiple studies to tell us what the body of research collectively knows — the forest, not any one tree. A single causal study (B) is exactly what a meta-analysis pools <em>over</em>.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>2. A meta-analysis wants to estimate the average <em>causal</em> effect of an intervention. Which studies may it include?</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. Any study that measured the outcome, to maximize sample size</li>
+          <li>B. Only descriptive and correlational studies</li>
+          <li>C. <b>Only studies designed for causal inference — experiments and quasi-experiments</b></li>
+          <li>D. Only the studies with the largest published effect sizes</li>
+        </ul>
+        <b>C.</b> Garbage in, garbage out: to pool a causal average you can only include designs that support causal inference. Kraft et al. required random assignment and excluded studies without it. (D describes cherry-picking — and would worsen publication bias.)
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>3. A reviewer only searched published journals and reports a large pooled effect. The most likely threat to that estimate is —</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. Selection bias in each study's sample</li>
+          <li>B. <b>Publication bias — null results sit in file drawers, inflating the published average</b></li>
+          <li>C. A standard error that is too small</li>
+          <li>D. Using standard-deviation units for effect size</li>
+        </ul>
+        <b>B.</b> Big significant results are published more readily than null ones, so synthesizing only published work can overstate the true effect. The fix is a systematic search that also chases unpublished (grey) literature.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>4. Kraft et al. report an average effect on achievement of 0.18 SD. Why does the session insist we also look at the <em>variation</em> in effect sizes (Figure 2) before advising São Paulo?</span></summary>
+      <div class="def">
+        Because the average alone doesn't tell us how dependable the effect is. If studies cluster tightly near 0.18, we can be fairly confident São Paulo would see a similar effect. If the spread is wide — some negative, some near zero, some strongly positive (<b>heterogeneity</b>) — the average may not describe our context, and we should be far more cautious about what to expect.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>5. Someone says a meta-analysis is "objective because it just combines the numbers." Give two reasons the session would push back.</span></summary>
+      <div class="def">
+        (1) <b>The criteria carry judgment.</b> Which studies are included/excluded depends on choices — the definition of the intervention, what counts as a valid design, which "leading" scholars to consult — none free from the researchers' values and networks. (2) <b>It's only as good as its inputs.</b> Garbage in, garbage out, plus threats like publication bias mean the pooled number can be biased even if the arithmetic is correct. Synthesis shows a bigger picture, never the entire picture.
+      </div>
+    </details>
+
+    <div class="prompt"><span class="lbl">Discussion 1</span>Inside the Kraft study, Figure 4 shows larger coaching programs are associated with smaller effects. A colleague concludes, "So we should keep São Paulo's program small." Using the language of evidence, explain what this within-synthesis finding can and cannot support — and why "descriptive, not causal" matters here.</div>
+    <div class="prompt"><span class="lbl">Discussion 2</span>You must choose between a rigorous <em>systematic literature review</em> (pools words) and a <em>meta-analysis</em> (pools numbers) to brief leadership on a new intervention with only a handful of underlying studies. Which would you trust more, and what would make you change your mind?</div>
+  </section>
+
+  <!-- ===== 09 READINGS ===== -->
+  <section>
+    <h2><span class="num">09</span> Readings</h2>
+    <div class="readings">
+      <h3>For this session</h3>
+      <ul>
+        <li><strong>Required:</strong> Kraft, M. A., Blazar, D., &amp; Hogan, D. (2018). <em>The effect of teacher coaching on instruction and achievement: A meta-analysis of the causal evidence.</em> <strong>Review of Educational Research, 88(4), 547–588.</strong> Access via the course Library Reserves page.</li>
+        <li><strong>Where to look:</strong> the coaching definition (p. 553); the inclusion criteria and search process (from the bottom of p. 553); the student-achievement measures (p. 555); the main pooled effects in <strong>Table 2</strong>; the density plot of effect-size variation in <strong>Figure 2</strong> (top of p. 562); and the descriptive program-size relationship in <strong>Figure 4</strong>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>Synthetic evidence answers "What is already known?"</strong> — it pools many prior studies to show the forest, not the trees.</li>
+      <li><strong>Systematic review is the big idea:</strong> select studies systematically and state the criteria transparently, so you're not cherry-picking.</li>
+      <li><strong>Two flavors:</strong> a literature review pools words (qualitative); a meta-analysis pools numbers (quantitative average effect size).</li>
+      <li><strong>Judge a synthesis on three questions:</strong> is the topic clearly defined, are the inclusion criteria transparent/systematic, and are the underlying studies strong?</li>
+      <li><strong>Effect size is a unit, not a verdict.</strong> It makes studies comparable in SD units; causal language is earned by the designs, and for effects only experiments/quasi-experiments belong.</li>
+      <li><strong>Read the spread, not just the average</strong> — and watch for publication bias, heterogeneity, and garbage-in-garbage-out. Even synthetic evidence never shows the entire picture.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 8 · study notes · © Harvard content paraphrased for personal study</footer>
+
+</div>
+</body>
+</html>

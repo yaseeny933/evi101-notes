@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVI101 · Session 7 — Process Evidence · Study Notes</title>
+<style>
+  :root{
+    --ink:#181a2e;
+    --ink-soft:#454a72;
+    --paper:#f4f5fb;
+    --indigo:#3b4c9e;
+    --indigo-bright:#5a6bc8;
+    --teal:#1a8b8f;
+    --amber:#c77c1f;
+    --rose:#c14d6b;
+    --line:#d7dbee;
+    --node:#ffffff;
+    --shadow:0 10px 30px rgba(30,35,90,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    color:var(--ink);
+    line-height:1.6;
+    /* faint mechanism-node texture: open the black box between cause and effect */
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(90,107,200,.10) 2px, transparent 2.5px),
+      radial-gradient(circle at 58px 78px, rgba(26,139,143,.07) 2px, transparent 2.5px);
+    background-size:96px 96px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  /* ---------- header ---------- */
+  header.masthead{
+    background:linear-gradient(135deg,#1e254f,#3b4c9e 68%,#5a6bc8);
+    color:#fff;border-radius:18px;padding:34px 34px 30px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header.masthead::after{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+            mask-image:radial-gradient(circle at 80% 20%,#000,transparent 70%);
+  }
+  header.masthead > *{position:relative;z-index:1}
+  .kicker{font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+    color:#c7cef0;margin:0 0 10px}
+  header.masthead h1{margin:0;font-size:2.25rem;line-height:1.1;letter-spacing:-.01em}
+  header.masthead p.sub{margin:14px 0 0;color:#e0e4f7;font-size:1.05rem;max-width:52ch}
+  .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:"SF Mono",ui-monospace,monospace;font-size:.7rem;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    color:#fff;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+
+  /* ---------- sections ---------- */
+  section{margin-top:30px}
+  h2{font-size:1.5rem;margin:0 0 4px;color:var(--indigo);letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:10px}
+  h2 .num{font-family:"SF Mono",ui-monospace,monospace;font-size:.85rem;
+    color:var(--teal);background:rgba(26,139,143,.12);
+    padding:2px 9px;border-radius:8px;font-weight:700}
+  h3{font-size:1.12rem;margin:22px 0 6px;color:var(--ink)}
+  p{margin:10px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 24px;box-shadow:var(--shadow);margin-top:14px}
+
+  /* big idea banner */
+  .bigidea{
+    border-left:6px solid var(--indigo-bright);
+    background:linear-gradient(90deg,rgba(90,107,200,.10),#fff 60%);
+    border-radius:12px;padding:18px 22px;margin-top:16px}
+  .bigidea strong{color:var(--indigo)}
+
+  /* open-the-black-box motif */
+  .flowline{display:flex;align-items:center;justify-content:center;
+    gap:14px;flex-wrap:wrap;margin:8px 0 2px;font-family:"SF Mono",ui-monospace,monospace}
+  .fl-node{background:#fff;border:2px solid var(--indigo);color:var(--indigo);
+    padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:700;text-align:center}
+  .fl-node small{display:block;font-size:.62rem;letter-spacing:.08em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .fl-box{background:#fff;border:2px dashed var(--teal);color:var(--teal);
+    padding:12px 18px;border-radius:12px;text-align:center;font-weight:700;font-size:.82rem}
+  .fl-box small{display:block;font-size:.62rem;letter-spacing:.1em;color:var(--ink-soft);margin-top:4px;font-weight:400}
+  .fl-arrow{color:var(--ink-soft);font-size:1.3rem}
+
+  /* contrast / two-col tables */
+  table.vs{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+  table.vs th,table.vs td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  table.vs thead th{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase}
+  table.vs thead th:nth-child(2){color:var(--ink-soft)}
+  table.vs thead th:nth-child(3){color:var(--indigo)}
+  table.vs td:first-child{font-weight:700;color:var(--ink);width:22%}
+  table.vs tr td:nth-child(3){background:rgba(90,107,200,.05)}
+
+  .figcap{font-family:"SF Mono",ui-monospace,monospace;font-size:.72rem;
+    color:var(--ink-soft);text-align:center;letter-spacing:.04em;margin-top:6px}
+  .svgfig{margin:6px 0 2px}
+
+  /* two-pane comparison */
+  .aa{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .aa .pane{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .aa .pane h4{margin:0 0 4px;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .aa .pane.care h4{color:var(--teal)}
+  .aa .pane.solid h4{color:var(--rose)}
+  .pill{font-family:"SF Mono",monospace;font-size:.62rem;padding:2px 8px;border-radius:999px;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pill.teacher{background:rgba(26,139,143,.14);color:var(--teal)}
+  .pill.child{background:rgba(193,77,107,.14);color:var(--rose)}
+  .aa .pane p{font-size:.92rem;margin:8px 0 0}
+  .aa .ex{font-size:.84rem;color:var(--ink-soft);margin-top:10px;
+    border-top:1px dashed var(--line);padding-top:8px}
+
+  /* nuance / watch-out box */
+  .nuance{background:#fff;border:1px solid var(--line);border-top:5px solid var(--amber);
+    border-radius:14px;padding:20px 24px;margin-top:16px;box-shadow:var(--shadow)}
+  .nuance h3{margin:0 0 6px;color:var(--amber);display:flex;align-items:center;gap:8px}
+  .nuance ul{margin:10px 0 0;padding-left:0;list-style:none}
+  .nuance li{padding:9px 0 9px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:.95rem}
+  .nuance li:last-child{border-bottom:none}
+  .nuance li::before{content:"⚠";position:absolute;left:0;top:8px;color:var(--amber);font-size:.9rem}
+  .nuance b{color:var(--ink)}
+
+  /* quality-question steps */
+  .lesson{counter-reset:step;margin-top:10px}
+  .step{display:flex;gap:16px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-top:12px;box-shadow:var(--shadow);position:relative}
+  .step::before{counter-increment:step;content:"Q" counter(step);
+    flex:0 0 42px;height:42px;border-radius:50%;
+    background:var(--indigo);color:#fff;font-family:"SF Mono",monospace;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .step .body{flex:1}
+  .step .idea{font-style:italic;color:var(--ink)}
+  .step .mech{margin-top:8px;font-size:.85rem;color:var(--ink-soft)}
+  .step .mech b{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);background:rgba(26,139,143,.12);
+    padding:2px 8px;border-radius:6px;margin-right:6px;font-weight:700}
+
+  /* application panes */
+  .app{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .app .fig{background:#fff;border:1px solid var(--line);border-left:4px solid var(--indigo-bright);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .app .fig b{color:var(--indigo);display:block;font-size:.98rem;margin-bottom:2px}
+  .app .fig .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal)}
+  .app .fig p{font-size:.9rem;color:var(--ink-soft);margin:6px 0 0}
+
+  /* ladder of inference */
+  .ladder{margin-top:14px;display:flex;flex-direction:column;gap:0}
+  .rung{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:13px 16px;margin-top:10px;box-shadow:var(--shadow)}
+  .rung .rl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;
+    color:#fff;background:var(--indigo);padding:4px 9px;border-radius:6px;white-space:nowrap;flex:0 0 auto;margin-top:2px}
+  .rung .frame{font-size:.94rem}
+  .rung .frame b{color:var(--indigo)}
+
+  /* glossary + iRAT reveal */
+  .gloss details, .quiz details{background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-top:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .gloss summary, .quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--indigo);
+    font-size:1.02rem;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .gloss summary::-webkit-details-marker, .quiz summary::-webkit-details-marker{display:none}
+  .gloss summary::after{content:"reveal ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .gloss details[open] summary::after{content:"hide ▾"}
+  .quiz summary::after{content:"answer ▸";font-family:"SF Mono",monospace;font-size:.68rem;
+    color:var(--teal);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .quiz details[open] summary::after{content:"hide ▾"}
+  .gloss details[open] summary, .quiz details[open] summary{border-bottom:1px solid var(--line)}
+  .gloss .def, .quiz .def{padding:14px 18px;color:var(--ink-soft);font-size:.97rem}
+  .gloss .def .eg{display:block;margin-top:8px;font-size:.85rem;color:var(--ink)}
+  .quiz .q{font-weight:400;color:var(--ink);flex:1}
+  .quiz .q .tag-mc{font-family:"SF Mono",monospace;font-size:.6rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--amber);background:rgba(199,124,31,.12);
+    padding:2px 7px;border-radius:6px;margin-right:8px;font-weight:700;vertical-align:middle}
+  .quiz .q .tag-sa{color:var(--teal);background:rgba(26,139,143,.12)}
+  .quiz .opts{margin:8px 0 0;padding-left:18px;font-size:.9rem;color:var(--ink-soft)}
+  .quiz .opts li{margin:3px 0}
+  .quiz .def b{color:var(--indigo)}
+
+  .prompt{background:linear-gradient(90deg,rgba(26,139,143,.08),#fff 60%);
+    border-left:5px solid var(--teal);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:.95rem}
+  .prompt .lbl{font-family:"SF Mono",monospace;font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--teal);display:block;margin-bottom:2px}
+
+  /* readings note */
+  .readings{background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;margin-top:14px;box-shadow:var(--shadow);font-size:.95rem}
+  .readings h3{margin:0 0 8px;color:var(--indigo)}
+  .readings ul{margin:0;padding-left:20px}
+  .readings li{margin:6px 0}
+
+  /* recap */
+  .recap{background:linear-gradient(135deg,#1e254f,#33407e);color:#fff;
+    border-radius:18px;padding:26px 28px;margin-top:30px;box-shadow:var(--shadow)}
+  .recap h2{color:#fff}
+  .recap h2 .num{color:#c7cef0;background:rgba(255,255,255,.16)}
+  .recap ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .recap li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid rgba(255,255,255,.14)}
+  .recap li:last-child{border-bottom:none}
+  .recap li::before{content:"◆";position:absolute;left:4px;color:#a9b4ea}
+  .recap strong{color:#fff}
+
+  footer{margin-top:34px;text-align:center;font-size:.8rem;color:var(--ink-soft);
+    font-family:"SF Mono",ui-monospace,monospace}
+
+  @media (max-width:680px){
+    .aa,.app{grid-template-columns:1fr}
+    header.masthead h1{font-size:1.7rem}
+    .step::before{flex-basis:36px;height:36px}
+  }
+
+  /* print: expand glossary + answers, tidy */
+  @media print{
+    body{background:#fff}
+    .gloss details, .quiz details{break-inside:avoid}
+    .gloss .def, .quiz .def{display:block !important}
+    details:not([open]) .def{display:block}
+    .card,.step,.aa .pane,.app .fig,.gloss details,.quiz details,.nuance,.readings,.rung{box-shadow:none}
+    header.masthead,.recap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker">EVI101 · Session 7</p>
+    <h1>Process Evidence</h1>
+    <p class="sub">The evidence that opens the black box: not just <em>whether</em> something worked, but <strong>how and why</strong> it worked — and in what context.</p>
+    <div class="tags">
+      <span class="tag">context</span>
+      <span class="tag">mechanisms</span>
+      <span class="tag">triangulation</span>
+      <span class="tag">levers of change</span>
+    </div>
+  </header>
+
+  <!-- ===== 01 CORE IDEA ===== -->
+  <section>
+    <h2><span class="num">01</span> The core idea</h2>
+    <p class="lead">Causal evidence answers <strong>"Does it work?"</strong> Process evidence answers the harder pair of questions that comes next: <strong>"How and why does it work?"</strong> It tells us about the <strong>causal processes and mechanisms</strong> behind an impact — as distinct from the causal impact itself.</p>
+
+    <div class="bigidea">
+      Our two big ideas for the day are <strong>context</strong> and <strong>mechanisms</strong>. <strong>Context</strong> is the environment in which an intervention or process happens — legal, historical, social, political, community. <strong>Mechanisms</strong> are the features of an intervention that actually produce the impacts (or the lack of impacts) we observe. Understanding both is how we find the <strong>levers of change</strong> inside educational systems — which is why process evidence is so central to <strong>bridging research and practice.</strong>
+    </div>
+
+    <p>Recall the Dee &amp; Penner study on ethnic studies from earlier in the course. Causal evidence told a Boston superintendent <em>that</em> the course improved attendance, grades, and credits earned. But it couldn't say <strong>how</strong>: Was it the teachers' enthusiasm? A more engaging curriculum that pulled students into attending? An effect on students' social identity development? Something about San Francisco's diverse setting? We knew the course worked; we didn't know the mechanism or the contextual ingredients. <strong>That gap is exactly what process evidence fills.</strong></p>
+
+    <div class="card svgfig">
+      <svg viewBox="0 0 760 300" role="img" aria-label="A diagram showing that causal evidence sees only treatment and outcome, while process evidence opens the black box between them to reveal mechanisms embedded in a context" style="width:100%;height:auto">
+        <defs>
+          <marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+            <path d="M0,0 L8,5 L0,10 z" fill="#3b4c9e"></path>
+          </marker>
+          <marker id="art" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+            <path d="M0,0 L8,5 L0,10 z" fill="#1a8b8f"></path>
+          </marker>
+        </defs>
+        <!-- context frame -->
+        <rect x="24" y="66" width="712" height="176" rx="18" fill="#eef0f9" stroke="#c2c9ea" stroke-width="1.5" stroke-dasharray="7 6"></rect>
+        <text x="44" y="90" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#454a72">CONTEXT — legal · historical · social · political · community</text>
+
+        <!-- treatment node -->
+        <rect x="52" y="118" width="132" height="80" rx="12" fill="#fff" stroke="#3b4c9e" stroke-width="2.5"></rect>
+        <text x="118" y="152" text-anchor="middle" font-family="ui-monospace,monospace" font-size="13" fill="#1e254f">TREATMENT</text>
+        <text x="118" y="172" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#454a72">program /</text>
+        <text x="118" y="186" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#454a72">policy</text>
+
+        <!-- black box opened: mechanisms -->
+        <rect x="266" y="104" width="228" height="108" rx="14" fill="#e4f3f2" stroke="#1a8b8f" stroke-width="2.5"></rect>
+        <text x="380" y="126" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11.5" fill="#1a8b8f">MECHANISMS — the "how &amp; why"</text>
+        <!-- little mechanism gears/nodes -->
+        <circle cx="316" cy="166" r="20" fill="#fff" stroke="#1a8b8f" stroke-width="2"></circle>
+        <text x="316" y="170" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9.5" fill="#0f6f64">why</text>
+        <circle cx="380" cy="182" r="20" fill="#fff" stroke="#1a8b8f" stroke-width="2"></circle>
+        <text x="380" y="186" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9.5" fill="#0f6f64">how</text>
+        <circle cx="444" cy="166" r="20" fill="#fff" stroke="#1a8b8f" stroke-width="2"></circle>
+        <text x="444" y="170" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9.5" fill="#0f6f64">for whom</text>
+        <line x1="336" y1="166" x2="360" y2="180" stroke="#8fc9c6" stroke-width="2"></line>
+        <line x1="400" y1="180" x2="424" y2="166" stroke="#8fc9c6" stroke-width="2"></line>
+
+        <!-- outcome node -->
+        <rect x="576" y="118" width="132" height="80" rx="12" fill="#fff" stroke="#3b4c9e" stroke-width="2.5"></rect>
+        <text x="642" y="152" text-anchor="middle" font-family="ui-monospace,monospace" font-size="13" fill="#1e254f">OUTCOME</text>
+        <text x="642" y="172" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#454a72">impact</text>
+        <text x="642" y="186" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#454a72">(or none)</text>
+
+        <!-- arrows -->
+        <line x1="186" y1="158" x2="260" y2="158" stroke="#3b4c9e" stroke-width="2.5" marker-end="url(#ar)"></line>
+        <line x1="496" y1="158" x2="570" y2="158" stroke="#3b4c9e" stroke-width="2.5" marker-end="url(#ar)"></line>
+
+        <!-- causal-only bracket -->
+        <path d="M 118 214 C 118 260, 642 260, 642 214" fill="none" stroke="#b7407e" stroke-width="1.6" stroke-dasharray="5 5"></path>
+        <text x="380" y="278" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10.5" fill="#b7407e">CAUSAL evidence sees only the two ends ("does it work?")</text>
+      </svg>
+      <p class="figcap">Causal evidence measures treatment → outcome. Process evidence opens the box in the middle — the mechanisms — and situates the whole thing inside its context.</p>
+    </div>
+
+    <h3>Process vs. descriptive vs. causal — three quick contrasts</h3>
+    <p>Two questions come up constantly. First, <strong>how is process evidence different from descriptive evidence?</strong> Descriptive evidence (qualitative or quantitative) tells us <em>what</em> is happening; process evidence looks deeper at the <strong>social forces that produce those results</strong> — the how and why. Second, <strong>if it explains causes, is it "causal research"?</strong> Not in the sense we use in this course. "Causal" here means <strong>experimental or quasi-experimental</strong> (counterfactual) evidence. Process evidence is a <em>different</em> route to cause and effect — focused on the mechanisms that create change over time, in specific contexts.</p>
+    <div class="card" style="padding:6px 10px">
+      <table class="vs">
+        <thead>
+          <tr><th>Question it answers</th><th>Form of evidence</th><th>What it delivers</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>What is happening?</td><td>Descriptive (qual / quant)</td><td>A faithful account of conditions or patterns — no causes.</td></tr>
+          <tr><td>Does it work? (impact)</td><td>Causal (experimental / quasi-experimental)</td><td>Counterfactual estimate of effect — but a "black box" on why.</td></tr>
+          <tr><td>How &amp; why does it work?</td><td>Process</td><td>The mechanisms and contextual features producing the impact.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="bigidea">
+      Why "why" questions resist experiments: consider <em>"Why do nations invest in education?"</em> You can't randomize some nations to have contributing factors and others not. As Nobel laureate <strong>Angus Deaton</strong> notes, historians study long-term causal <em>processes</em> — no single event explains the outcome; instead they trace the <strong>causal mechanisms</strong> unfolding over decades in specific national contexts. Answering how/why questions usually needs <strong>multiple sources of evidence across the whole evidence framework</strong> — different data types, disciplines, even paradigms. That is what makes process evidence distinctive.
+    </div>
+  </section>
+
+  <!-- ===== 02 THE READING / MECHANISMS ===== -->
+  <section>
+    <h2><span class="num">02</span> Mechanisms in action — the Oliveira study</h2>
+    <p class="lead">Today's reading (Oliveira et al., 2024) is <strong>anthropological</strong> process evidence: it examines Venezuelan refugee elementary students in Northern Brazil and asks <strong>how</strong> teachers and students engage and learn from one another to build welcoming, caring spaces — and how harmful stereotypes get reinforced.</p>
+
+    <p>Compare it to the Calarco article from earlier: both care about children's agency and teacher–student engagement. But Calarco asks <strong>what</strong> children and teachers <em>do</em> (and how that maps to socioeconomic status) — descriptive. Oliveira et al. ask <strong>how</strong> engagement occurs and <strong>how</strong> classroom culture develops — process. Same classroom scene, different question.</p>
+
+    <p>To identify mechanisms, the authors <strong>triangulate</strong> a rich, diverse set of data: classroom observations, interviews with teachers, caregivers, and administrators, and key documents (curricula, policies, grading), plus students' drawings and artifacts. From this they name <strong>two mechanisms</strong> for the process they study — and, cleverly, they present one from the teachers' perspective and one from the children's:</p>
+
+    <div class="aa">
+      <div class="pane care">
+        <h4>Portuguese-only teaching <span class="pill teacher">teachers' view</span></h4>
+        <p>Teachers enforce Portuguese as an <strong>act of care and compliance</strong> — helping immigrant students adapt to their new country. The same mechanism that welcomes also <strong>suppresses Spanish</strong> in the school environment.</p>
+        <p class="ex"><b>Mechanism:</b> a single practice does two things at once — builds belonging <em>and</em> reinforces a linguistic hierarchy.</p>
+      </div>
+      <div class="pane solid">
+        <h4>Children's solidarity work <span class="pill child">children's view</span></h4>
+        <p>Students <strong>push back</strong> against the rigid Portuguese-only approach — holding <strong>parallel conversations in Spanish</strong> during play and academic work, sustaining their language and identity from below.</p>
+        <p class="ex"><b>Mechanism:</b> children exercise agency, co-constructing a classroom culture the official rules don't capture.</p>
+      </div>
+    </div>
+    <p style="font-size:.9rem;color:var(--ink-soft);margin-top:12px">↳ Weaving <strong>both</strong> perspectives together builds <em>cognitive empathy</em> and increases trust in the results. Teachers alone would show us Portuguese-as-care but not how children respond; children alone would show resistance but not the teachers' motivations. Together they give a robust picture — and, crucially, the reader is invited to ask whether these are the <strong>most plausible</strong> mechanisms, or whether some <strong>alternative explanation</strong> fits better.</p>
+  </section>
+
+  <!-- ===== 03 QUALITY QUESTIONS ===== -->
+  <section>
+    <h2><span class="num">03</span> Judging quality — the three process questions</h2>
+    <p class="lead">Evaluating process evidence happens in <strong>two layers</strong>. First, identify <em>what type(s) of data</em> it draws on and apply that form's quality questions. The Oliveira piece is <strong>qualitative</strong>, so you'd apply the descriptive-qualitative questions (case logic in sampling, cognitive empathy, describing context). Had it used quantitative, causal, or synthetic data, you'd layer in <em>those</em> questions too.</p>
+    <p>Then, on top of that, ask the <strong>three questions unique to process evidence:</strong></p>
+    <div class="lesson">
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well does the study identify the mechanisms by which an outcome is produced — including by ruling out plausible alternatives?</p>
+          <p class="mech"><b>Mechanism</b> Oliveira et al. use rich, triangulated data (observations, interviews, documents, artifacts) to name two mechanisms. The reader's job: are these convincing, or is there a more plausible alternative explanation?</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well does the study describe how relevant features of the local context might affect this process?</p>
+          <p class="mech"><b>Context</b> The authors devote early pages to the political, historical, and social context, and describe their methods. A gap they note: little on the two <em>particular</em> schools — their histories, unique pedagogies, or how teachers came to work there.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="body">
+          <p class="idea">How well does the study explore how participants interpret and respond to this process?</p>
+          <p class="mech"><b>Interpretation</b> By splitting findings into teachers' and children's perspectives, the study captures how each group makes meaning of the same practice — a fuller, more comprehensive account of the two classrooms.</p>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.9rem;color:var(--ink-soft);margin-top:12px">↳ And always ask about <strong>relevance</strong> to your own challenge: how related are the setting and sample to <em>your</em> context, priorities, and needs — and would any differences matter? Because this study is qualitative, judge relevance by <strong>authenticity</strong> (would the analysis ring true to teachers and students in São Paulo?), <em>not</em> by statistical generalizability the way you would a quantitative piece.</p>
+  </section>
+
+  <!-- ===== 04 NUANCE ===== -->
+  <section>
+    <h2><span class="num">04</span> Nuance &amp; watch-outs</h2>
+    <p class="lead">Process evidence is powerful precisely because it goes where causal evidence can't — but that power comes with traps. Keep these in view.</p>
+    <div class="nuance">
+      <h3>⚠ Nuance &amp; watch-outs</h3>
+      <ul>
+        <li><b>Process explains; it doesn't by itself prove impact.</b> Naming a plausible mechanism is not the same as demonstrating a treatment caused an outcome. Process evidence <em>pairs with</em> causal evidence — the causal study says "it worked," the process study says "here's why."</li>
+        <li><b>A mechanism is a claim, not a fact.</b> The bar is ruling out <em>plausible alternatives</em>. If a different explanation fits the same data as well, the mechanism isn't established. Stay skeptical of the author's preferred story.</li>
+        <li><b>The same mechanism can cut both ways.</b> Portuguese-only teaching is care <em>and</em> suppression at once. Mechanisms aren't automatically "good levers" — they can produce inequity alongside inclusion.</li>
+        <li><b>Context is not decoration — it's a condition.</b> A mechanism that works in one setting may misfire in another. Weak description of local context (e.g., the specific schools) limits how much you can transfer the finding.</li>
+        <li><b>Implementation matters.</b> An observed impact bundles the program's elements <em>and how well they were implemented</em> with the surrounding environment. Fidelity of implementation is part of the mechanism story — a good idea poorly implemented can look like a failed idea.</li>
+        <li><b>Don't over-generalize from qualitative process work.</b> Judge it on authenticity and depth, not on whether it "represents" a population. A vivid two-classroom study earns trust by ringing true, not by sample size.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 05 GLOSSARY ===== -->
+  <section class="gloss">
+    <h2><span class="num">05</span> Glossary — quiz yourself first</h2>
+    <p style="color:var(--ink-soft)">Try to define each term before you reveal it. These are the Session 7 evidence-vocabulary words.</p>
+
+    <details>
+      <summary>context</summary>
+      <div class="def">The environment in which an intervention or process is happening — its legal, historical, social, political, and community surroundings. Some contextual features enable a program's success; others pose challenges. Describing context well is one of the three quality tests for process evidence.
+        <span class="eg">Oliveira et al. open by situating their study in the political and social history of Venezuelan migration to Northern Brazil.</span>
+      </div>
+    </details>
+    <details>
+      <summary>mechanism</summary>
+      <div class="def">The feature(s) of an intervention that actually contribute to producing the impacts — or lack of impacts — we observe. Mechanisms are the "how and why" between a treatment and its outcome. Good process evidence identifies them and rules out plausible alternatives.
+        <span class="eg">"Portuguese-only teaching as an act of care" is a proposed mechanism for how teachers build belonging while suppressing Spanish.</span>
+      </div>
+    </details>
+    <details>
+      <summary>triangulation</summary>
+      <div class="def">Using multiple, diverse sources or types of data to converge on and corroborate a finding — strengthening confidence in an identified mechanism. Process questions often require evidence from across the whole evidence framework.
+        <span class="eg">The study combines classroom observations, interviews (teachers, caregivers, administrators), curricular documents, and student drawings.</span>
+      </div>
+    </details>
+    <details>
+      <summary>plausible alternatives</summary>
+      <div class="def">Rival explanations for the same observed process or outcome. Identifying a mechanism convincingly means showing it fits the evidence better than the competing accounts — not just that it's consistent with the data.
+        <span class="eg">As you read, ask: is "children's solidarity work" really the driver, or could another explanation account for the Spanish side-conversations?</span>
+      </div>
+    </details>
+    <details>
+      <summary>cognitive empathy</summary>
+      <div class="def">The extent to which a researcher comes to understand how individuals view themselves and their own situations. Central to descriptive-qualitative quality — and deepened here by presenting both teachers' and children's perspectives.
+        <span class="eg">Weaving both viewpoints together increases our trust that the authors grasp what each group actually experiences.</span>
+      </div>
+    </details>
+    <details>
+      <summary>levers of change</summary>
+      <div class="def">The features inside an educational system that, if adjusted, can produce more learning and more equity in opportunity and outcomes. Process evidence is prized by practitioners because it locates these levers — bridging research and practice.
+        <span class="eg">Knowing <em>why</em> ethnic studies improved outcomes tells a superintendent which ingredient to invest in and scale.</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== 06 TODAY'S APPLICATION ===== -->
+  <section>
+    <h2><span class="num">06</span> Today's application — coaching teachers in São Paulo</h2>
+    <p>São Paulo leaders are weighing whether to <strong>coach teachers to sustain students' native languages and identities</strong> in multilingual classrooms with immigrant and Brazilian students. The task: <strong>which claim from the Oliveira article best supports this decision, and why?</strong> There's <strong>no correct answer</strong> — the point is to use the <em>language of evidence</em> to argue for one choice over the other.</p>
+    <div class="app">
+      <div class="fig">
+        <span class="lbl">Claim 1 · p. 547</span>
+        <b>Care &amp; compliance</b>
+        <p>"Teachers' approach to children's Portuguese learning is an act of both care and compliance." Frames the coaching decision around the <strong>teacher-side mechanism</strong>: reshape how caring intentions are enacted so they don't suppress home languages.</p>
+      </div>
+      <div class="fig">
+        <span class="lbl">Claim 2 · p. 548</span>
+        <b>Children's own boundaries</b>
+        <p>"The boundaries observed by teachers… regarding the hyperfocus and need to use and learn Portuguese were not how Brazilian and Venezuelan children spent time with one another." Frames coaching around the <strong>children's-solidarity mechanism</strong>: build on the multilingual culture kids already create.</p>
+      </div>
+    </div>
+    <p>Defend your pick using the <strong>ladder of inference</strong> sentence frames — climbing deliberately from data to action:</p>
+    <div class="ladder">
+      <div class="rung"><span class="rl">Select data</span><span class="frame"><b>"The researchers found that…"</b> — name the specific observation or claim you're standing on.</span></div>
+      <div class="rung"><span class="rl">Interpret</span><span class="frame"><b>"This shows that…"</b> — say what mechanism the data reveals.</span></div>
+      <div class="rung"><span class="rl">Conclude</span><span class="frame"><b>"This matters because…"</b> — connect the mechanism to the coaching decision.</span></div>
+      <div class="rung"><span class="rl">Act</span><span class="frame"><b>"So we should…"</b> — the design choice for the coaching program.</span></div>
+    </div>
+    <div class="bigidea">
+      The deeper design question: <strong>which processes or mechanisms from the article should a São Paulo coaching program replicate, and which should it avoid?</strong> A strong answer treats the two mechanisms as levers — e.g., <em>replicate</em> and amplify children's solidarity work; <em>redesign</em> the "care" mechanism so belonging no longer requires suppressing Spanish — and checks relevance by <strong>authenticity</strong> (would this ring true in São Paulo's classrooms?) rather than by generalizability.
+    </div>
+  </section>
+
+  <!-- ===== 07 iRAT PREP ===== -->
+  <section class="quiz">
+    <h2><span class="num">07</span> iRAT prep — test yourself</h2>
+    <p style="color:var(--ink-soft)">Answer before revealing. Two are written like TBL readiness-check multiple-choice; the rest are short-answer/application. Then chew on the discussion prompts.</p>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>1. A randomized trial shows a tutoring program raised test scores. Leaders want to know <em>why</em> it worked so they can scale it. Which form of evidence best answers that?</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. More causal (experimental) evidence — run the trial again</li>
+          <li>B. Descriptive quantitative evidence — report the average gain</li>
+          <li>C. <b>Process evidence — identify the mechanisms and contextual features producing the impact</b></li>
+          <li>D. Synthetic evidence — combine many trials' effect sizes</li>
+        </ul>
+        <b>C.</b> The causal study already answered "does it work?" The "why/how" question — the levers to scale — is precisely what process evidence addresses by opening the black box between treatment and outcome.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-mc">MC</span>2. In this course, "causal evidence" refers specifically to —</span></summary>
+      <div class="def">
+        <ul class="opts">
+          <li>A. Any study that explains why something happens</li>
+          <li>B. <b>Experimental or quasi-experimental (counterfactual) evidence</b></li>
+          <li>C. A historian's account of long-term causal processes</li>
+          <li>D. Qualitative interviews about participants' reasons</li>
+        </ul>
+        <b>B.</b> The course reserves "causal" for the counterfactual method — comparing what happened to what would have happened without treatment. Process evidence is a <em>different</em> route to cause and effect (mechanisms over time), not "causal" in this technical sense.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>3. What are the two "big ideas" of process evidence, and how do they differ?</span></summary>
+      <div class="def">
+        <b>Context</b> — the environment (legal, historical, social, political, community) in which the intervention happens. <b>Mechanisms</b> — the features of the intervention that actually produce the impacts (or lack of them). Context is the surrounding conditions; mechanisms are the working parts inside. Both are needed to locate the levers of change.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>4. The Oliveira study is qualitative. How does that shape the way you evaluate its quality?</span></summary>
+      <div class="def">
+        In <b>two layers</b>. First apply the <b>descriptive-qualitative</b> questions (case logic in sampling, cognitive empathy, describing context) because that's the data type. Then apply the <b>three process questions</b> (identify mechanisms &amp; rule out alternatives; describe how local context affects the process; explore how participants interpret and respond). Judge relevance by <b>authenticity</b>, not generalizability.
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="tag-sa">SA</span>5. The authors present findings from both teachers' and children's perspectives. Which process quality question does this most directly serve, and why does it strengthen the study?</span></summary>
+      <div class="def">
+        It most directly serves the third question — <b>how participants interpret and respond to the process.</b> Teachers alone would show Portuguese-as-care but not how children respond; children alone would show resistance but not teachers' motivations. Weaving both builds <b>cognitive empathy</b> and a fuller, more trustworthy account of the two classrooms.
+      </div>
+    </details>
+
+    <div class="prompt"><span class="lbl">Discussion 1</span>Process evidence and causal evidence answer different questions. Take an intervention you care about and explain what each form could — and could <em>not</em> — tell you about it. Where would relying on only one leave you exposed?</div>
+    <div class="prompt"><span class="lbl">Discussion 2</span>A mechanism is only as good as the alternatives it rules out. For Oliveira et al.'s "children's solidarity work," propose one plausible alternative explanation for the Spanish side-conversations, and say what additional evidence would help you decide between them.</div>
+  </section>
+
+  <!-- ===== 08 READINGS ===== -->
+  <section>
+    <h2><span class="num">08</span> Readings</h2>
+    <div class="readings">
+      <h3>For this session</h3>
+      <ul>
+        <li><strong>Required:</strong> Oliveira, G., Barbosa Lindquist, C., Sato Shiratori, E., &amp; Baptaglin, L. (2024). <em>Venezuelan migration to Brazil: teachers and students co-constructing multicultural education inside classrooms.</em> Journal for Multicultural Education, 18(4), 540–553. Access via the course Library Reserves page.</li>
+        <li><strong>Read for the mechanisms:</strong> the two claims flagged for today's application sit on <strong>pp. 547–548</strong>. As you read, track the two mechanisms (Portuguese-only teaching as care/compliance; children's solidarity work) and test them against plausible alternatives.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RECAP ===== -->
+  <section class="recap">
+    <h2><span class="num">★</span> Remember this</h2>
+    <ul>
+      <li><strong>Process evidence answers "how &amp; why," not just "whether."</strong> It reveals the causal processes and mechanisms behind an impact — complementing, not replacing, causal evidence.</li>
+      <li><strong>Two big ideas: context and mechanisms.</strong> The environment around an intervention, and the working parts inside it that produce the impacts we see.</li>
+      <li><strong>It opens the black box.</strong> Causal evidence sees treatment → outcome; process evidence explains the middle — the levers of change that bridge research and practice.</li>
+      <li><strong>Evaluate in two layers:</strong> apply the quality questions for the data type(s) used, then the three process questions — identify mechanisms (ruling out alternatives), describe context, and explore how participants interpret the process.</li>
+      <li><strong>Triangulate.</strong> How/why questions usually need multiple data types, disciplines, even paradigms — from across the whole evidence framework.</li>
+      <li><strong>Explaining ≠ proving impact.</strong> A plausible mechanism isn't proof; process evidence pairs with causal evidence, and implementation fidelity is part of the story.</li>
+    </ul>
+  </section>
+
+  <footer>EVI101 · Session 7 · study notes · © Harvard content paraphrased for personal study</footer>
+
+</div>
+</body>
+</html>
